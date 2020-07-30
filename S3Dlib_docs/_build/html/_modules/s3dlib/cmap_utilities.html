@@ -1,0 +1,517 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>s3dlib.cmap_utilities &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../examples/index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for s3dlib.cmap_utilities</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) Frank Zaverl, Jr.</span>
+<span class="c1"># See file LICENSE for license information.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Module containing functions to create Matplotlib color maps.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># Not much going on here but these functions simplify constructing</span>
+<span class="c1"># colormaps during development.  Most custom colormaps can be made</span>
+<span class="c1"># with just one or two lines of code which are easier to comprehend.</span>
+<span class="c1"># Got tired of remembering which module and what function  ;-)</span>
+
+
+<span class="kn">import</span> <span class="nn">string</span> 
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span><span class="p">,</span> <span class="n">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span><span class="p">,</span> <span class="n">LinearSegmentedColormap</span>
+
+
+<div class="viewcode-block" id="rgb_cmap_gradient"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.rgb_cmap_gradient">[docs]</a><span class="k">def</span> <span class="nf">rgb_cmap_gradient</span><span class="p">(</span><span class="n">lowColor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">highColor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A linear-in-RGB-space Colormap, with option of registering the map.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    locColor : color, optional, default: &#39;black&#39;</span>
+<span class="sd">        Color at the low end of the Colormap range.</span>
+<span class="sd">    </span>
+<span class="sd">    highColor : color, optional, default: &#39;white&#39;</span>
+<span class="sd">        Color at the high end of the Colormap range.</span>
+<span class="sd">    </span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The registered name to identify the colormap.</span>
+<span class="sd">        If it&#39;s None, the name will be a string of random</span>
+<span class="sd">        characters and the map is not registered.</span>
+
+<span class="sd">    mirrored : bool</span>
+<span class="sd">        If True, colormap is divided into two linear</span>
+<span class="sd">        segments with the lowColor at the low and high</span>
+<span class="sd">        values, the highColr in the middle.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    LinearSegmentedColormap</span>
+<span class="sd">        An instance of a colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mirrored</span><span class="p">,</span> <span class="nb">bool</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid mirrored argument (bool required): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>       
+    <span class="n">call_name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span> 
+        <span class="n">call_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid name argument (str required): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">colors</span><span class="o">.</span><span class="n">is_color_like</span><span class="p">(</span><span class="n">lowColor</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid negColor argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lowColor</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">colors</span><span class="o">.</span><span class="n">is_color_like</span><span class="p">(</span><span class="n">highColor</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid posColor argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">highColor</span><span class="p">))</span>
+    
+    <span class="n">clist</span> <span class="o">=</span> <span class="p">[</span><span class="n">lowColor</span><span class="p">,</span><span class="n">highColor</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">mirrored</span> <span class="p">:</span> <span class="n">clist</span> <span class="o">=</span> <span class="p">[</span><span class="n">lowColor</span><span class="p">,</span><span class="n">highColor</span><span class="p">,</span><span class="n">lowColor</span><span class="p">]</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">call_name</span><span class="p">,</span> <span class="n">clist</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+<span class="k">def</span> <span class="nf">_smoothHue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">eps</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># ....................................</span>
+    <span class="k">def</span> <span class="nf">sgm</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">xref</span><span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">c</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">xref</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">),</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">t1</span><span class="o">*</span><span class="n">t2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="o">/</span><span class="mi">3</span>
+        <span class="k">return</span> <span class="n">val</span>
+    <span class="c1"># ....................................</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">sgm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">x</span> <span class="o">&gt;</span><span class="mf">0.333</span> <span class="p">,</span> <span class="n">sgm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mf">0.333</span><span class="p">),</span> <span class="n">y</span> <span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">x</span> <span class="o">&gt;</span><span class="mf">0.666</span> <span class="p">,</span> <span class="n">sgm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mf">0.666</span><span class="p">),</span> <span class="n">y</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+
+<div class="viewcode-block" id="hsv_cmap_gradient"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.hsv_cmap_gradient">[docs]</a><span class="k">def</span> <span class="nf">hsv_cmap_gradient</span><span class="p">(</span><span class="n">lowHSVarg</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">highHSVarg</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A linear-in-HSV-space Colormap, with option of registering the map.</span>
+<span class="sd">    </span>
+<span class="sd">    Using hSV or hSVA values for HSV color. SVA values are in the range [0,1].</span>
+<span class="sd">    The h values are in the range [0,2] so that Hue is mod(h,1).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lowHSVarg : 3 or 4 array or string, optional, default: [0,1,1], , &#39;red&#39;</span>
+<span class="sd">        HSV, HSVA color at the low end of the Colormap range.  If a string,</span>
+<span class="sd">        a named color (may be proceeded by a &#39;+&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">    highHSVarg : 3 or 4 array or string, optional, default: [1,1,1] , &#39;+red&#39;</span>
+<span class="sd">        HSV, HSVA color at the high end of the Colormap range.  If a string,</span>
+<span class="sd">        a named color (may be proceeded by a &#39;+&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">    name : str, optional, default: None</span>
+<span class="sd">        The registered name to identify the colormap.</span>
+<span class="sd">        If it&#39;s None, the map is not registered.</span>
+
+<span class="sd">    mirrored : bool</span>
+<span class="sd">        If True, colormap is divided into two linear</span>
+<span class="sd">        segments with the lowColor at the low and high</span>
+<span class="sd">        values, the highColr in the middle.</span>
+<span class="sd">        </span>
+<span class="sd">    smooth: float, optional, default: None</span>
+<span class="sd">        Controls the ratio of the amount of CMY to RGB color.</span>
+<span class="sd">        CMY is extended relative to the RGB hues for values</span>
+<span class="sd">        greater than one (relative to standard HSV colormap).</span>
+<span class="sd">        RGB is extended relative to the CMY hues for values</span>
+<span class="sd">        less than one.  Range is [.1,10]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ListedColormap</span>
+<span class="sd">        An instance of a colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ............................................................</span>
+    <span class="k">def</span> <span class="nf">stringToHSV</span><span class="p">(</span><span class="n">sVal</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">addOne</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">sVal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+            <span class="n">addOne</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">sVal</span> <span class="o">=</span> <span class="n">sVal</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">rgb_to_hsv</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">sVal</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">addOne</span> <span class="p">:</span> <span class="n">h</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">]</span>    
+    <span class="c1"># ............................................................</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mirrored</span><span class="p">,</span> <span class="nb">bool</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid mirrored argument (boolean required): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>       
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid name argument (str required): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>        
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lowHSVarg</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span> <span class="n">lowHSVarg</span><span class="o">=</span> <span class="n">stringToHSV</span><span class="p">(</span><span class="n">lowHSVarg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">highHSVarg</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span> <span class="n">highHSVarg</span><span class="o">=</span> <span class="n">stringToHSV</span><span class="p">(</span><span class="n">highHSVarg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lowHSVarg</span><span class="p">,(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid lowHSVarg argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">highHSVarg</span><span class="p">,(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid highHSVarg argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>  
+
+    <span class="n">lowColor</span><span class="p">,</span> <span class="n">highColor</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">lowHSVarg</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">highHSVarg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lowColor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="p">:</span> <span class="n">lowColor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">highColor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="p">:</span> <span class="n">highColor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lowColor</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">highColor</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span>  <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid HSVarg argument list length &#39;</span><span class="p">)</span>
+
+    <span class="n">lowColor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.0</span>
+    <span class="n">highColor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.0</span>
+    <span class="n">numbSegs</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">highColor</span><span class="p">,</span><span class="n">lowColor</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="n">numbSegs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mirrored</span> <span class="p">:</span> <span class="n">x</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="p">)</span>
+    <span class="c1"># DevNote:  insignificant time spent in loop. no need to opt.</span>
+    <span class="n">clist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span> <span class="p">:</span>
+            <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lowColor</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">smooth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_smoothHue</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">smooth</span><span class="p">)</span>
+            <span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">([</span><span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">])</span>
+            <span class="n">clist</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">])</span>  
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">clist</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="c1"># name property not assigned for ListedColormap, so...</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+<div class="viewcode-block" id="binary_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.binary_cmap">[docs]</a><span class="k">def</span> <span class="nf">binary_cmap</span><span class="p">(</span><span class="n">negColor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">posColor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A two-color Colormap, with option of registering the map.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    negColor : color, optional, default: &#39;blue&#39;</span>
+<span class="sd">        Color at the low end of the Colormap range.</span>
+<span class="sd">    </span>
+<span class="sd">    posColor : color, optional, default: &#39;red&#39;</span>
+<span class="sd">        Color at the high end of the Colormap range.</span>
+<span class="sd">    </span>
+<span class="sd">    name : str, optional, default: None</span>
+<span class="sd">        The registered name to identify the colormap.</span>
+<span class="sd">        If it&#39;s None, the map is not registered.</span>
+<span class="sd">       </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ListedColormap</span>
+<span class="sd">        An instance of a colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid name argument (str required): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>        
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">colors</span><span class="o">.</span><span class="n">is_color_like</span><span class="p">(</span><span class="n">negColor</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid negColor argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">negColor</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">colors</span><span class="o">.</span><span class="n">is_color_like</span><span class="p">(</span><span class="n">posColor</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid posColor argument: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">posColor</span><span class="p">))</span>
+    
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="n">negColor</span><span class="p">,</span><span class="n">posColor</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="c1"># name property not assigned for ListedColormap, so...</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+  
+<div class="viewcode-block" id="hue_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.hue_cmap">[docs]</a><span class="k">def</span> <span class="nf">hue_cmap</span><span class="p">(</span><span class="n">smooth</span><span class="o">=</span><span class="mf">1.6</span><span class="p">,</span> <span class="n">lowHue</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">highHue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A &#39;smooth-HSV&#39; colormap, with option of registering the map.</span>
+<span class="sd">    </span>
+<span class="sd">    Non linear adjustment of Hue in a HSV colormap.</span>
+<span class="sd">    For the HSV colors, S and V are 1.</span>
+<span class="sd">    The h values are shifted based on the smoothing parameter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    smooth: float, optional, default: 1.6</span>
+<span class="sd">        Controls the ratio of the amount of CMY to RGB color.</span>
+<span class="sd">        CMY is extended relative to the RGB hues for values</span>
+<span class="sd">        greater than one (relative to standard HSV colormap).</span>
+<span class="sd">        RGB is extended relative to the CMY hues for values</span>
+<span class="sd">        less than one.  Range is [.1,10]</span>
+
+<span class="sd">    lowHue : float or string, optional, default: 0</span>
+<span class="sd">        Hue at the low end of the Colormap range.</span>
+<span class="sd">        Values are in the range [0,2].  </span>
+<span class="sd">        If a string, the hue of a named color (may be</span>
+<span class="sd">        proceeded by a &#39;+&#39;)</span>
+
+<span class="sd">    highHue : float or string, optional, default: 1</span>
+<span class="sd">        Hue at the upper end of the Colormap range.  </span>
+<span class="sd">        Values are in the range [0,2].  </span>
+<span class="sd">        If a string, the hue of a named color (may be</span>
+<span class="sd">        proceeded by a &#39;+&#39;)</span>
+
+<span class="sd">    name : str, optional, default: None</span>
+<span class="sd">        The registered name to identify the colormap.</span>
+<span class="sd">        If it&#39;s None, the map is not registered.</span>
+<span class="sd">       </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ListedColormap</span>
+<span class="sd">        An instance of a colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># ............................................................</span>
+    <span class="k">def</span> <span class="nf">stringToHue</span><span class="p">(</span><span class="n">sVal</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">addOne</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">sVal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+            <span class="n">addOne</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">sVal</span> <span class="o">=</span> <span class="n">sVal</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">rgb_to_hsv</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">sVal</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">addOne</span> <span class="p">:</span> <span class="n">h</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">h</span>    
+    <span class="c1"># ............................................................</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">smooth</span><span class="o">&lt;</span><span class="mf">0.1</span> <span class="ow">or</span> <span class="n">smooth</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;smooth must be between 0.1 and 10. , found </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smooth</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lowHue</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span> <span class="n">lowHue</span><span class="o">=</span> <span class="n">stringToHue</span><span class="p">(</span><span class="n">lowHue</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">highHue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">highHue</span> <span class="o">=</span> <span class="n">lowHue</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">highHue</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span>  <span class="n">highHue</span><span class="o">=</span> <span class="n">stringToHue</span><span class="p">(</span><span class="n">highHue</span><span class="p">)</span>
+
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">highHue</span><span class="p">,</span><span class="n">lowHue</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lowHue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>       
+    <span class="n">h</span> <span class="o">=</span> <span class="n">_smoothHue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">smooth</span><span class="p">)</span>
+    <span class="n">one</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+    <span class="n">hsv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">h</span><span class="p">,</span><span class="n">one</span><span class="p">,</span><span class="n">one</span><span class="p">])</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">(</span><span class="n">hsv</span><span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">rgb</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="c1"># name property not assigned for ListedColormap, so...</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+<div class="viewcode-block" id="stitch_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.stitch_cmap">[docs]</a><span class="k">def</span> <span class="nf">stitch_cmap</span><span class="p">(</span> <span class="o">*</span><span class="n">maps</span><span class="p">,</span> <span class="n">bndry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Colormap composed of multiple colormaps.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *maps : colormaps</span>
+<span class="sd">    </span>
+<span class="sd">    bndry : scalar or list, default: None</span>
+<span class="sd">        Boundary between colormaps.  If  a list, </span>
+<span class="sd">        the number of values must be one less than</span>
+<span class="sd">        the number of maps.  The list values must</span>
+<span class="sd">        be in assending order.  If None, input colormaps</span>
+<span class="sd">        are evenly spaced in the returned colormap.</span>
+<span class="sd">        The list values are in the range 0 to 1.</span>
+<span class="sd">    </span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The registered name to identify the colormap.</span>
+<span class="sd">        If it&#39;s None, the name will be a string of random</span>
+<span class="sd">        characters and the map is not registered.</span>
+<span class="sd">       </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ListedColormap</span>
+<span class="sd">        An instance of a colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">numbMaps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">maps</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numbMaps</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">:</span> 
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only one cmap entered, need two or greater&#39;</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">bndry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">bndry</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="o">/</span><span class="n">numbMaps</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">numbMaps</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">numbBndry</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bndry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numbBndry</span> <span class="o">!=</span> <span class="p">(</span><span class="n">numbMaps</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">strgMsg</span> <span class="o">=</span> <span class="s1">&#39;Number of boundaries, </span><span class="si">{}</span><span class="s1">, is NOT equal to one less that the number of maps, </span><span class="si">{}</span><span class="s1">. &#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">strgMsg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numbBndry</span><span class="p">,</span><span class="n">numbMaps</span><span class="p">))</span>
+    <span class="n">bndry</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">colormaps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cmap</span> <span class="ow">in</span> <span class="n">maps</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>  
+        <span class="n">colormaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">Nbndry</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">bndry</span><span class="p">,</span><span class="n">N</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mapIndex</span><span class="p">,</span> <span class="n">colorIndexStart</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">clist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">Nbndry</span><span class="p">[</span><span class="n">mapIndex</span><span class="p">]</span> <span class="p">:</span> 
+            <span class="n">mapIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">colorIndexStart</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">Nbndry</span><span class="p">[</span><span class="n">mapIndex</span><span class="p">]</span><span class="o">-</span><span class="n">colorIndexStart</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">d</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">colorIndexStart</span><span class="p">)</span>
+        <span class="n">clist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">colormaps</span><span class="p">[</span><span class="n">mapIndex</span><span class="p">](</span><span class="n">index</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">clist</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="c1"># name property not assigned for ListedColormap, so...</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+<div class="viewcode-block" id="alpha_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.alpha_cmap">[docs]</a><span class="k">def</span> <span class="nf">alpha_cmap</span><span class="p">(</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span>  <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A registered colormap with a constant alpha channel.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">alpha</span><span class="o">&lt;</span><span class="mf">0.0</span> <span class="ow">or</span> <span class="n">alpha</span><span class="o">&gt;</span><span class="mf">1.0</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;alpha must be between 0 and 1, found </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>       
+    
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_a&#39;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="n">LinearSegmentedColormap</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># LinearSegmentedColormap ...</span>
+        <span class="n">cdict</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">cmap</span><span class="o">.</span><span class="n">_segmentdata</span><span class="p">)</span>
+        <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span><span class="n">alpha</span><span class="p">),(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">cdict</span><span class="p">)</span>
+        <span class="n">newCmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="c1"># ListedColormap ............</span>
+        <span class="n">colorArr</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span> 
+        <span class="n">colorArr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">colorArr</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">newCmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">colorArr</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">newCmap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">newCmap</span></div>
+
+<div class="viewcode-block" id="mirrored_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.mirrored_cmap">[docs]</a><span class="k">def</span> <span class="nf">mirrored_cmap</span><span class="p">(</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A registered mirrored colormap.&quot;&quot;&quot;</span>  
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_m&#39;</span>
+        <span class="k">if</span> <span class="n">rev</span> <span class="p">:</span> <span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39;r&#39;</span>
+
+    <span class="n">numbSegs</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="n">numbSegs</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">rev</span> <span class="p">:</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">n</span>
+    <span class="n">clist</span> <span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">clist</span><span class="p">)</span>
+   
+    <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="c1"># name property not assigned for ListedColormap, so...</span>
+    <span class="n">cmap</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+<div class="viewcode-block" id="reversed_cmap"><a class="viewcode-back" href="../../docs/clss_mod/cmap_utilities.html#s3dlib.cmap_utilities.reversed_cmap">[docs]</a><span class="k">def</span> <span class="nf">reversed_cmap</span><span class="p">(</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A registered reversed colormap.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>    
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">reversed</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># note: reverse returns name + &#39;_r&#39;</span>
+    
+    <span class="n">cm</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

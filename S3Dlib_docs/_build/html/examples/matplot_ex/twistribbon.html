@@ -1,0 +1,281 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cylindrical Coordinates &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Datagrid Wireframe Plot" href="mp_wire.html" />
+    <link rel="prev" title="Color Mapping Normals" href="pringle.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mp_wire.html" title="Datagrid Wireframe Plot"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pringle.html" title="Color Mapping Normals"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cylindrical Coordinates</a><ul>
+<li><a class="reference internal" href="#surface-normal-color-mapping">Surface Normal Color Mapping</a></li>
+<li><a class="reference internal" href="#color-mapping-in-the-z-direction">Color Mapping in the Z direction</a></li>
+<li><a class="reference internal" href="#parametric-surfaces">Parametric Surfaces</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pringle.html"
+                        title="previous chapter">Color Mapping Normals</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mp_wire.html"
+                        title="next chapter">Datagrid Wireframe Plot</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/matplot_ex/twistribbon.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cylindrical-coordinates">
+<span id="twistribbon"></span><h1>Cylindrical Coordinates<a class="headerlink" href="#cylindrical-coordinates" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="surface-normal-color-mapping">
+<h2>Surface Normal Color Mapping<a class="headerlink" href="#surface-normal-color-mapping" title="Permalink to this headline">¶</a></h2>
+<p>Surface geometry is that taken from the Matplotlib
+<a class="reference external" href="https://matplotlib.org/3.1.1/gallery/mplot3d/trisurf3d_2.html#sphx-glr-gallery-mplot3d-trisurf3d-2-py">More triangular 3D surfaces</a>
+example.</p>
+<img alt="../../_images/twistribbon1.png" class="sphx-glr-single-img" src="../../_images/twistribbon1.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">LinearLocator</span><span class="p">,</span> <span class="n">FormatStrFormatter</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+<span class="c1">#.. Matplotlib Examples: Cylindrical Coordinates</span>
+
+<span class="c1"># 1. Define functions to examine ....................................</span>
+
+<span class="k">def</span> <span class="nf">twistFunction</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="n">twists</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="c1"># Note: sliced surface needed due to discontinuity @ t=0 if twists is odd</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.33</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">thickness</span><span class="o">*</span><span class="n">z</span> 
+    <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">t</span><span class="o">*</span><span class="n">twists</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">R</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">Z</span>
+
+<span class="k">def</span> <span class="nf">ribbonFunc</span><span class="p">(</span><span class="n">rtz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.95</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_radius</span><span class="o">-</span><span class="n">min_radius</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">min_radius</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="n">z</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">R</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">R</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">Z</span>
+
+<span class="c1"># 2. Setup and map surfaces .........................................</span>
+<span class="n">rez</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span><span class="o">.</span><span class="mi">75</span><span class="p">],</span><span class="s1">&#39;cardboard&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span><span class="o">.</span><span class="mi">75</span><span class="p">],</span><span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span><span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">twist</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">)</span>
+<span class="n">twist</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">twistFunction</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">twist</span><span class="o">.</span><span class="n">map_cmap_from_normals</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="hll"><span class="c1">#twist.map_cmap_from_op( lambda xyz : xyz[2] , &#39;Spectral&#39;)</span>
+</span>
+<span class="n">ribbon</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;tri&#39;</span><span class="p">)</span>
+<span class="n">ribbon</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="n">ribbonFunc</span> <span class="p">)</span>
+<span class="n">ribbon</span><span class="o">.</span><span class="n">map_cmap_from_normals</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cardboard&#39;</span><span class="p">,</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="hll"><span class="c1">#ribbon.map_cmap_from_op( lambda xyz : xyz[2] , &#39;CMRmap&#39;)</span>
+</span>
+<span class="c1"># 3. Construct figure, add surfaces, and plot ......................</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mf">0.5</span><span class="o">/</span><span class="mf">1.4</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.42</span><span class="p">,</span><span class="mf">0.975</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">twist</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;smaller&#39;</span><span class="p">,</span> <span class="n">multialignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.845</span><span class="p">,</span><span class="mf">0.975</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">ribbon</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;smaller&#39;</span><span class="p">,</span> <span class="n">multialignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">zlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">zlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LinearLocator</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Twist&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Ribbon&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">twist</span><span class="o">.</span><span class="n">cBar_ScalarMappable</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span> <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ribbon</span><span class="o">.</span><span class="n">cBar_ScalarMappable</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span> <span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">ribbon</span><span class="p">)</span>
+
+<span class="c1">#fig.tight_layout()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A sliced cylindrical surface, basetype=’squ_s’, was used for the twist surface because the surface
+twists and joins together at <span class="raw-html">&theta; = 0 amd 2&pi;</span>.  Also, for this reason, the mirrored
+color map is applied since the normals at these two locations are in opposite directions.  As noted
+in the code comments, this condition applies for cases when the parameter ‘twists’ is odd.
+A further description of mirrored colormap usage is given in the  <a class="reference internal" href="../functional/cyclic_mirror.html#cyclic-mirror"><span class="std std-ref">Cyclic and Mirrored Colormaps</span></a> example.</p>
+</div>
+</div>
+<div class="section" id="color-mapping-in-the-z-direction">
+<h2>Color Mapping in the Z direction<a class="headerlink" href="#color-mapping-in-the-z-direction" title="Permalink to this headline">¶</a></h2>
+<p>The referenced Matplotlib example uses a cmap applied to the vertical location of the surface.  This can also
+be easily constructed by uncommenting the highlighted lines to apply a surface cmap.  A simple lambda function
+can be used instead of defining a separate functional operation  since the surface geometry is already applied.
+The resulting plot is shown below.  When this is done, the shade operation is no longer needed (but can be
+applied after the mapping operation to highlight the surface geometry)</p>
+<img alt="../../_images/twistribbon_z.png" class="sphx-glr-single-img" src="../../_images/twistribbon_z.png" />
+</div>
+<div class="section" id="parametric-surfaces">
+<h2>Parametric Surfaces<a class="headerlink" href="#parametric-surfaces" title="Permalink to this headline">¶</a></h2>
+<p>The <em>twist</em> surface was constructed using an additional parameter in the geometry mapping function.
+Multiple surfaces, varying with the ‘twists’ parameter are shown below:</p>
+<img alt="../../_images/twist_multi.png" class="sphx-glr-single-img" src="../../_images/twist_multi.png" />
+<p>Surface normal color mapping is particularly useful for complex shaped surfaces.
+The comprehension of the higher twist surfaces is more difficult using a z color mapping.
+Using same twist function, steps 2 and 3 were replaced by the following code to produce the
+above figure.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2 &amp; 3. Setup surfaces and plot ....................................</span>
+<span class="n">rez</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span><span class="o">.</span><span class="mi">75</span><span class="p">],</span><span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span><span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mf">0.6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">i</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">zlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">twist</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">)</span>
+    <span class="n">twist</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">twistFunction</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">twist</span><span class="o">.</span><span class="n">map_cmap_from_normals</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;twists: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">twist</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mp_wire.html" title="Datagrid Wireframe Plot"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pringle.html" title="Color Mapping Normals"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

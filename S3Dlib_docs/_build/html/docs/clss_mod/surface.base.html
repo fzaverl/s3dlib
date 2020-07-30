@@ -1,0 +1,905 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>s3dlib.surface.Surface3DCollection &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="s3dlib.surface.PlanarSurface" href="surface.planar.html" />
+    <link rel="prev" title="S3Dlib API" href="../index.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../examples/index.html">Examples</a></li>
+            <li><a href="../index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surface.planar.html" title="s3dlib.surface.PlanarSurface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="S3Dlib API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">S3Dlib API</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">S3Dlib API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="surface.planar.html"
+                        title="next chapter">s3dlib.surface.PlanarSurface</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/docs/clss_mod/surface.base.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="s3dlib-surface-surface3dcollection">
+<h1>s3dlib.surface.Surface3DCollection<a class="headerlink" href="#s3dlib-surface-surface3dcollection" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.coor_convert" title="s3dlib.surface.Surface3DCollection.coor_convert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coor_convert</span></code></a>(xyz[,&nbsp;tocart])</td>
+<td>Coordinate transformation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.bounds" title="s3dlib.surface.Surface3DCollection.bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bounds</span></code></a></td>
+<td>Dictionary of surface geometric and value ranges.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.cBar_ScalarMappable" title="s3dlib.surface.Surface3DCollection.cBar_ScalarMappable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cBar_ScalarMappable</span></code></a></td>
+<td>matplotlib.cm.ScalarMappable object for surface values.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.edges" title="s3dlib.surface.Surface3DCollection.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a></td>
+<td>Line3DCollection of the triangulated surface edges.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.vertices" title="s3dlib.surface.Surface3DCollection.vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices</span></code></a></td>
+<td>A 3 x N array of surface vertices.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.facecenters" title="s3dlib.surface.Surface3DCollection.facecenters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">facecenters</span></code></a></td>
+<td>A 3 x N array of surface face center coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.normalize_scale" title="s3dlib.surface.Surface3DCollection.normalize_scale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_scale</span></code></a>()</td>
+<td>Scaling normalization array and reciprocal.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.triangulate" title="s3dlib.surface.Surface3DCollection.triangulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">triangulate</span></code></a>([rez])</td>
+<td>Planar subdivision of each face into triangular faces.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.facenormals" title="s3dlib.surface.Surface3DCollection.facenormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">facenormals</span></code></a>([scale,&nbsp;color,&nbsp;width,&nbsp;alr])</td>
+<td>Vector3DCollection of scaled face normals at face centers.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.dispfield_from_op" title="s3dlib.surface.Surface3DCollection.dispfield_from_op"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dispfield_from_op</span></code></a>(operation[,&nbsp;returnxyz,&nbsp;…])</td>
+<td>Vector3DCollection of displacement of vertices to a different position.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.vectorfield_from_op" title="s3dlib.surface.Surface3DCollection.vectorfield_from_op"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vectorfield_from_op</span></code></a>(operation[,&nbsp;scale,&nbsp;…])</td>
+<td>Vector3DCollection of vectors in u,v,w coordinates at surface vertices.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.vectorfield_to_surface" title="s3dlib.surface.Surface3DCollection.vectorfield_to_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vectorfield_to_surface</span></code></a>(surface[,&nbsp;scale,&nbsp;…])</td>
+<td>Vector3DCollection of vectors from surface to surface vertex coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_color_from_image" title="s3dlib.surface.Surface3DCollection.map_color_from_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_color_from_image</span></code></a>(fname[,&nbsp;viewport])</td>
+<td>Assign image color values to surface face colors.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_color_from_op" title="s3dlib.surface.Surface3DCollection.map_color_from_op"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_color_from_op</span></code></a>(operation[,&nbsp;rgb])</td>
+<td>Assignment of face color from a function.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_datagrid" title="s3dlib.surface.Surface3DCollection.map_cmap_from_datagrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_cmap_from_datagrid</span></code></a>(datagrid[,&nbsp;cmap,&nbsp;…])</td>
+<td>Face color assignment using a 2D datagrid surface.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_normals" title="s3dlib.surface.Surface3DCollection.map_cmap_from_normals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_cmap_from_normals</span></code></a>([cmap,&nbsp;direction])</td>
+<td>Face color assignment using normals relative to illumination.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_op" title="s3dlib.surface.Surface3DCollection.map_cmap_from_op"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_cmap_from_op</span></code></a>(operation[,&nbsp;cmap])</td>
+<td>Functional assignment of a color from a color map.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_geom_from_datagrid" title="s3dlib.surface.Surface3DCollection.map_geom_from_datagrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_geom_from_datagrid</span></code></a>(datagrid[,&nbsp;scale,&nbsp;…])</td>
+<td>Append surface vertices proportional to 2D datagrid surface.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_geom_from_image" title="s3dlib.surface.Surface3DCollection.map_geom_from_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_geom_from_image</span></code></a>(fname[,&nbsp;scale,&nbsp;…])</td>
+<td>Append surface vertices proportional to image color component values.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.map_geom_from_op" title="s3dlib.surface.Surface3DCollection.map_geom_from_op"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_geom_from_op</span></code></a>(operation[,&nbsp;returnxyz])</td>
+<td>Functional transformation of surface vertex coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.clip" title="s3dlib.surface.Surface3DCollection.clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip</span></code></a>(operation[,&nbsp;usexyz])</td>
+<td>Remove faces from the surface.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.restore_from_clip" title="s3dlib.surface.Surface3DCollection.restore_from_clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restore_from_clip</span></code></a>()</td>
+<td>Reset face and colors prior to any clip operation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.shade" title="s3dlib.surface.Surface3DCollection.shade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shade</span></code></a>([depth,&nbsp;direction,&nbsp;contrast])</td>
+<td>Reduce surface HSV color Value based on face normals.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.hilite" title="s3dlib.surface.Surface3DCollection.hilite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hilite</span></code></a>([height,&nbsp;direction,&nbsp;focus])</td>
+<td>Increase surface HSV color Value and reduce Saturation, based on face normals.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.transform" title="s3dlib.surface.Surface3DCollection.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>([rotate,&nbsp;scale,&nbsp;translate])</td>
+<td>Linear transformation of the surface object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.set_surface_alpha" title="s3dlib.surface.Surface3DCollection.set_surface_alpha"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_surface_alpha</span></code></a>(alpha[,&nbsp;constant])</td>
+<td>Adjust the alpha value of the surface face colors.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.get_transformAxis" title="s3dlib.surface.Surface3DCollection.get_transformAxis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transformAxis</span></code></a>([lenmult,&nbsp;width,&nbsp;colors])</td>
+<td>Line3DCollection of the ‘last’ transformed surface coordinate axis.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#s3dlib.surface.Surface3DCollection.svd" title="s3dlib.surface.Surface3DCollection.svd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">svd</span></code></a>(data[,&nbsp;pc])</td>
+<td>Transform surface geometry based on a data set.</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="s3dlib.surface.Surface3DCollection">
+<em class="property">class </em><code class="descclassname">s3dlib.surface.</code><code class="descname">Surface3DCollection</code><span class="sig-paren">(</span><em>vertexCoor</em>, <em>faceIndices</em>, <em>edgeIndices=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mpl_toolkits.mplot3d.art3d.Poly3DCollection</span></code></p>
+<p>Base class for 3D surfaces.</p>
+<p>3D surface of connected F faces, each face with N number of vertices.
+The surface has V number of vertices and E number of edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vertexCoor</strong> (<em>V x 3 float numpy.ndarray</em>) – An array of V number of xyz vertex coordinates.</li>
+<li><strong>faceIndices</strong> (<em>F x N int numpy.ndarray</em>) – An array of F number of N face vertex indices.</li>
+<li><strong>edgeIndices</strong> (<em>E x 2 int numpy.ndarray</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – An array of E number of 2 edge vertex indices.
+If None is provided, the ‘edges’ property is not available.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Other Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last"><strong>*args, **kwargs</strong> – All other arguments are passed on to mpl_toolkits.mplot3d.art3d.Poly3DCollection.
+Valid argument names include: color, edgecolors, facecolors, linewidths, cmap.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="s3dlib.surface.Surface3DCollection.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of surface geometric and value ranges.</p>
+<p>Each dictionary value is a 2 float array of minimum
+and maximum values of the surface.  Keys are:</p>
+<blockquote>
+<div>‘xlim’ : x-coordinate
+‘ylim’ : y-coordinate
+‘zlim’ : z-coordinate
+‘r_xy’ : radial distance from the z axis
+‘rorg’ : radial distance from the origin
+‘vlim’ : value functional assignments.</div></blockquote>
+<p>Values are assigned using datagrid and color mapping methods.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="s3dlib.surface.Surface3DCollection.cBar_ScalarMappable">
+<code class="descname">cBar_ScalarMappable</code><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.cBar_ScalarMappable" title="Permalink to this definition">¶</a></dt>
+<dd><p>matplotlib.cm.ScalarMappable object for surface values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.clip">
+<code class="descname">clip</code><span class="sig-paren">(</span><em>operation</em>, <em>usexyz=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove faces from the surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Function that takes one argument, a 3xN Numpy array of coordinates.
+The function returns a bool { True, False } indicating if
+the face, at the face centered coordinate, is to be
+retained (True), otherwise, the face is removed from the
+surface (False).</li>
+<li><strong>usexyz</strong> (<em>bool { True</em><em>, </em><em>False }</em><em>, </em><em>default: False</em>) – If True, face centers are passed to the operation function
+in xyz coordinates.  If False, face centers are passed
+in native coordinates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="s3dlib.surface.Surface3DCollection.coor_convert">
+<em class="property">static </em><code class="descname">coor_convert</code><span class="sig-paren">(</span><em>xyz</em>, <em>tocart=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.coor_convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.coor_convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coordinate transformation.</p>
+<p>To be overriden by any subclass not in Cartesian coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.dispfield_from_op">
+<code class="descname">dispfield_from_op</code><span class="sig-paren">(</span><em>operation</em>, <em>returnxyz=False</em>, <em>useBase=False</em>, <em>scale=1</em>, <em>color=None</em>, <em>width=None</em>, <em>alr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.dispfield_from_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.dispfield_from_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vector3DCollection of displacement of vertices to a different position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Function that takes one coordinate
+argument, a 3xN Numpy array.
+The function returns a 3xN array of vectors.</li>
+<li><strong>returnxyz</strong> (<em>bool { True</em><em>, </em><em>False }</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – By default, native coordinates are returned by the
+operation function.  If set True, the operation
+returns xyz Cartesian coordinates.</li>
+<li><strong>useBase</strong> (<em>bool { True</em><em>, </em><em>False }</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – When set False, vertices of the surface, prior to
+any geometric mapping or transforms, are passed to
+the operation function.  Otherwise, when True, the
+current surface vertices are passed.</li>
+<li><strong>scale</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1.</em>) – </li>
+<li><strong>color</strong> (<em>str</em><em> or </em><em>float list of length 3</em><em> or </em><em>4.</em>) – RGB or RGBA color, either a Matplotlib format string or a
+list of color values in range [0,1].</li>
+<li><strong>width</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Line width of the vector.</li>
+<li><strong>alr</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 0.25</em>) – Axis length ratio, head size to vector magnitude.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>Vector3DCollection object</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="s3dlib.surface.Surface3DCollection.edges">
+<code class="descname">edges</code><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line3DCollection of the triangulated surface edges.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="s3dlib.surface.Surface3DCollection.facecenters">
+<code class="descname">facecenters</code><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.facecenters" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 3 x N array of surface face center coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.facenormals">
+<code class="descname">facenormals</code><span class="sig-paren">(</span><em>scale=None</em>, <em>color=None</em>, <em>width=None</em>, <em>alr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.facenormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.facenormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vector3DCollection of scaled face normals at face centers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>scale</strong> (<em>number</em><em>, </em><em>optional</em>) – If not spectified, scaled proportional to the mean edge
+length of surface base faces.</li>
+<li><strong>color</strong> (<em>str</em><em> or </em><em>float list of length 3</em><em> or </em><em>4.</em>) – RGB or RGBA color, either a Matplotlib format string or a
+list of color values in range [0,1].</li>
+<li><strong>width</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Line width of the vector.</li>
+<li><strong>alr</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 0.25</em>) – Axis length ratio, head size to vector magnitude.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>Vector3DCollection object</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.get_transformAxis">
+<code class="descname">get_transformAxis</code><span class="sig-paren">(</span><em>lenmult=1.0</em>, <em>width=1.5</em>, <em>colors=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.get_transformAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.get_transformAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line3DCollection of the ‘last’ transformed surface coordinate axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lenmult</strong> (<em>scalar</em><em> or </em><em>3D array</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Scalar multiplier of the three coordinate axis.</li>
+<li><strong>width</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 1.5</em>) – Line width of the coordinate axis.</li>
+<li><strong>colors</strong> (<em>a Color</em><em> or </em><em>3D array of Colors</em><em>, </em><em>optional</em><em>, </em><em>default:</em><em> [</em><em>'r'</em><em>,</em><em>'g'</em><em>,</em><em>'b'</em><em>]</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>Line3DCollection</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.hilite">
+<code class="descname">hilite</code><span class="sig-paren">(</span><em>height=1</em>, <em>direction=None</em>, <em>focus=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.hilite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.hilite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase surface HSV color Value and reduce Saturation, based on face normals.</p>
+<p>The dot product of face normals with the illumination direction
+is used to adjust face HSV color value and saturation.
+Faces having normals with a negative component in the direction of
+illumination are not affected. The reduction of color saturation is
+proportional to the increase in color value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>height</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Maximum color value of highlighted surface faces.
+Height value ranges from 0 to 1.</li>
+<li><strong>direction</strong> (<em>array-like</em><em>, </em><em>optional</em><em>, </em><em>default:</em><em> (</em><em>1</em><em>,</em><em>0</em><em>,</em><em>1</em><em>)</em>) – A xyz vector pointing to the illumination source.</li>
+<li><strong>focus</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Highlighting focus adjustment from low to high with a value
+of 1 for quadratic variations with the normal direction.
+Focus value ranges from 0.1 to 3.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_cmap_from_datagrid">
+<code class="descname">map_cmap_from_datagrid</code><span class="sig-paren">(</span><em>datagrid</em>, <em>cmap=None</em>, <em>viewport=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_cmap_from_datagrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_datagrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Face color assignment using a 2D datagrid surface.</p>
+<p>Datagrid values are normalized in the range 0 to 1.</p>
+<p>This method is not available for composite surfaces.
+The entire datagrid domain is applied to the geometric operation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>datagrid</strong> (<em>2D float array</em>) – </li>
+<li><strong>cmap</strong> (<em>str</em><em> or </em><em>Colormap</em><em>, </em><em>optional</em>) – A Colormap instance or registered colormap name.
+If not assigned, the surface Colormap is used.
+The colormap maps the datagrid values to colors.</li>
+<li><strong>viewport</strong> (<em>4D array-like</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – Viewport defines the subdomain of the surface onto which
+the datagrid is mapped.  The subdomain is set by normalized
+native surface coordinates in a 4D array.
+The entire surface is colored for the default of None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_cmap_from_normals">
+<code class="descname">map_cmap_from_normals</code><span class="sig-paren">(</span><em>cmap=None</em>, <em>direction=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_cmap_from_normals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_normals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Face color assignment using normals relative to illumination.</p>
+<p>The dot product of face normals with the illumination direction
+is used to assign face colors from a colormap.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cmap</strong> (<em>str</em><em> or </em><em>Colormap</em><em>, </em><em>optional</em>) – A Colormap instance or registered colormap name.
+If not assigned, the surface Colormap is used.
+The colormap maps the dot product values to colors.</li>
+<li><strong>direction</strong> (<em>list of size 3</em><em>, </em><em>optional</em><em>, </em><em>default:</em><em> [</em><em>1</em><em>,</em><em>0</em><em>,</em><em>1</em><em>]</em>) – A 3D vector in xyz Cartesian coordinates designating
+the direction of the illumination source.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_cmap_from_op">
+<code class="descname">map_cmap_from_op</code><span class="sig-paren">(</span><em>operation</em>, <em>cmap=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_cmap_from_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_cmap_from_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functional assignment of a color from a color map.</p>
+<p>Face coordinates are used to calculate a scalar
+which is then used to assign face colors from a
+colormap.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Function that takes one argument,
+a 3xN Numpy array of native coordinates.
+The function returns a Numpy array of scalar values.</li>
+<li><strong>cmap</strong> (<em>str</em><em> or </em><em>Colormap</em><em>, </em><em>optional</em>) – A Colormap instance or registered colormap name.
+If not assigned, the surface Colormap is used.
+The colormap maps the function return values to colors.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_color_from_image">
+<code class="descname">map_color_from_image</code><span class="sig-paren">(</span><em>fname</em>, <em>viewport=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_color_from_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_color_from_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign image color values to surface face colors.</p>
+<p>This method is not available for composite surfaces.
+The entire image domain is applied to the coloring operation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>str</em><em> or </em><em>file-like</em>) – The image file to read: a filename, a URL or a file-like object opened
+in read-binary mode.  Currently restricted to PNG format.</li>
+<li><strong>viewport</strong> (<em>4D array-like</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – Viewport defines the subdomain of the surface onto which
+the image is mapped.  The subdomain is set by normalized
+native surface coordinates in a 4D array.
+The entire surface is colored for the default of None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_color_from_op">
+<code class="descname">map_color_from_op</code><span class="sig-paren">(</span><em>operation</em>, <em>rgb=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_color_from_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_color_from_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assignment of face color from a function.</p>
+<p>Face colors are assigned from a function
+of face coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Function that takes one argument,
+a 3xN Numpy array of native coordinates.
+The function returns a 3xN color value.</li>
+<li><strong>rgb</strong> (<em>bool {True</em><em>, </em><em>False}</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – By default, RGB color values are returned by the
+operation function.  If set False, the operation
+returns HSV color values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_geom_from_datagrid">
+<code class="descname">map_geom_from_datagrid</code><span class="sig-paren">(</span><em>datagrid</em>, <em>scale=1.0</em>, <em>viewport=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_geom_from_datagrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_geom_from_datagrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append surface vertices proportional to 2D datagrid surface.</p>
+<p>Datagrid values are normalized in the range 0 to 1.</p>
+<p>This method is not available for composite surfaces.
+The entire datagrid domain is applied to the geometric operation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>datagrid</strong> (<em>2D array</em>) – </li>
+<li><strong>scale</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – </li>
+<li><strong>viewport</strong> (<em>4D array-like</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – Viewport defines the subdomain of the surface onto which
+the datagrid is mapped.  The subdomain is set by normalized
+native surface coordinates in a 4D array.
+The entire surface is geometrically mapped for the default of None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_geom_from_image">
+<code class="descname">map_geom_from_image</code><span class="sig-paren">(</span><em>fname</em>, <em>scale=1.0</em>, <em>viewport=None</em>, <em>cref='v'</em>, <em>hzero=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_geom_from_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_geom_from_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append surface vertices proportional to image color component values.</p>
+<p>For planar and polar coordinates, the z-coordinate is appended.
+For cylindrical and spherical coordinates, the r-coordinate is appended.</p>
+<p>This method is not available for composite surfaces.
+The entire image domain is applied to the geometric operation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>str</em><em> or </em><em>file-like</em>) – The image file to read: a filename, a URL or a file-like object opened
+in read-binary mode.  Currently restricted to PNG format.</li>
+<li><strong>scale</strong> (<em>number</em>) – </li>
+<li><strong>cref</strong> (<em>{'r'</em><em>,</em><em>'g'</em><em>,</em><em>'b'</em><em>,</em><em>'h'</em><em>,</em><em>'s'</em><em>,</em><em>'v'}</em><em>, </em><em>optional</em><em>, </em><em>default: 'v'</em>) – Sets which color tuple value to use for geometry mapping.
+Note: only the first character of the string is evaluated.</li>
+<li><strong>hzero</strong> (<em>number</em><em> or </em><em>None</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Argument is used if cref is set to ‘h’.
+The hzero magnitude indicates the Hue value for a zero coordinate
+diplacement. The hzero sign (positive or negative),
+indicates the direction of increasing value in the
+appended coordinate with hue value.  Range of hzero is [-1,1].</li>
+<li><strong>viewport</strong> (<em>4D array-like</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – Viewport defines the subdomain of the surface onto which
+the image is mapped.  The subdomain is set by normalized
+native surface coordinates in a 4D array.
+The entire surface is geometrically mapped for the default of None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.map_geom_from_op">
+<code class="descname">map_geom_from_op</code><span class="sig-paren">(</span><em>operation</em>, <em>returnxyz=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.map_geom_from_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.map_geom_from_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functional transformation of surface vertex coordinates.</p>
+<p>This method is not available for composite surfaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Coordinate mapping function that takes one
+argument, a 3xN Numpy array of native coordinates.
+The function returns a 3xN array of coordinates.</li>
+<li><strong>returnxyz</strong> (<em>bool { True</em><em>, </em><em>False }</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – By default, native coordinates are returned by the
+operation function.  If set True, the operation
+returns xyz Cartesian coordinates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.normalize_scale">
+<code class="descname">normalize_scale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.normalize_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.normalize_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scaling normalization array and reciprocal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.restore_from_clip">
+<code class="descname">restore_from_clip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.restore_from_clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.restore_from_clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset face and colors prior to any clip operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.set_surface_alpha">
+<code class="descname">set_surface_alpha</code><span class="sig-paren">(</span><em>alpha</em>, <em>constant=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.set_surface_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.set_surface_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjust the alpha value of the surface face colors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>alpha</strong> (<em>scalar</em>) – Alpha is in the range 0 to 1.</li>
+<li><strong>constant</strong> (<em>bool { True</em><em>, </em><em>False }</em><em>, </em><em>optional</em><em>, </em><em>False</em>) – If False, face color values are multiplied by
+alpha.  If True, all face colors alpha channels
+are assigned to alpha.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.shade">
+<code class="descname">shade</code><span class="sig-paren">(</span><em>depth=0</em>, <em>direction=None</em>, <em>contrast=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.shade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.shade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce surface HSV color Value based on face normals.</p>
+<p>The dot product of face normals with the illumination direction
+is used to adjust face HSV color value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>depth</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Minimum color value of shaded surface faces.
+Depth value ranges from 0 to 1.</li>
+<li><strong>direction</strong> (<em>array-like</em><em>, </em><em>optional</em><em>, </em><em>default:</em><em> (</em><em>1</em><em>,</em><em>0</em><em>,</em><em>1</em><em>)</em>) – A xyz vector pointing to the illumination source.</li>
+<li><strong>contrast</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Shading contrast adjustment from low to high with a value
+of 1 for linear variations with the normal direction.
+Contrast value ranges from 0.1 to 3.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.svd">
+<code class="descname">svd</code><span class="sig-paren">(</span><em>data</em>, <em>pc=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform surface geometry based on a data set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>N x 3 array of x</em><em>,</em><em>y</em><em>,</em><em>z data coordinates.</em>) – </li>
+<li><strong>pc</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – Sets the minimum size of the surface based on the
+relative number of data.  Value range from 0 to 1,
+with 1 for 100%.  If None, one standard deviation
+of the data sets the surface size.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>disArr</strong> (<em>array of N floats, normalized to the surface size.</em>)</li>
+<li><strong>t</strong> (<em>a 4D array containing surface and data properties</em>) – [standard deviation, rotation matrix, scaling, translation]</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>rotate=None, scale=1.0, translate=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear transformation of the surface object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rotate</strong> (<em>array-like</em><em>, </em><em>optional</em><em>, </em><em>default: None</em>) – A 3 by 3 rotation matrix.</li>
+<li><strong>scale</strong> (<em>3D array</em><em> or </em><em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – Multipliers of the object coordinates, in
+xyz coordinates. If a single scalar, three
+multipliers are the same value.</li>
+<li><strong>translate</strong> (<em>array-like</em><em>, </em><em>optional</em><em>, </em><em>default:</em><em> [</em><em>0</em><em>,</em><em>0</em><em>,</em><em>0</em><em>]</em>) – A xyz translation vector of object origin.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> (<em>surface object</em>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.triangulate">
+<code class="descname">triangulate</code><span class="sig-paren">(</span><em>rez=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.triangulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.triangulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Planar subdivision of each face into triangular faces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rez</strong> (<em>integer</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Number of recursive subdivisions of the base faces
+into triangular faces, four faces per rez.
+Rez values range from 0 to 7.
+For surfaces with 4 vertices per face, each face is first
+subdivided into two faces, then recursion proceeds.
+For surfaces with 5 vertices per face, each face is first
+subdivided into three faces, then recursion proceeds.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>self</strong> (<em>surface object</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="s3dlib.surface.Surface3DCollection.triangulateBase">
+<em class="property">static </em><code class="descname">triangulateBase</code><span class="sig-paren">(</span><em>rez</em>, <em>baseVcoor</em>, <em>baseFaceVertexIndices</em>, <em>midVectFunc</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.triangulateBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.triangulateBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively subdivide a triangulated surface.</p>
+<p>Each recursion subdivides each surface face by four.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rez</strong> (<em>integer</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Number of recursive subdivisions of the triangulated base faces.
+Rez values range from 0 to 7.</li>
+<li><strong>baseVcoor</strong> (<em>V x 3 float array</em>) – An array of ‘v’ number of xyz vertex coordinates.</li>
+<li><strong>baseFaceVertextIndices</strong> (<em>F x 3 int array</em>) – An array of ‘F’ number of face vertex indices.</li>
+<li><strong>midVectFunc</strong> (<em>function object</em>) – A function that takes two xyz coordinate (list of 3)
+representing a surface face edge.  Returns one xyz coordinate
+at the bisection of the edge, mapped on the surface.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>indexObj</strong> (<em>a dictionary of vertex indices, for a surface</em>) – of F faces, E edges and V vertices.
+‘face’ : F x 3 int array
+‘edge’ : E x 2 int array</li>
+<li><strong>vertCoor</strong> (<em>V x 3 float array</em>) – An array of V number of xyz vertex coordinates.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.vectorfield_from_op">
+<code class="descname">vectorfield_from_op</code><span class="sig-paren">(</span><em>operation</em>, <em>scale=1</em>, <em>color=None</em>, <em>width=None</em>, <em>alr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.vectorfield_from_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.vectorfield_from_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vector3DCollection of vectors in u,v,w coordinates at surface vertices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>operation</strong> (<em>function object</em>) – Function that takes one coordinate
+argument, a 3xN Numpy array of native coordinates.
+The function returns a 3xN array of vectors.</li>
+<li><strong>scale</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1.</em>) – </li>
+<li><strong>color</strong> (<em>str</em><em> or </em><em>float list of length 3</em><em> or </em><em>4.</em>) – RGB or RGBA color, either a Matplotlib format string or a
+list of color values in range [0,1].</li>
+<li><strong>width</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Line width of the vector.</li>
+<li><strong>alr</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 0.25</em>) – Axis length ratio, head size to vector magnitude.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>Vector3DCollection object</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="s3dlib.surface.Surface3DCollection.vectorfield_to_surface">
+<code class="descname">vectorfield_to_surface</code><span class="sig-paren">(</span><em>surface</em>, <em>scale=1</em>, <em>color=None</em>, <em>width=None</em>, <em>alr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#Surface3DCollection.vectorfield_to_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.vectorfield_to_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vector3DCollection of vectors from surface to surface vertex coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surface</strong> (<em>surface object</em>) – Surface that matches the calling surface vectors.
+Should be the same basetype and rez for surface subclasses.</li>
+<li><strong>scale</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1.</em>) – </li>
+<li><strong>color</strong> (<em>str</em><em> or </em><em>float list of length 3</em><em> or </em><em>4.</em>) – RGB or RGBA color, either a Matplotlib format string or a
+list of color values in range [0,1].</li>
+<li><strong>width</strong> (<em>number</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Line width of the vector.</li>
+<li><strong>alr</strong> (<em>scalar</em><em>, </em><em>optional</em><em>, </em><em>default: 0.25</em>) – Axis length ratio, head size to vector magnitude.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – Mismatched surfaces based on the number of vertices.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>Vector3DCollection object</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="s3dlib.surface.Surface3DCollection.vertices">
+<code class="descname">vertices</code><a class="headerlink" href="#s3dlib.surface.Surface3DCollection.vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 3 x N array of surface vertices.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surface.planar.html" title="s3dlib.surface.PlanarSurface"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="S3Dlib API"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >S3Dlib API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,233 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Function Plots, z = f(x,y) &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Cyclic and Mirrored Colormaps" href="cyclic_mirror.html" />
+    <link rel="prev" title="Base Class Surface" href="cube.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cyclic_mirror.html" title="Cyclic and Mirrored Colormaps"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cube.html" title="Base Class Surface"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cube.html"
+                        title="previous chapter">Base Class Surface</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cyclic_mirror.html"
+                        title="next chapter">Cyclic and Mirrored Colormaps</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/functional/funcplots.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="function-plots-z-f-x-y">
+<span id="funcplots"></span><h1>Function Plots, z = f(x,y)<a class="headerlink" href="#function-plots-z-f-x-y" title="Permalink to this headline">¶</a></h1>
+<img alt="../../_images/funcplots.png" class="sphx-glr-single-img" src="../../_images/funcplots.png" />
+<p>These examples show the basic functional plotting using:</p>
+<p><em>one code statement to create a surface object, one code statement to create the
+surface geometry and one code statement to color the surface</em>. Finally, <em>one code statement
+to add that object to a Matplotlib 3D axis.</em></p>
+<p>Also, several functions were used to demonstrate:</p>
+<p><em>a functional relationship should look like a function</em></p>
+<p>The functions are given on the Wikipedia page
+<a class="reference external" href="https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_single-objective_optimization">Test functions</a>
+for optimization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>  
+
+<span class="c1">#.. Function plots, z = f(x,y) </span>
+
+<span class="c1"># 1. Define functions to examine ....................................</span>
+<span class="c1"># all functions normalized into the domain [-1.1]</span>
+
+<span class="k">def</span> <span class="nf">Ackley</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">xyz</span>
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">st1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span> <span class="n">X</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">Y</span><span class="o">*</span><span class="n">Y</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">Z1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">st1</span><span class="p">)</span>
+    <span class="n">st2</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span>  <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">Y</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">Z2</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">st2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">+</span> <span class="mi">20</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">Z1</span> <span class="o">+</span> <span class="n">Z2</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">Z</span><span class="o">/</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">Himmelblau</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">xyz</span>
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">Z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">X</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">-</span> <span class="mi">11</span> <span class="p">)</span>
+    <span class="n">Z2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">Y</span><span class="o">*</span><span class="n">Y</span> <span class="o">+</span> <span class="n">X</span> <span class="o">-</span> <span class="mi">7</span>  <span class="p">)</span> 
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">Z1</span> <span class="o">+</span> <span class="n">Z2</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">Z</span><span class="o">/</span><span class="mi">500</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">Rosenbrock</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">xyz</span>
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">Z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">X</span> <span class="p">)</span>
+    <span class="n">Z2</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span> <span class="n">Y</span> <span class="o">-</span> <span class="n">X</span><span class="o">*</span><span class="n">X</span>  <span class="p">)</span> 
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">Z1</span> <span class="o">+</span> <span class="n">Z2</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">Z</span><span class="o">/</span><span class="mi">1000</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">Rastrigin</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">xyz</span>
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="n">Y</span><span class="o">*</span><span class="n">Y</span> <span class="o">-</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">Y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">Z</span><span class="o">/</span><span class="mi">40</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="c1"># ..........................</span>
+<span class="k">def</span> <span class="nf">nonlinear_cmap</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># assume -1 &lt; n &lt; 1, nove to domain of [0,1]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span> <span class="n">N</span><span class="p">,</span> <span class="mf">0.1</span> <span class="p">)</span>
+
+<span class="c1"># 2 &amp; 3. Setup surfaces and plot ....................................</span>
+<span class="n">rez</span><span class="o">=</span><span class="mi">6</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;b&#39;</span> <span class="p">,</span> <span class="s1">&#39;r&#39;</span> <span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">funcList</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Ackley</span><span class="p">,</span> <span class="n">Himmelblau</span><span class="p">,</span> <span class="n">Rosenbrock</span><span class="p">,</span> <span class="n">Rastrigin</span> <span class="p">]</span>
+
+<span class="n">minmax</span><span class="p">,</span> <span class="n">ticks</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># setup surfaces ....... </span>
+<span class="hll">    <span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">PlanarSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span><span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;oct1&#39;</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span><span class="n">funcList</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</span><span class="hll">    <span class="n">surface</span><span class="o">.</span><span class="n">map_cmap_from_op</span><span class="p">(</span><span class="k">lambda</span> <span class="n">xyz</span> <span class="p">:</span>  <span class="n">nonlinear_cmap</span><span class="p">(</span><span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">cmap</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+</span>    <span class="c1"># ...................... </span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">zlim</span><span class="o">=</span><span class="n">minmax</span> <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">funcList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_zticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_proj_type</span><span class="p">(</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="hll">    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cyclic_mirror.html" title="Cyclic and Mirrored Colormaps"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cube.html" title="Base Class Surface"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

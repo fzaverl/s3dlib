@@ -1,0 +1,266 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Parametric Animation &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Transform and Shade" href="anim_earth_moon.html" />
+    <link rel="prev" title="Time Sequence Animation" href="anim_tube_disp.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="anim_earth_moon.html" title="Transform and Shade"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="anim_tube_disp.html" title="Time Sequence Animation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="anim_tube_disp.html"
+                        title="previous chapter">Time Sequence Animation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="anim_earth_moon.html"
+                        title="next chapter">Transform and Shade</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/animations/anim_cat2heli.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parametric-animation">
+<span id="anim-cat2heli"></span><h1>Parametric Animation<a class="headerlink" href="#parametric-animation" title="Permalink to this headline">¶</a></h1>
+<img alt="../../_images/anim_cat2heli.png" class="sphx-glr-single-img" src="../../_images/anim_cat2heli.png" />
+<p>Based on the static plot from the <a class="reference internal" href="../functional/cat2heli_disp.html#cat2heli-disp"><span class="std std-ref">Surface Displacement Vector Field</span></a> example. Animation control:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Visualization</th>
+<th class="head">Frame Value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Surface geometry</td>
+<td>functional <strong>parameter</strong> per frame</td>
+</tr>
+<tr class="row-odd"><td>Surface position</td>
+<td>fixed to the coordinate axis</td>
+</tr>
+<tr class="row-even"><td>Surface color</td>
+<td><strong>color</strong> per frame</td>
+</tr>
+<tr class="row-odd"><td>Shading and highlighting</td>
+<td>fixed to the coordinate axis</td>
+</tr>
+<tr class="row-even"><td>Axis coordinate</td>
+<td>constant</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+<span class="c1">#.. Helicoid Transformation Animation</span>
+
+<span class="c1"># 1. Define functions to examine ....................................</span>
+
+<span class="k">def</span> <span class="nf">catenoid_helicoid</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1">#  -1 &lt; A &lt; 1</span>
+    <span class="n">cosA</span><span class="p">,</span> <span class="n">sinA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">t</span><span class="p">,</span> <span class="n">z</span>   
+    <span class="n">x</span> <span class="o">=</span>  <span class="n">cosA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">U</span><span class="p">)</span> <span class="o">+</span>   <span class="n">sinA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">cosA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">U</span><span class="p">)</span> <span class="o">+</span>   <span class="n">sinA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="p">(</span> <span class="n">U</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">-</span> <span class="mf">1.0</span> <span class="p">)</span> <span class="o">*</span><span class="n">cosA</span> <span class="o">+</span>  <span class="n">V</span> <span class="o">*</span> <span class="n">sinA</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">Z</span>
+
+<span class="k">def</span> <span class="nf">colormap_by_A</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="k">return</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="n">hue</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span> <span class="p">[</span><span class="n">hue</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">indicator_by_A</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">vOld</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">symbol</span><span class="p">,</span> <span class="n">blank</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\blacktriangleright$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\blacksquare$&#39;</span>
+    <span class="n">horz</span><span class="p">,</span> <span class="n">vCen</span><span class="p">,</span> <span class="n">vRng</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.28</span>
+    <span class="n">vert</span> <span class="o">=</span> <span class="n">vCen</span> <span class="o">+</span> <span class="n">vRng</span><span class="o">*</span><span class="n">A</span>
+    <span class="k">if</span> <span class="n">vOld</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">horz</span><span class="p">,</span><span class="n">vOld</span><span class="p">,</span><span class="n">blank</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">horz</span><span class="p">,</span><span class="n">vert</span><span class="p">,</span><span class="n">symbol</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vert</span>
+
+<span class="c1"># 2. Setup and map surfaces .........................................</span>
+<span class="n">start_A</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">rez</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hsv&#39;</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">catenoid_helicoid</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="n">start_A</span><span class="p">),</span> <span class="n">returnxyz</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+
+<span class="c1"># 3. Construct figures, add surface, plot ...........................</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">cBar_ScalarMappable</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span> <span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;A Parameter, $\pi$  &#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">)</span>
+<span class="c1"># surface mapping placed here to change colormap after colorbar defined.</span>
+<span class="n">surface</span><span class="o">.</span><span class="n">map_cmap_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">rtz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">colormap_by_A</span><span class="p">(</span><span class="n">start_A</span><span class="p">))</span>
+<span class="c1"># ....</span>
+<span class="n">minmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">1.1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">zlim</span><span class="o">=</span><span class="n">minmax</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">28</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">prevIndicator</span> <span class="o">=</span> <span class="n">indicator_by_A</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">start_A</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># 4. Animation ......................................................</span>
+
+<span class="k">def</span> <span class="nf">init_fig</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">surface</span><span class="p">,</span>
+
+<span class="k">def</span> <span class="nf">update_fig</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">surface</span>
+    <span class="k">global</span> <span class="n">prevIndicator</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll">    <span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">catenoid_helicoid</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="n">frame</span><span class="p">),</span> <span class="n">returnxyz</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+</span><span class="hll">    <span class="n">surface</span><span class="o">.</span><span class="n">map_cmap_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">rtz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">colormap_by_A</span><span class="p">(</span><span class="n">frame</span><span class="p">))</span>
+</span><span class="hll">    <span class="n">prevIndicator</span> <span class="o">=</span> <span class="n">indicator_by_A</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">prevIndicator</span><span class="p">)</span>
+</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">surface</span><span class="p">,</span>
+
+<span class="n">ani</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">update_fig</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">81</span><span class="p">),</span>
+                    <span class="n">init_func</span><span class="o">=</span><span class="n">init_fig</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Animation completed, file save proceeds&quot;</span><span class="p">)</span>
+<span class="c1">#ani.save(&#39;ZZZ.mp4&#39;)                                   # use for movie file.</span>
+<span class="c1">#ani.save(None,writer=animation.FFMpegFileWriter())    # use for temp files.</span>
+<span class="c1">#print(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Save completed, screen display proceeds&quot;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="anim_earth_moon.html" title="Transform and Shade"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="anim_tube_disp.html" title="Time Sequence Animation"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

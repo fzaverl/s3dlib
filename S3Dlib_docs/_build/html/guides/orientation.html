@@ -1,0 +1,304 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Orientation &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial" href="../tutorials/index.html" />
+    <link rel="prev" title="OOPs, Order of Operations" href="order_of_operations.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../index.html"><img src="../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../inst_index.html">Installation</a></li>
+            <li><a href="../doc_index.html">Documentation</a></li>
+            <li><a href="../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../examples/index.html">Examples</a></li>
+            <li><a href="../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/index.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="order_of_operations.html" title="OOPs, Order of Operations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Guides</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Orientation</a><ul>
+<li><a class="reference internal" href="#coordinate-views">Coordinate Views</a></li>
+<li><a class="reference internal" href="#object-rotations">Object Rotations</a></li>
+<li><a class="reference internal" href="#illumination-source">Illumination Source</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="order_of_operations.html"
+                        title="previous chapter">OOPs, Order of Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tutorials/index.html"
+                        title="next chapter">Tutorial</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/orientation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="orientation">
+<span id="id1"></span><h1>Orientation<a class="headerlink" href="#orientation" title="Permalink to this headline">¶</a></h1>
+<p>Figure orientation in 2D is generally of little concern. Usually, plots are oriented with independent variables
+on the horizontal axis, x-axis, and dependent ones on the vertical axis, y-axis.  Then viewed normal to plane.</p>
+<p>For 3D surfaces, visualizations are controlled by</p>
+<ul class="simple">
+<li>viewing position relative to the coordinate axes</li>
+<li>surface orientation relative to the coordinate axes</li>
+<li>lighting direction relative to the viewer or coordinate axes</li>
+</ul>
+<div class="section" id="coordinate-views">
+<h2>Coordinate Views<a class="headerlink" href="#coordinate-views" title="Permalink to this headline">¶</a></h2>
+<p>Standard 3D axis views are controlled by the Matplotlib 3D <em>axes</em> method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">axes</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="p">,</span> <span class="n">azim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <em>elev</em> and <em>azim</em> are the elevation and azimuthal viewing angle relative to the coordinate axis.
+The <em>azim</em> controls the rotation about the z-axis. The <em>elev</em> sets the z-axis tilt foward and back from
+the view.</p>
+<p>Since restricted to controlling views using these two arguments, the omission of a third rotation in 3D doesn’t permit
+the z-axis to be tilted to the right or left in the view.  The transform method discussed in the next
+section permits viewing the surface object from this perspective by rotating the surface in
+addition to the view.  The following plots show the effect of shading and highlighting for various
+view orientations, with the illumination direction of [0,1,1].</p>
+<img alt="../_images/coor_view.png" class="sphx-glr-single-img" src="../_images/coor_view.png" />
+<p>The default values for <em>elev</em> and <em>azim</em> are 30 and -60, respectively in degree units, which
+is used if this method is not called.
+In addition, three planes normal to the axis are shown by default.  S3Dlib provides a method
+to show an xyz coordinate axis system in the 3D <em>axes</em> visualization, called as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">setupAxis</span><span class="p">(</span> <span class="n">axes</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">negaxis</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Where all arguments, except the 3D <em>axes</em> are named arguments.  The <em>offset</em> argument is the position
+on the axis where the tail of the coordinate arrow is located.  The <em>negaxis</em> argument is set to False
+if the negative coordinate lines are not to be shown.</p>
+<p>When viewing surfaces, particularly mathematical function representations, a ‘standard’ coordinate
+system is usually shown with the x and y axis pointing to the left and right, with the z-axis pointing upward.
+S3Dlib provides a method to initialize the plot for s ‘standard’ view using the method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">standardAxis</span><span class="p">(</span> <span class="n">axes</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>This method uses the same argument list as the previous method.  When this method is called, the
+axis view is changed using view_init(30,30) and the axis set off.   In addition, the minimum and
+maximum x, y, and z-axis are set to -1 and 1, which is consistent with the S3Dlib object size
+normalizations.</p>
+<p>The default axes setup for the three methods is shown in the plots below.</p>
+<img alt="../_images/standard_axis.png" class="sphx-glr-single-img" src="../_images/standard_axis.png" />
+</div>
+<div class="section" id="object-rotations">
+<h2>Object Rotations<a class="headerlink" href="#object-rotations" title="Permalink to this headline">¶</a></h2>
+<p>Surface objects can be transformed so that the surface rotates relative to the origin using
+the transform method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the  <em>matrix</em> argument is a 3x3 transformation matrix, e.g.</p>
+<img alt="../_images/matrix120.png" class="sphx-glr-single-img" src="../_images/matrix120.png" />
+<p>The use of a transformation matrix argument provides flexibility, but for simple surface
+rotations, S3Dlib provides a convenient method of calculating a rotational matrix from angles using
+the method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">eulerRot</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">useXconv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inrad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <em>theta</em>, <em>phi</em> and <em>psi</em> ( <span class="raw-html">&theta;, &phi;, &psi;</span> )
+are Euler rotational angles about the coordinate axis using the right hand rule.
+The angles are in degrees as the default.
+Rotations in 3D are dependent on the sequence of rotations. Two conventions
+are supported. The sequence of rotations are</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="31%" />
+<col width="31%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Order</th>
+<th class="head">Rotation</th>
+<th class="head">X-convention  (zxz)</th>
+<th class="head">Y-convention  (zyz)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td><span class="raw-html">&theta;</span></td>
+<td>Z - axis</td>
+<td>Z - axis</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td><span class="raw-html">&phi;</span></td>
+<td>X - axis</td>
+<td>Y - axis</td>
+</tr>
+<tr class="row-even"><td>3</td>
+<td><span class="raw-html">&psi;</span></td>
+<td>Z - axis</td>
+<td>Z - axis</td>
+</tr>
+</tbody>
+</table>
+<p>The default is to use X-convention.  Setting the <em>useXconv</em> argument to False changes
+the interpretation to Y-convention. When the <em>inrad</em> argument is set to True,
+the rotational angles will be interpreted in radians.
+The rotation of the coordinate axis is shown below, which illustrates the difference between the
+X and Y conventions.</p>
+<img alt="../_images/euler_rotation.png" class="sphx-glr-single-img" src="../_images/euler_rotation.png" />
+<p>To illustrate the final rotation <span class="raw-html">&psi;</span> about the z-axis (shown in blue in the above figure),
+consider the following surface shown in the default view and standard axis view below:</p>
+<img alt="../_images/euler_surface_1.png" class="sphx-glr-single-img" src="../_images/euler_surface_1.png" />
+<p>The following shows the same surface using a standard axis and
+various surface rotations. Plots have the same values for <span class="raw-html">&theta; and &phi;</span> which was
+used in the previous coordinate plot.  The effect of the <span class="raw-html">&psi;</span> rotation is seen
+by comparing the top to bottom surface orientations.</p>
+<img alt="../_images/euler_surface_2.png" class="sphx-glr-single-img" src="../_images/euler_surface_2.png" />
+</div>
+<div class="section" id="illumination-source">
+<span id="illum-source"></span><h2>Illumination Source<a class="headerlink" href="#illumination-source" title="Permalink to this headline">¶</a></h2>
+<p>The perception of 3D surfaces from a 2D image is accomplished by ‘simulating’ an illumination
+projection based on surface normals.  S3Dlib illumination sources are referenced relative
+to the coordinate axis, as discussed in the <a class="reference internal" href="shading.html#shading"><span class="std std-ref">Shading, Highlighting and Color Mapped Normals</span></a> guide.
+The Matplotlib view parameters of elevation and azimuth are also referenced
+relative to the coordinate axis.</p>
+<p>As coordinate views and object orientations are changed from the default,
+it may be useful to have an illumination source that is referenced to the viewer,
+not the coordinate axis.  This is
+particularly needed when animations are required to be ‘perceived as’ the object orientation
+being changed, not the viewer orientation changing.  This was achieved in
+the <a class="reference internal" href="../examples/animations/anim_bases.html#anim-bases"><span class="std std-ref">View_init() Azim Reset and Shading</span></a> animation example.  In that case, the objects are perceived as rotating, not
+the viewer moving around the objects.  However, the opposite was actually being calculated with
+the illumination source position changing with the view.</p>
+<p>So, the two types of perceptions of the same object are:</p>
+<ul class="simple">
+<li>Stationary viewer - Illumination source referenced to the viewer.</li>
+<li>Stationary object - Illumination source referenced to the coordinate system.</li>
+</ul>
+<p>Using a sunset analogy, is the sun going down or are you rotating backward?  It’s the same image.
+Kepler, Copernicus and Galileo made a perceptual leap.</p>
+<p>The illumination source relative to the viewer can be determined using the function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reldir</span> <span class="o">=</span> <span class="n">rtv</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span><span class="n">elev</span><span class="p">,</span><span class="n">azim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where direction is a 3D vector in xyz coordinates. The parameters, ‘elev’ and ‘azim’
+are the view orientations.  Using the ‘reldir’ for the direction in the <em>shade</em> and
+<em>hilite</em> methods, the light source will always appear
+to come from the same direction, independent of the coordinate elev and azim view.
+In the following figures, a direction argument of [1,1,1] was used for all views.</p>
+<img alt="../_images/coor_view2.png" class="sphx-glr-single-img" src="../_images/coor_view2.png" />
+<p>A good example of using the relative illumination source is shown in the <a class="reference internal" href="../examples/animations/anim_pycube.html#anim-pycube"><span class="std std-ref">View_init() Elev and Azim Reset and Shading</span></a> animation example
+where both <em>elev</em> and <em>azim</em> parameters are varied from frame to frame.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/index.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="order_of_operations.html" title="OOPs, Order of Operations"
+             >previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Guides</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

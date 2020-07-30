@@ -1,0 +1,339 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lab Mapping &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="S3Dlib API" href="../../docs/index.html" />
+    <link rel="prev" title="HSV Mapping" href="anim_hsv_cylinder.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../docs/index.html" title="S3Dlib API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="anim_hsv_cylinder.html" title="HSV Mapping"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="anim_hsv_cylinder.html"
+                        title="previous chapter">HSV Mapping</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../docs/index.html"
+                        title="next chapter">S3Dlib API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/animations/anim_lab_rot.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="lab-mapping">
+<span id="anim-lab-rot"></span><h1>Lab Mapping<a class="headerlink" href="#lab-mapping" title="Permalink to this headline">¶</a></h1>
+<img alt="../../_images/anim_lab_rot.png" class="sphx-glr-single-img" src="../../_images/anim_lab_rot.png" />
+<p>Based on the static plot from the <a class="reference internal" href="../functional/Lab_space.html#lab-space"><span class="std std-ref">Color Space</span></a> example. Animation control:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Visualization</th>
+<th class="head">Frame Value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Surface geometry</td>
+<td>constant</td>
+</tr>
+<tr class="row-odd"><td>Surface position</td>
+<td>fixed to the coordinate axis</td>
+</tr>
+<tr class="row-even"><td>Surface color</td>
+<td>constant</td>
+</tr>
+<tr class="row-odd"><td>Shading and highlighting</td>
+<td>illumination <strong>direction</strong> per frame</td>
+</tr>
+<tr class="row-even"><td>Axis coordinate</td>
+<td><strong>azim</strong> per frame using <em>view_init</em></td>
+</tr>
+</tbody>
+</table>
+<p>To minimize execution time, the Lab surface object was constructed once,
+then copied for each frame construction.
+Changing the axis coordinate <em>and</em> shading/highlighting results in ‘stationary viewer’ perception.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+<span class="kn">from</span> <span class="nn">colorspacious</span> <span class="kn">import</span> <span class="n">cspace_converter</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+
+<span class="c1">#.. Lab Space Animation</span>
+
+<span class="c1"># 1. Define function to examine ...............</span>
+
+<span class="n">elev</span><span class="p">,</span> <span class="n">illum</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">labRange</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="k">def</span> <span class="nf">Cube</span><span class="p">()</span> <span class="p">:</span>  
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span> 
+        <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>  <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>  <span class="p">[</span> <span class="mi">1</span> <span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>
+        <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span>  <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span>  <span class="p">[</span> <span class="mi">1</span> <span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">]</span>  <span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="p">]</span>
+    <span class="n">vertexCoor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">faceIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">Surface3DCollection</span><span class="p">(</span><span class="n">vertexCoor</span><span class="p">,</span> <span class="n">faceIndices</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">triangulate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">set_color</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">translate</span><span class="o">=</span><span class="p">[</span><span class="o">-.</span><span class="mi">5</span><span class="p">,</span><span class="o">-.</span><span class="mi">5</span><span class="p">,</span><span class="mi">00</span><span class="p">])</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">2.2</span><span class="o">*</span><span class="n">labRange</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">surface</span>
+
+<span class="k">def</span> <span class="nf">dirBound</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># simple binary-chop to determime limits in a Lab direction.</span>
+    <span class="k">def</span> <span class="nf">rgbErr</span><span class="p">(</span><span class="n">lab</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># determine out of gamut error.</span>
+        <span class="n">rgb</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">,</span> <span class="s2">&quot;sRGB1&quot;</span> <span class="p">)(</span><span class="n">lab</span><span class="p">)</span>
+        <span class="n">rgbRng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">errMagn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rgb</span><span class="o">-</span><span class="n">rgbRng</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">errMagn</span>
+    <span class="c1">#........................................</span>
+    <span class="k">def</span> <span class="nf">toLab</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># centered at [50,0,0]</span>
+        <span class="n">Lmax</span><span class="p">,</span> <span class="n">abMax</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">labRange</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">Lmax</span><span class="o">*</span><span class="p">(</span> <span class="n">n</span><span class="o">*</span><span class="n">normal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="n">abMax</span><span class="o">*</span><span class="n">normal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="n">abMax</span><span class="o">*</span><span class="n">normal</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">]</span>
+    <span class="c1">#........................................</span>
+    <span class="n">normal</span> <span class="o">=</span> <span class="n">direction</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+    <span class="n">maxdir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">normal</span><span class="p">))</span>
+    <span class="n">nDir</span> <span class="o">=</span> <span class="n">normal</span><span class="o">/</span><span class="n">maxdir</span>
+    <span class="n">nLw</span><span class="p">,</span> <span class="n">nHi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="n">maxErr</span><span class="p">,</span> <span class="n">maxRGBerr</span><span class="p">,</span> <span class="n">maxChops</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">,</span> <span class="mi">18</span>
+    <span class="n">inGamut</span> <span class="o">=</span> <span class="n">toLab</span><span class="p">(</span><span class="n">nDir</span><span class="p">,</span><span class="n">nLw</span><span class="p">)</span>
+    <span class="n">lastRGBgoodValue</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">,</span> <span class="s2">&quot;sRGB1&quot;</span> <span class="p">)(</span><span class="n">inGamut</span><span class="p">)</span>
+    <span class="n">delta_rgbErr</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxChops</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nMd</span> <span class="o">=</span> <span class="p">(</span><span class="n">nHi</span><span class="o">+</span><span class="n">nLw</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">tempGamut</span> <span class="o">=</span> <span class="n">toLab</span><span class="p">(</span><span class="n">nDir</span><span class="p">,</span><span class="n">nMd</span><span class="p">)</span>
+        <span class="n">errMd</span> <span class="o">=</span> <span class="n">rgbErr</span><span class="p">(</span> <span class="n">toLab</span><span class="p">(</span><span class="n">nDir</span><span class="p">,</span><span class="n">nMd</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">errMd</span> <span class="o">&lt;</span> <span class="n">maxErr</span> <span class="p">:</span>
+            <span class="n">nLw</span> <span class="o">=</span> <span class="n">nMd</span>
+            <span class="n">inGamut</span> <span class="o">=</span> <span class="n">tempGamut</span>
+            <span class="n">oldRGBgoodValue</span> <span class="o">=</span> <span class="n">lastRGBgoodValue</span>
+            <span class="n">lastRGBgoodValue</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">,</span> <span class="s2">&quot;sRGB1&quot;</span> <span class="p">)(</span><span class="n">inGamut</span><span class="p">)</span>
+            <span class="n">delta_rgbErr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lastRGBgoodValue</span><span class="o">-</span><span class="n">oldRGBgoodValue</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">delta_rgbErr</span> <span class="o">&lt;</span> <span class="n">maxRGBerr</span> <span class="p">:</span>  <span class="k">break</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">nHi</span> <span class="o">=</span> <span class="n">nMd</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="n">maxChops</span><span class="o">-</span><span class="mi">1</span> <span class="p">:</span>
+            <span class="n">chopErr</span> <span class="o">=</span> <span class="n">delta_rgbErr</span><span class="o">*</span><span class="mi">255</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">chopErr</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;BC algorithm maxed out!! </span><span class="si">{:6.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chopErr</span> <span class="p">))</span>
+    <span class="k">return</span> <span class="n">inGamut</span>
+
+<span class="k">def</span> <span class="nf">toCoor</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="nb">dir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="n">labCoor</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">dir</span> <span class="p">:</span>
+        <span class="n">l</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">dirBound</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mi">50</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">/</span><span class="n">labRange</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">/</span><span class="n">labRange</span>
+        <span class="n">labCoor</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">l</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">labCoor</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">labColor</span><span class="p">(</span><span class="n">rtp</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="o">.</span><span class="n">coor_convert</span><span class="p">(</span><span class="n">rtp</span><span class="p">,</span> <span class="n">tocart</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="mi">50</span><span class="o">*</span><span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">labRange</span><span class="o">*</span><span class="n">x</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">labRange</span><span class="o">*</span><span class="n">y</span>
+    <span class="n">Lab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">,</span> <span class="s2">&quot;sRGB1&quot;</span> <span class="p">)(</span><span class="n">Lab</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rgb</span><span class="p">)</span> 
+
+<span class="c1"># Setup surface ................................................</span>
+<span class="n">rez</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">start_azim</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">)</span>
+<span class="n">labCoor</span> <span class="o">=</span> <span class="n">toCoor</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lab coordinate calculation completed....&quot;</span><span class="p">)</span>
+<span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtp</span> <span class="p">:</span> <span class="n">labCoor</span> <span class="p">,</span> <span class="n">returnxyz</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">surface</span><span class="o">.</span><span class="n">map_color_from_op</span><span class="p">(</span><span class="n">labColor</span><span class="p">)</span>
+<span class="n">surface</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">labRange</span><span class="p">,</span><span class="n">translate</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">labRange</span><span class="p">])</span>
+<span class="n">surface</span> <span class="o">=</span> <span class="p">(</span><span class="n">surface</span> <span class="o">+</span> <span class="n">Cube</span><span class="p">()</span> <span class="p">)</span>
+
+<span class="n">reldir</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">rtv</span><span class="p">(</span><span class="n">illum</span><span class="p">,</span><span class="n">elev</span><span class="p">,</span><span class="n">start_azim</span><span class="p">)</span>
+<span class="n">surfcopy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+<span class="n">surfcopy</span><span class="o">.</span><span class="n">shade</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span><span class="n">direction</span><span class="o">=</span><span class="n">reldir</span><span class="p">)</span>
+<span class="n">surfcopy</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Construct figure, add surface, plot ..........................</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">adj</span> <span class="o">=</span> <span class="mf">1.1</span>
+<span class="n">xylim</span><span class="p">,</span> <span class="n">zlim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">adj</span><span class="o">*</span><span class="mi">50</span><span class="p">,</span> <span class="n">adj</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span> <span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adj</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">xylim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">xylim</span><span class="p">,</span> <span class="n">zlim</span><span class="o">=</span><span class="n">zlim</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="p">,</span> <span class="n">start_azim</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surfcopy</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># 4. Animation ......................................................</span>
+
+<span class="k">def</span> <span class="nf">init_fig</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">surfcopy</span><span class="p">,</span>
+
+<span class="k">def</span> <span class="nf">update_fig</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">surfcopy</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">surfcopy</span><span class="p">)</span>
+
+    <span class="n">azim</span> <span class="o">=</span> <span class="mi">360</span><span class="o">*</span><span class="n">frame</span>
+    <span class="n">reldir</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">rtv</span><span class="p">(</span><span class="n">illum</span><span class="p">,</span><span class="n">elev</span><span class="p">,</span><span class="n">azim</span><span class="p">)</span>
+    <span class="n">surfcopy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+<span class="hll">    <span class="n">surfcopy</span><span class="o">.</span><span class="n">shade</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span><span class="n">direction</span><span class="o">=</span><span class="n">reldir</span><span class="p">)</span>
+</span>    <span class="n">surfcopy</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surfcopy</span><span class="p">)</span>
+<span class="hll">    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="n">elev</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="n">azim</span><span class="p">)</span>
+</span>
+    <span class="k">return</span> <span class="n">surfcopy</span><span class="p">,</span>
+
+<span class="n">ani</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">update_fig</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">72</span><span class="p">),</span>
+                    <span class="n">init_func</span><span class="o">=</span><span class="n">init_fig</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Animation completed, file save proceeds&quot;</span><span class="p">)</span>
+<span class="c1">#ani.save(&#39;ZZZ.mp4&#39;)                                   # use for movie file.</span>
+<span class="n">ani</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="n">writer</span><span class="o">=</span><span class="n">animation</span><span class="o">.</span><span class="n">FFMpegFileWriter</span><span class="p">())</span>    <span class="c1"># use for temp files.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Save completed, screen display proceeds&quot;</span><span class="p">)</span>
+<span class="c1">#plt.show()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; process completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../docs/index.html" title="S3Dlib API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="anim_hsv_cylinder.html" title="HSV Mapping"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

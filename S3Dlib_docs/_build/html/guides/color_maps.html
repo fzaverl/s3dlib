@@ -1,0 +1,731 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Color Map Utilities &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Shading, Highlighting and Color Mapped Normals" href="shading.html" />
+    <link rel="prev" title="Base Surfaces" href="base_surfaces.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../index.html"><img src="../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../inst_index.html">Installation</a></li>
+            <li><a href="../doc_index.html">Documentation</a></li>
+            <li><a href="../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../examples/index.html">Examples</a></li>
+            <li><a href="../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shading.html" title="Shading, Highlighting and Color Mapped Normals"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="base_surfaces.html" title="Base Surfaces"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Guides</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Color Map Utilities</a><ul>
+<li><a class="reference internal" href="#rgb-linear-gradient">RGB Linear Gradient</a></li>
+<li><a class="reference internal" href="#hsv-linear-gradient">HSV Linear Gradient</a><ul>
+<li><a class="reference internal" href="#hue">Hue</a></li>
+<li><a class="reference internal" href="#saturation-and-value">Saturation and Value</a></li>
+<li><a class="reference internal" href="#cyclic-and-named-colors">Cyclic and Named Colors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hue-hsv-modifications">Hue HSV Modifications</a></li>
+<li><a class="reference internal" href="#smooth-hsv">Smooth HSV</a></li>
+<li><a class="reference internal" href="#lab-linear-gradient">Lab Linear Gradient</a></li>
+<li><a class="reference internal" href="#stitch-cmaps">Stitch Cmaps</a></li>
+<li><a class="reference internal" href="#rgb-binary">RGB Binary</a></li>
+<li><a class="reference internal" href="#mirrored-and-reversed">Mirrored and Reversed</a></li>
+<li><a class="reference internal" href="#transparency">Transparency</a></li>
+<li><a class="reference internal" href="#tandem-cmaps">Tandem Cmaps</a></li>
+<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a><ul>
+<li><a class="reference internal" href="#colormap-plot-script">Colormap Plot Script</a></li>
+<li><a class="reference internal" href="#id1">Named Colors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="base_surfaces.html"
+                        title="previous chapter">Base Surfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="shading.html"
+                        title="next chapter">Shading, Highlighting and Color Mapped Normals</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/color_maps.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="color-map-utilities">
+<span id="color-maps"></span><h1>Color Map Utilities<a class="headerlink" href="#color-map-utilities" title="Permalink to this headline">¶</a></h1>
+<p>Matplotlib provides numerous built-in colormaps and an excellent tutorial on
+<a class="reference external" href="https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html">Choosing Colormaps</a>.
+Familiarity with these built-in color maps is suggested.
+The <em>sequential</em> built-in maps are particularly useful for 3D surface visualizations.</p>
+<p>Choosing colormaps for surfaces in 3D has the additional requirement of
+enhancing the geometric visualization along with defining functional values.
+S3Dlib provides mulitple easy-to-use methods for
+creating custom colormaps which are particularly applicable for displaying 3D surfaces.
+These methods are particularly useful when transparent and mirrored colormaps are needed
+for clear visualizations of 3D surfaces, or simply for a more graphic display.
+All colormaps returned using these functions are derived from
+<a class="reference external" href="https://matplotlib.org/3.1.3/api/_as_gen/matplotlib.colors.Colormap.html">matplotlib.colors.Colormap</a>.
+These functions are available in the module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">S3Dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+</pre></div>
+</div>
+<p>In the following discusssion, example colormaps are provided to illustrate the
+usage of the S3Dlib methods.
+The colormap graphs were generated using the
+script provided in the <em>Mathplotlib Choosing Colormaps</em> tutorial, with modifications to display
+the example colormaps.</p>
+<div class="section" id="rgb-linear-gradient">
+<h2>RGB Linear Gradient<a class="headerlink" href="#rgb-linear-gradient" title="Permalink to this headline">¶</a></h2>
+<p>Simple color maps, linear in RGB space, are created using the function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rgb_cmap_gradient</span><span class="p">(</span><span class="n">lowColor</span><span class="p">,</span><span class="n">highColor</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">mirrored</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which returns an instance of a registered matplotlib.colors.Colormap with name if provided.
+The color arguments are in
+<a class="reference external" href="https://matplotlib.org/3.1.0/tutorials/colors/colors.html">Matplotlib Colors</a> format.
+The colormap monotonically increases from the <em>lowColor</em> to the <em>highColor</em> in RGB color space.
+The <em>mirrored</em> argument is a boolean and if set <em>True</em>, the color map is mirrored with
+the <em>highcolor</em> at the center.  <strong>Mirrored colormaps are particularly useful for non-orientable
+surfaces.</strong></p>
+<p>Several examples using this function are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;RGB Gradient&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;rgbDefault&#39;</span><span class="p">,</span> <span class="s1">&#39;mpDefault&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;RdToGn&#39;</span><span class="p">,</span> <span class="s1">&#39;YWToBu&#39;</span><span class="p">,</span> <span class="s1">&#39;cardboard&#39;</span><span class="p">,</span> <span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bnShade&#39;</span><span class="p">,</span> <span class="s1">&#39;WtToBk&#39;</span><span class="p">,</span> <span class="s1">&#39;BkToWtMrrd&#39;</span><span class="p">,</span> <span class="s1">&#39;WtToBkMrrd&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgbDefault&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.122</span><span class="p">,</span> <span class="mf">0.467</span><span class="p">,</span> <span class="mf">0.706</span><span class="p">],</span> <span class="s1">&#39;mpDefault&#39;</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToGn&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;YWToBu&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span><span class="o">.</span><span class="mi">75</span><span class="p">],</span> <span class="s1">&#39;cardboard&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span><span class="o">.</span><span class="mi">75</span><span class="p">],</span> <span class="s1">&#39;cardboardMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;bnShade&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;WtToBk&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;BkToWtMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;WtToBkMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the colormap named ‘rgbDefault’ is the default colormap if no arguments are provided.</p>
+<img alt="../_images/cmap_rgb_grad.png" class="sphx-glr-single-img" src="../_images/cmap_rgb_grad.png" />
+</div>
+<div class="section" id="hsv-linear-gradient">
+<h2>HSV Linear Gradient<a class="headerlink" href="#hsv-linear-gradient" title="Permalink to this headline">¶</a></h2>
+<p>Simple color maps, linear in HSV space, are created using the function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hsv_cmap_gradient</span><span class="p">(</span><span class="n">lowColorArg</span><span class="p">,</span><span class="n">highColorArg</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">mirrored</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which returns an instance of a registered matplotlib.colors.Colormap with name, if provided.
+The <em>lowColorArg</em> and <em>highColorArg</em> are HSV or HSVA (hue, saturation, value, alpha) arrays of float values.
+The float values for SVA range in [0,1].</p>
+<p><strong>The float values for hue range in [0,2]</strong>, which is <strong>not</strong> the standard range for hue.  This
+was defined in this manner to allow for direction in the cyclic definition of hue.  This hue
+mapping from 0 to 2 is shown below.</p>
+<img alt="../_images/hue_colorbar.png" class="sphx-glr-single-img" src="../_images/hue_colorbar.png" />
+<p>For example, consider a color map going from green (low) to blue (high).  Specifying green
+and blue as 0.33 and 0.67, the map will pass through cyan.  However, specifying green
+as 1.33, the map will pass through yellow, red and magenta.
+The colormap still monotonically increases from the lowColor to the highColor in HSV space.
+The <em>mirrored</em> argument is applied in the same manner as previously described for
+the RGB gradient color maps.</p>
+<div class="section" id="hue">
+<h3>Hue<a class="headerlink" href="#hue" title="Permalink to this headline">¶</a></h3>
+<p>The following are examples of varying the cyclic hue value of the color arguments in both
+the forward and backward directions.  In these examples, the saturation and value for
+the low and high color arguments were held constant at 1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Hue Gradient&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;hsvDefault&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;hsvRdToGn&#39;</span><span class="p">,</span> <span class="s1">&#39;hsvRdFromGn&#39;</span><span class="p">,</span> <span class="s1">&#39;hsvYwToBu&#39;</span><span class="p">,</span><span class="s1">&#39;hsvYwFromBu&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;RdToRd&#39;</span><span class="p">,</span> <span class="s1">&#39;RdFromRd&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToRdMrrd&#39;</span><span class="p">,</span> <span class="s1">&#39;RdFromRdMrrd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;BlToBl&#39;</span><span class="p">,</span> <span class="s1">&#39;BlFromBl&#39;</span><span class="p">,</span> <span class="s1">&#39;BlToBlMrrd&#39;</span><span class="p">,</span> <span class="s1">&#39;BlFromBlMrrd&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hsvDefault&#39;</span><span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;hsvRdToGn&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;hsvRdFromGn&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.166</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;hsvYwToBu&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">1.166</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;hsvYwFromBu&#39;</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;RdToRd&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;RdFromRd&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;RdToRdMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;RdFromRdMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BlToBl&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">1.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BlFromBl&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BlToBlMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">1.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BlFromBlMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the colormap named ‘hsvDefault’ is the default colormap if no arguments are provided.
+This colormap is equivalent to the Matplotlib built-in colormap named ‘hsv’.</p>
+<img alt="../_images/cmap_hue_grad.png" class="sphx-glr-single-img" src="../_images/cmap_hue_grad.png" />
+<p>The effect of reversing the order of the low and high color arguments is most notable by comparing
+the maps ‘RdToRd’ versus ‘RdFromRd’.  Both start and end with red.
+Also, the difference between using RGB and HSV is seen by comparing the yellow to blue
+colormaps in these two color spaces, ‘YwToBu’  versus ‘hsvYwToBu’.</p>
+</div>
+<div class="section" id="saturation-and-value">
+<h3>Saturation and Value<a class="headerlink" href="#saturation-and-value" title="Permalink to this headline">¶</a></h3>
+<p>In these examples, the hue was constant at 0 (red).  The first four colormaps vary value [0,1]
+while holding saturation to 1.
+The second set vary saturation [0,1] and hold value constant at 1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Saturation and Value Gradient&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;RdToBk&#39;</span><span class="p">,</span> <span class="s1">&#39;BkFromRd&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToBkMrrd&#39;</span><span class="p">,</span> <span class="s1">&#39;BkFromRdMrrd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;RdToWt&#39;</span><span class="p">,</span> <span class="s1">&#39;WtFromRd&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToWtMrrd&#39;</span><span class="p">,</span> <span class="s1">&#39;WtFromRdMrrd&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;RdToBk&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BkFromRd&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;RdToBkMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;BkFromRdMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;RdToWt&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;WtFromRd&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;RdToWtMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;WtFromRdMrrd&#39;</span><span class="p">,</span> <span class="n">mirrored</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/cmap_satval_grad.png" class="sphx-glr-single-img" src="../_images/cmap_satval_grad.png" />
+</div>
+<div class="section" id="cyclic-and-named-colors">
+<h3>Cyclic and Named Colors<a class="headerlink" href="#cyclic-and-named-colors" title="Permalink to this headline">¶</a></h3>
+<p>Since the hue is cyclic, any same hue can be represented by a number plus an integer value.  For example,
+blue hue is 0.67, 1.67, 2.66, 3.67, etc.  This results in the ability to produce repeated color maps
+by representing the low and high arguments with values greater than 2.</p>
+<p>Also, the arguments can be strings of named Matplotlib colors. See for example
+<a class="reference external" href="https://matplotlib.org/3.1.0/gallery/color/named_colors.html">named colors</a>.
+To shift the named color hues above 1,
+the color string is prefixed with a ‘+’ character.
+This provides the method of reversing the direction of the hue while still using named color values.</p>
+<p>Examples using cyclic and named color for HSV color maps are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Cyclic and Named Color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;red3&#39;</span><span class="p">,</span> <span class="s1">&#39;blue2R&#39;</span><span class="p">,</span> <span class="s1">&#39;goldteal&#39;</span><span class="p">,</span> <span class="s1">&#39;plgrnOrchR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;pgrdkcy&#39;</span><span class="p">,</span> <span class="s1">&#39;hpnktrq&#39;</span><span class="p">,</span> <span class="s1">&#39;pgrdkcy_RGB&#39;</span><span class="p">,</span> <span class="s1">&#39;hpnktrq_RGB&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;red3&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">2.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;blue2R&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;gold&#39;</span><span class="p">,</span><span class="s1">&#39;teal&#39;</span><span class="p">,</span> <span class="s1">&#39;goldteal&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;+palegreen&#39;</span><span class="p">,</span><span class="s1">&#39;orchid&#39;</span><span class="p">,</span> <span class="s1">&#39;plgrnOrchR&#39;</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;palegoldenrod&#39;</span><span class="p">,</span><span class="s1">&#39;darkcyan&#39;</span><span class="p">,</span> <span class="s1">&#39;pgrdkcy&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;hotpink&#39;</span><span class="p">,</span><span class="s1">&#39;turquoise&#39;</span><span class="p">,</span> <span class="s1">&#39;hpnktrq&#39;</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;palegoldenrod&#39;</span><span class="p">,</span><span class="s1">&#39;darkcyan&#39;</span><span class="p">,</span> <span class="s1">&#39;pgrdkcy_RGB&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">rgb_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;hotpink&#39;</span><span class="p">,</span><span class="s1">&#39;turquoise&#39;</span><span class="p">,</span> <span class="s1">&#39;hpnktrq_RGB&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>This produces the following colormaps.</p>
+<img alt="../_images/cmap_cyclic.png" class="sphx-glr-single-img" src="../_images/cmap_cyclic.png" />
+<p>In the above, the last two colormaps use the RGB gradient method as
+a comparison to the map produced by the HSV gradient method which precedes them.
+This exemplifies the effect of a reduction in saturation and value while linearly
+moving through RGB space.</p>
+</div>
+</div>
+<div class="section" id="hue-hsv-modifications">
+<h2>Hue HSV Modifications<a class="headerlink" href="#hue-hsv-modifications" title="Permalink to this headline">¶</a></h2>
+<p>While varying hue in HSV color space, there is an apparent ‘sharpness’ or rapid change in
+apparent color at yellow, cyan, and magenta.  This is seen in ‘hsv’ colormap shown below.</p>
+<img alt="../_images/hsv_colormap.png" class="sphx-glr-single-img" src="../_images/hsv_colormap.png" />
+<p>This perceptual change is also reflected in the rapid change in CIELAB color space
+represented by lightness, L*.  (A more detailed discussion of this is in
+<a class="reference external" href="https://matplotlib.org/3.1.1/tutorials/colors/colormaps.html">Choosing Colors in Matplotlib</a> ).</p>
+<p>To smooth-out this sharpness in the HSV colormap, the following method is available:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hue_cmap</span><span class="p">(</span><span class="n">smooth</span><span class="p">,</span> <span class="n">lowHue</span><span class="p">,</span> <span class="n">highHue</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which returns a colormap of constant value and saturation of 1. The
+<em>smooth</em> parameter is the degree of smoothing at yellow, cyan and magenta, with a value of
+1 for no smoothing.  For values greater than one, hues around yellow, cyan and magenta are
+expanded, reducing the extent of red, green and blue hues.  For values less than one,
+the opposite occurs.  The <em>smooth</em> value range is [0.1,10]. The default value is 1.6.
+The parameters <em>lowHue</em> and <em>highHue</em> are
+similary defined for the hue as given in the previous sections.  When color names
+are used for this parameter, only the hue value of the color is used.</p>
+<p>Example colormaps using this method are given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Hue HSV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;hue_05&#39;</span><span class="p">,</span> <span class="s1">&#39;hsvDefault&#39;</span><span class="p">,</span> <span class="s1">&#39;HUEdefault&#39;</span><span class="p">,</span><span class="s1">&#39;hue_80&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;hueYwToYw8&#39;</span><span class="p">,</span> <span class="s1">&#39;hueYwToBu8&#39;</span><span class="p">,</span> <span class="s1">&#39;hueYwFromBu8&#39;</span><span class="p">,</span> <span class="s1">&#39;hueYwFromBu5&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;hue_05&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;HUEdefault&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;hue_80&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;hue_05&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.166</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hueYwToYw8&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span>    <span class="s1">&#39;hueYwToBu8&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span><span class="s1">&#39;+y&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>    <span class="s1">&#39;hueYwFromBu8&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;+y&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>    <span class="s1">&#39;hueYwFromBu5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/cmap_hueHSV.png" class="sphx-glr-single-img" src="../_images/cmap_hueHSV.png" />
+<p>The effect of lightness, L*, on smoothing is shown in the grayscale maps below, for the first four
+colormaps.</p>
+<img alt="../_images/cmap_grayscale.png" class="sphx-glr-single-img" src="../_images/cmap_grayscale.png" />
+<p>A qualitative description of smoothing by examining the L* numerical values is shown in the
+plot below.
+The effect of smoothing is dramatically illustrated in this plot showing the peaks, valleys and
+plateaus of the lightness curves at CMY (0.167, 0.5, 0.833) and  RGB (0.0, 0.33, 0.67).</p>
+<img alt="../_images/cmap_Lplot.png" class="sphx-glr-single-img" src="../_images/cmap_Lplot.png" />
+<p>The script for producing the above plot is given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+<span class="kn">from</span> <span class="nn">colorspacious</span> <span class="kn">import</span> <span class="n">cspace_converter</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+<span class="k">def</span> <span class="nf">Lstar</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39; x,y arrays for ploting L* of a colormap.&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="n">ListedColormap</span><span class="p">)</span> <span class="p">:</span> <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">lab</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;sRGB1&quot;</span><span class="p">,</span> <span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">)(</span><span class="n">rgb</span><span class="p">)</span>        
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">lab</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">L</span>
+<span class="c1"># ...................................................</span>
+<span class="n">vhsv</span><span class="p">,</span> <span class="n">Lhsv</span>   <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="s1">&#39;hsv&#39;</span><span class="p">)</span>
+<span class="n">vdflt</span><span class="p">,</span> <span class="n">Ldflt</span> <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">())</span>
+<span class="n">v_80</span><span class="p">,</span> <span class="n">L_80</span>   <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">v_05</span><span class="p">,</span> <span class="n">L_05</span>   <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="n">cmu</span><span class="o">.</span><span class="n">hue_cmap</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.5</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L* value&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v_05</span><span class="p">,</span><span class="n">L_05</span><span class="p">,</span>    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;0.5 &#39;</span><span class="p">,</span>         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vhsv</span><span class="p">,</span> <span class="n">Lhsv</span><span class="p">,</span>   <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1.0, HSV&#39;</span><span class="p">,</span>     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vdflt</span><span class="p">,</span> <span class="n">Ldflt</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1.6, default&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v_80</span><span class="p">,</span><span class="n">L_80</span><span class="p">,</span>    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;8.0  &#39;</span><span class="p">,</span>        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The effect of smoothing out an HSV colormap when applied to a surface is shown in the
+simple surface plot below.</p>
+<img alt="../_images/hue_torus.png" class="sphx-glr-single-img" src="../_images/hue_torus.png" />
+</div>
+<div class="section" id="smooth-hsv">
+<h2>Smooth HSV<a class="headerlink" href="#smooth-hsv" title="Permalink to this headline">¶</a></h2>
+<p>The ‘smooth’ parameter is also available when using the <em>hsv_cmap_gradient</em> method.  This effect
+is most apparent when creating colormaps between the RGB colors.  The regular and smooth
+colormaps are shown as a comparison.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Smoothed HSV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;RG&#39;</span><span class="p">,</span> <span class="s1">&#39;RG_s&#39;</span><span class="p">,</span> <span class="s1">&#39;GB&#39;</span><span class="p">,</span><span class="s1">&#39;GB_s&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;BR&#39;</span><span class="p">,</span> <span class="s1">&#39;BR_s&#39;</span><span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>      <span class="p">[</span><span class="mf">0.333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">65</span><span class="p">],</span> <span class="s1">&#39;RG&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>      <span class="p">[</span><span class="mf">0.333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">65</span><span class="p">],</span> <span class="s1">&#39;RG_s&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="mf">1.6</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="o">.</span><span class="mi">333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">34</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>   <span class="s1">&#39;GB&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="o">.</span><span class="mi">333</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">34</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>   <span class="s1">&#39;GB_s&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="mf">1.4</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">52</span><span class="p">],</span>     <span class="s1">&#39;BR&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.666</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">52</span><span class="p">],</span>     <span class="s1">&#39;BR_s&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="mf">1.6</span> <span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/cmap_smooth.png" class="sphx-glr-single-img" src="../_images/cmap_smooth.png" />
+<p>In these examples, the red and green values were selected with reduced values to create
+maps with similar starting and ending L* values, as seen in the following plot.</p>
+<img alt="../_images/cmap_Lplot2.png" class="sphx-glr-single-img" src="../_images/cmap_Lplot2.png" />
+</div>
+<div class="section" id="lab-linear-gradient">
+<h2>Lab Linear Gradient<a class="headerlink" href="#lab-linear-gradient" title="Permalink to this headline">¶</a></h2>
+<p>A colormap with a linearly monotonic increasing L* values may be preferable for increased
+perception when used for illustrating surface geometries.  This type of map is also
+beneficial when surface geometry visualization is needed when printed on black and
+white printers.  The cmap_xtra file provides the <em>Lab_cmap_gradient</em> method to produce colormaps
+which are linear in Lab space. Consequently, these maps will be linear in L*.
+Linear Lab colormaps are created using a function from a file and creating the cmap as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cmap_xtra</span> <span class="kn">import</span> <span class="n">Lab_cmap_gradient</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="n">lowColor</span><span class="p">,</span> <span class="n">highColor</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mirrored</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All calling parameters are identical to those used in the <em>rgb_cmap_gradient</em> method.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function requires the installation
+of the  <em>colorspacious</em> package.  All methods referred to in this guide use the
+<em>cmap_utilities</em> module except this one.</p>
+</div>
+<p>Example generation of colormaps using <em>Lab_cmap_gradient</em> are given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Lab Gradient&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;magma&#39;</span><span class="p">,</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="s1">&#39;lab_indg&#39;</span><span class="p">,</span><span class="s1">&#39;lab_marn&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lab_dgrn&#39;</span><span class="p">,</span> <span class="s1">&#39;LabDefault&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToWt&#39;</span> <span class="p">]</span>
+
+<span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;indigo&#39;</span><span class="p">,</span>   <span class="s1">&#39;aqua&#39;</span><span class="p">,</span>        <span class="s1">&#39;lab_indg&#39;</span><span class="p">)</span>
+<span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;maroon&#39;</span><span class="p">,</span>   <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>      <span class="s1">&#39;lab_marn&#39;</span><span class="p">)</span>
+<span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;darkgreen&#39;</span><span class="p">,</span><span class="s1">&#39;lemonchiffon&#39;</span><span class="p">,</span><span class="s1">&#39;lab_dgrn&#39;</span><span class="p">)</span>
+<span class="n">Lab_cmap_gradient</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;LabDefault&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting colormaps are below.  The linear Matplotlib colormaps of ‘magma’ and ‘viridis’ are shown
+as a comparison to those generated using this function.</p>
+<img alt="../_images/cmap_lab.png" class="sphx-glr-single-img" src="../_images/cmap_lab.png" />
+<p>Grayscale maps for these colormaps illustrate the perceived lightness values.</p>
+<img alt="../_images/cmap_grayscale_lab.png" class="sphx-glr-single-img" src="../_images/cmap_grayscale_lab.png" />
+<p>The plot below quantitatively demonstrates the linear nature of the colormaps and the
+relative differences between the maps.</p>
+<img alt="../_images/cmap_Lplot3.png" class="sphx-glr-single-img" src="../_images/cmap_Lplot3.png" />
+<p>The application of a linear Lab colormap to visualize surface geometry is shown below.  The
+addition of shading will enhance the effect, effectively reducing the L*  at the lower
+end of the scale.</p>
+<img alt="../_images/lab_torus.png" class="sphx-glr-single-img" src="../_images/lab_torus.png" />
+</div>
+<div class="section" id="stitch-cmaps">
+<h2>Stitch Cmaps<a class="headerlink" href="#stitch-cmaps" title="Permalink to this headline">¶</a></h2>
+<p>Colormaps may be created from concatenated colormaps using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stitch_cmap</span><span class="p">(</span> <span class="o">*</span><span class="n">maps</span><span class="p">,</span> <span class="n">bndry</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which returns an instance of a registered matplotlib.colors.Colormap with name, if provided.
+The <em>bndry</em> argument is a float or a list of float values designating the boundaries between the
+input maps.  Values range from greater than 0 to less than 1.  If <em>bndry</em> is None (default), the
+input maps are evenly spaced.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Stitch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;fWt_2&#39;</span><span class="p">,</span> <span class="s1">&#39;inferno_3&#39;</span><span class="p">,</span> <span class="s1">&#39;RdCy_4&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Diverging*&#39;</span><span class="p">,</span> <span class="s1">&#39;Cyclic*&#39;</span><span class="p">,</span> <span class="s1">&#39;stchG&#39;</span> <span class="p">]</span>
+
+<span class="n">cmA</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span><span class="n">smooth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">cmB</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span><span class="s1">&#39;teal&#39;</span><span class="p">,</span><span class="n">smooth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span><span class="n">cmA</span><span class="p">,</span><span class="n">cmB</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;fWt_2&#39;</span><span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
+<span class="n">testMap3</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span><span class="s1">&#39;inferno&#39;</span><span class="p">,</span><span class="s1">&#39;inferno_m&#39;</span><span class="p">,</span><span class="s1">&#39;inferno_r&#39;</span><span class="p">,</span><span class="n">bndry</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;inferno_3&#39;</span> <span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;RdToBk&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;CyToBk&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;CyToBk&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span><span class="s1">&#39;RdToBk_r&#39;</span><span class="p">,</span> <span class="s1">&#39;RdToBk&#39;</span><span class="p">,</span><span class="s1">&#39;CyToBk_r&#39;</span><span class="p">,</span> <span class="s1">&#39;CyToBk&#39;</span><span class="p">,</span><span class="n">bndry</span><span class="o">=</span><span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;RdCy_4&#39;</span> <span class="p">)</span>
+
+<span class="n">cmC</span> <span class="o">=</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;olive&#39;</span><span class="p">,</span><span class="s1">&#39;paleturquoise&#39;</span><span class="p">)</span>
+<span class="n">cmD</span> <span class="o">=</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;paleturquoise&#39;</span><span class="p">,</span><span class="s1">&#39;mediumslateblue&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span><span class="n">cmC</span><span class="p">,</span><span class="n">cmD</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Diverging*&#39;</span><span class="p">)</span>
+
+<span class="n">cmE</span><span class="p">,</span><span class="n">cmF</span> <span class="o">=</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="s1">&#39;mediumvioletred&#39;</span><span class="p">),</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;mediumvioletred&#39;</span><span class="p">,</span><span class="s1">&#39;white&#39;</span><span class="p">),</span>
+<span class="n">cmG</span><span class="p">,</span><span class="n">cmH</span> <span class="o">=</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">),</span> <span class="n">Lab_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span><span class="n">cmE</span><span class="p">,</span><span class="n">cmF</span><span class="p">,</span><span class="n">cmG</span><span class="p">,</span><span class="n">cmH</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cyclic*&#39;</span><span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">8</span><span class="p">],</span>        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>       <span class="s1">&#39;redG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;saddlebrown&#39;</span><span class="p">,</span>   <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>      <span class="s1">&#39;yelG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;darkgreen&#39;</span><span class="p">,</span>     <span class="s1">&#39;lime&#39;</span><span class="p">,</span>        <span class="s1">&#39;grnG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;darkslategray&#39;</span><span class="p">,</span> <span class="s1">&#39;cyan&#39;</span><span class="p">,</span>        <span class="s1">&#39;cynG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="s1">&#39;midnightblue&#39;</span><span class="p">,</span>  <span class="s1">&#39;deepskyblue&#39;</span><span class="p">,</span> <span class="s1">&#39;bluG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span> <span class="p">[</span><span class="mf">0.833</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>   <span class="s1">&#39;magenta&#39;</span><span class="p">,</span>     <span class="s1">&#39;mgnG&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">stitch_cmap</span><span class="p">(</span> <span class="s1">&#39;mgnG&#39;</span><span class="p">,</span><span class="s1">&#39;bluG&#39;</span><span class="p">,</span><span class="s1">&#39;cynG&#39;</span><span class="p">,</span> <span class="s1">&#39;grnG&#39;</span><span class="p">,</span><span class="s1">&#39;yelG&#39;</span><span class="p">,</span> <span class="s1">&#39;redG&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;stchG&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>This method can be used to construct simple linear tricolor or multi-color colormaps, for example <em>fWt_2</em>.
+Specific colormap values can be emphasized using this method as seen in the <em>inferno_3</em> and <em>RdCy_4</em> examples,
+(0.2, 0.6) and (0.3,0.8) respectively.  Using Lab colormaps,
+<a class="reference external" href="https://matplotlib.org/3.1.1/tutorials/colors/colormaps.html#diverging">Diverging and  Cyclic</a>
+colormaps can be constructed.</p>
+<img alt="../_images/cmap_stitch.png" class="sphx-glr-single-img" src="../_images/cmap_stitch.png" />
+</div>
+<div class="section" id="rgb-binary">
+<h2>RGB Binary<a class="headerlink" href="#rgb-binary" title="Permalink to this headline">¶</a></h2>
+<p>Simple two color maps are created using the function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">binary_cmap</span><span class="p">(</span><span class="n">negColor</span><span class="p">,</span><span class="n">posColor</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which returns an instance of a registered matplotlib.colors.Colormap with name, if provided.
+The colormap maps 0 to 0.5 as the negColor and 0.5 1.0 as the posColor.  Both color arguments
+are standard RGBA color formats.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Binary&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;binaryDefault&#39;</span><span class="p">,</span> <span class="s1">&#39;binaryRdBu&#39;</span><span class="p">,</span> <span class="s1">&#39;binaryBuYw&#39;</span><span class="p">,</span> <span class="s1">&#39;binaryBuGnLw&#39;</span> <span class="p">]</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">binary_cmap</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;binaryDefault&#39;</span> <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">binary_cmap</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;binaryRdBu&#39;</span>  <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">binary_cmap</span><span class="p">(</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="s1">&#39;binaryBuYw&#39;</span>  <span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">binary_cmap</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;binaryBuGnLw&#39;</span>  <span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/cmap_binary.png" class="sphx-glr-single-img" src="../_images/cmap_binary.png" />
+</div>
+<div class="section" id="mirrored-and-reversed">
+<h2>Mirrored and Reversed<a class="headerlink" href="#mirrored-and-reversed" title="Permalink to this headline">¶</a></h2>
+<p>Any registered colormap can have the order reversed using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reversed_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which returns a new instance of a registered colormap.  The returned colormap name is
+the <em>cmap</em> name with the suffix ‘_rev’.</p>
+<p>Any registered colormap can be used to create a mirrored color map using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="n">rev</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The returned colormap name is
+the <em>cmap</em> name with the suffix ‘_m’.  If the <em>rev</em> argument is True,
+the returned colormap is also reversed and the name has the suffix ‘_mr’.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmaps</span><span class="p">[</span><span class="s1">&#39;Mirrored and Reversed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="s1">&#39;magma&#39;</span><span class="p">,</span> <span class="s1">&#39;cividis&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;viridis_r&#39;</span><span class="p">,</span> <span class="s1">&#39;plasma_r&#39;</span><span class="p">,</span> <span class="s1">&#39;magma_r&#39;</span><span class="p">,</span> <span class="s1">&#39;cividis_r&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;viridis_m&#39;</span><span class="p">,</span> <span class="s1">&#39;plasma_m&#39;</span><span class="p">,</span> <span class="s1">&#39;magma_m&#39;</span><span class="p">,</span> <span class="s1">&#39;cividis_m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;viridis_mr&#39;</span><span class="p">,</span> <span class="s1">&#39;plasma_mr&#39;</span><span class="p">,</span> <span class="s1">&#39;magma_mr&#39;</span><span class="p">,</span> <span class="s1">&#39;cividis_mr&#39;</span> <span class="p">]</span>
+            
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;plasma&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;plasma&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
+
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;magma&#39;</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cmu</span><span class="o">.</span><span class="n">mirrored_cmap</span><span class="p">(</span><span class="s1">&#39;cividis&#39;</span><span class="p">,</span> <span class="n">rev</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/cmap_mirror_rev.png" class="sphx-glr-single-img" src="../_images/cmap_mirror_rev.png" />
+</div>
+<div class="section" id="transparency">
+<h2>Transparency<a class="headerlink" href="#transparency" title="Permalink to this headline">¶</a></h2>
+<p>Any registered colormap can have the transparency set using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <em>cmap</em> argument is a cmap or a registered colormap name. The argument <em>alpha</em> ranges from 0 to 1 for
+fully transparent to opaque, respectively.  This function will create and return a cmap with a
+name with suffix ‘_a’.  All colors in the map will have the same alpha value.</p>
+</div>
+<div class="section" id="tandem-cmaps">
+<h2>Tandem Cmaps<a class="headerlink" href="#tandem-cmaps" title="Permalink to this headline">¶</a></h2>
+<p>The gradient and binary cmap functions return a colormap.  With these created cmaps, the
+mirrored, reveresed and transparency cmap functions may be used in sequence to create additional
+complex cmaps.  This method was useful for creating the visualization of <a class="reference internal" href="../examples/functional/klein_bottle.html#klein-bottle"><span class="std std-ref">Klein Bottle, Spherical to XYZ</span></a>.
+In that case, the matplotlib built-in cmap <em>viridis</em> was mirrored and then made transparent.</p>
+</div>
+<div class="section" id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="colormap-plot-script">
+<h3>Colormap Plot Script<a class="headerlink" href="#colormap-plot-script" title="Permalink to this headline">¶</a></h3>
+<p>The development of custom colormaps should consider the visual, perceptual and applicability
+to black and white printing.   Any created colormaps can be readily analysed and compared
+to standard colormaps using the following code.  Three figures are generated; L* plot,
+color maps, and grayscale maps.  Colormaps to evaluate are set in the highlighted line
+defined by <em>cmap</em>, an array of colormaps or registered colormap names.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The script includes reference to the <strong>cspace_converter</strong> object which is located
+in the <a class="reference external" href="https://pypi.org/project/colorspacious/">colorspacious</a> package.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+<span class="kn">from</span> <span class="nn">colorspacious</span> <span class="kn">import</span> <span class="n">cspace_converter</span>
+
+<span class="c1"># Plot L* ,lightness, for colormaps =================================</span>
+
+<span class="hll"><span class="n">cmaps</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cmu</span><span class="o">.</span><span class="n">reversed_cmap</span><span class="p">(</span><span class="s1">&#39;binary&#39;</span><span class="p">),</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="s1">&#39;inferno&#39;</span><span class="p">,</span> <span class="s1">&#39;magma&#39;</span><span class="p">,</span> <span class="s1">&#39;cividis&#39;</span> <span class="p">]</span>
+</span>
+<span class="c1"># ...................................................................</span>
+<span class="k">def</span> <span class="nf">Lstar</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39; x,y arrays for ploting L* of a colormap.&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="n">ListedColormap</span><span class="p">)</span> <span class="p">:</span> <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">lab</span> <span class="o">=</span> <span class="n">cspace_converter</span><span class="p">(</span><span class="s2">&quot;sRGB1&quot;</span><span class="p">,</span> <span class="s2">&quot;CAM02-UCS&quot;</span><span class="p">)(</span><span class="n">rgb</span><span class="p">)</span>        
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">lab</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">cmap</span><span class="o">.</span><span class="n">name</span>
+
+<span class="c1"># Figure 1: x,L* line plot. -----------------------------------------</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="n">linestyles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">]</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mf">0.6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L* value&#39;</span><span class="p">)</span>
+
+<span class="n">Lcol</span><span class="p">,</span> <span class="n">Lstyles</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">linestyles</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">))</span> <span class="p">:</span>
+    <span class="n">linestyle</span> <span class="o">=</span> <span class="n">linestyles</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="n">Lstyles</span><span class="p">]</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="n">Lcol</span><span class="p">]</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="n">cmaps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="c1"># Figure 2: Visual L* gray scale. -----------------------------------</span>
+<span class="n">numb</span> <span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)</span>
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">numb</span><span class="o">*</span><span class="mf">0.25</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">numb</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.99</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">numb</span><span class="o">==</span><span class="mi">1</span> <span class="p">:</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)):</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">Lstar</span><span class="p">(</span><span class="n">cmaps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">grad</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;binary_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="n">x_text</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.01</span>
+    <span class="n">y_text</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pos</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_text</span><span class="p">,</span> <span class="n">y_text</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Figure 3: Visual color scale. -------------------------------------</span>
+<span class="n">numb</span> <span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)</span>
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">numb</span><span class="o">*</span><span class="mf">0.25</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">numb</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.99</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">numb</span><span class="o">==</span><span class="mi">1</span> <span class="p">:</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+<span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">grad</span><span class="p">,</span> <span class="n">grad</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="n">x_text</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.01</span>
+    <span class="n">y_text</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pos</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_text</span><span class="p">,</span> <span class="n">y_text</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># ...................................................................</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Named Colors<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>There are numerous available colors in the
+<a class="reference external" href="https://matplotlib.org/3.1.0/gallery/color/named_colors.html">List of named colors</a>
+in Matplotlib, sorted by hsv color value. When constructing custom colormaps, comparing colors
+based on the Lab color values is often convenient.  The following table lists the named
+CSS colors sorted by Lab color.</p>
+<img alt="../_images/colors_by_lab.png" class="sphx-glr-single-img" src="../_images/colors_by_lab.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shading.html" title="Shading, Highlighting and Color Mapped Normals"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="base_surfaces.html" title="Base Surfaces"
+             >previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Guides</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

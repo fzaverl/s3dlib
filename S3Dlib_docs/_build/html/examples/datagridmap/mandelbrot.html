@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Datagrid Alternative to Image Construction &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Surface Addition" href="../composite/chainlinks.html" />
+    <link rel="prev" title="Geometric and Color Datagrid Mapping 2" href="jacks_shaded2.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../composite/chainlinks.html" title="Surface Addition"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jacks_shaded2.html" title="Geometric and Color Datagrid Mapping 2"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jacks_shaded2.html"
+                        title="previous chapter">Geometric and Color Datagrid Mapping 2</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../composite/chainlinks.html"
+                        title="next chapter">Surface Addition</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/datagridmap/mandelbrot.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datagrid-alternative-to-image-construction">
+<span id="mandelbrot"></span><h1>Datagrid Alternative to Image Construction<a class="headerlink" href="#datagrid-alternative-to-image-construction" title="Permalink to this headline">¶</a></h1>
+<p>This example demonstrates a 3D alternative to viewing data intended for
+constructing a 2D image.  The example uses code directly from a Matplotlib
+<a class="reference external" href="https://matplotlib.org/3.1.0/gallery/showcase/mandelbrot.html#sphx-glr-gallery-showcase-mandelbrot-py">rendering</a>
+example, as commented in the script.
+The resolution of the 3D surface is less than a tenth of the Matplotlib example image.</p>
+<img alt="../../_images/mandelbrot.png" class="sphx-glr-single-img" src="../../_images/mandelbrot.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># +----------------------------------------------------------------------------</span>
+<span class="c1"># |  The following code between the ========= comments was copied DIRECTLY from</span>
+<span class="c1"># |  https://matplotlib.org/3.1.0/gallery/showcase/mandelbrot.html#sphx-glr-gallery-showcase-mandelbrot-py</span>
+<span class="c1"># |</span>
+<span class="c1"># +----------------------------------------------------------------------------</span>
+<span class="c1"># ===================================================== start of copy.</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">mandelbrot_set</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">yn</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xn</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">yn</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">Y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxiter</span><span class="p">):</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">horizon</span>
+        <span class="n">N</span><span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">Z</span><span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">I</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">I</span><span class="p">]</span>
+    <span class="n">N</span><span class="p">[</span><span class="n">N</span> <span class="o">==</span> <span class="n">maxiter</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">Z</span><span class="p">,</span> <span class="n">N</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xn</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.25</span><span class="p">,</span> <span class="o">+</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">3000</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">yn</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="o">+</span><span class="mf">1.25</span><span class="p">,</span> <span class="mi">2500</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">horizon</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="mi">40</span>
+    <span class="n">log_horizon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">horizon</span><span class="p">))</span>
+    <span class="n">Z</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">mandelbrot_set</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">yn</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
+
+    <span class="c1"># Normalized recount as explained in:</span>
+    <span class="c1"># https://linas.org/art-gallery/escape/smooth.html</span>
+    <span class="c1"># https://www.ibm.com/developerworks/community/blogs/jfp/entry/My_Christmas_Gift</span>
+
+    <span class="c1"># This line will generate warnings for null values but it is faster to</span>
+    <span class="c1"># process them afterwards using the nan_to_num</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">Z</span><span class="p">)))</span> <span class="o">+</span> <span class="n">log_horizon</span><span class="p">)</span>
+    
+    <span class="c1"># ===================================================== end of copy.</span>
+    
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+    <span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+    <span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+    <span class="c1"># 1. Define functions to examine ....................................</span>
+
+    <span class="n">pNorm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">n</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">amax</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">M</span><span class="o">&lt;</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="o">/</span><span class="n">amax</span><span class="p">)</span>
+    <span class="n">datagrid</span> <span class="o">=</span> <span class="n">pNorm</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clipZ</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">xyz</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 2. Setup and map surfaces .........................................</span>
+    <span class="n">blacktop</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">(</span><span class="s1">&#39;darkred&#39;</span><span class="p">,</span><span class="s1">&#39;lemonchiffon&#39;</span><span class="p">)</span>
+    <span class="n">blacktop</span> <span class="o">=</span> <span class="n">blacktop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="n">blacktop</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">blacktop</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">blacktop</span><span class="p">)</span>
+    <span class="n">rez</span><span class="o">=</span><span class="mi">7</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">PlanarSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;oct1&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">blacktop</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_datagrid</span><span class="p">(</span> <span class="n">datagrid</span> <span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span><span class="n">clipZ</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">map_cmap_from_op</span><span class="p">(</span><span class="k">lambda</span> <span class="n">xyz</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span><span class="o">.</span><span class="n">hilite</span><span class="p">(</span><span class="o">.</span><span class="mi">6</span><span class="p">,</span><span class="n">focus</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># 3. Construct figure, add surface, plot ............................</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span><span class="mf">0.975</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">surface</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;smaller&#39;</span><span class="p">,</span> <span class="n">multialignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-.</span><span class="mi">8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-.</span><span class="mi">8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">zlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">.</span><span class="mi">8</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_proj_type</span><span class="p">(</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">70</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../composite/chainlinks.html" title="Surface Addition"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="jacks_shaded2.html" title="Geometric and Color Datagrid Mapping 2"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

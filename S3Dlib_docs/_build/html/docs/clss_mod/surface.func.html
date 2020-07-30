@@ -1,0 +1,192 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>s3dlib.surface Functions &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="s3dlib.cmap_utilities" href="cmap_utilities.html" />
+    <link rel="prev" title="s3dlib.surface.Vector3DCollection" href="surface.vect.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../examples/index.html">Examples</a></li>
+            <li><a href="../index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cmap_utilities.html" title="s3dlib.cmap_utilities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="surface.vect.html" title="s3dlib.surface.Vector3DCollection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">S3Dlib API</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="surface.vect.html"
+                        title="previous chapter">s3dlib.surface.Vector3DCollection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cmap_utilities.html"
+                        title="next chapter">s3dlib.cmap_utilities</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/docs/clss_mod/surface.func.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-s3dlib.surface">
+<span id="s3dlib-surface-functions"></span><h1>s3dlib.surface Functions<a class="headerlink" href="#module-s3dlib.surface" title="Permalink to this headline">¶</a></h1>
+<p>A module for creating 3D surface objects and auxiliary functions.</p>
+<p>A surface is a collection of faces with 3D vertices ordered using
+the ‘right hand rule’ to designate the ‘outer’ surface normals.  All surface faces
+are joined with a minimum of one adjacent face. Adjacent faces share two
+common vertices.</p>
+<p>Surface instantiation is primarily performed using the four subclasses that
+have predefined surface topologies in native coordinates and triangular faces.
+The surface object geometry and color are controlled through various
+object methods in the ‘Surface3DCollection’ base class.
+Base class objects are created by addition of subclass surface objects to
+form a single ‘composite’ surface.</p>
+<p>Primitive surface objects may be created from faces with 3, 4, or 5
+edges using the  ‘Surface3DCollection’ base class in
+xyz native coordinates.</p>
+<p>Objects are added to the mpl_toolkits.mplot3d.axes3d using
+the Axes3D.add_collection3d() method.</p>
+<dl class="function">
+<dt id="s3dlib.surface.eulerRot">
+<code class="descclassname">s3dlib.surface.</code><code class="descname">eulerRot</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>psi=0</em>, <em>useXconv=True</em>, <em>inrad=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#eulerRot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.eulerRot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotation matrix from Euler angles, X or Y convention.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="s3dlib.surface.setupAxis">
+<code class="descclassname">s3dlib.surface.</code><code class="descname">setupAxis</code><span class="sig-paren">(</span><em>axes</em>, <em>length=1.5</em>, <em>width=2</em>, <em>color='black'</em>, <em>offset=0.0</em>, <em>negaxis=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#setupAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.setupAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set XYZ origin coordinate axis arrows.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="s3dlib.surface.standardAxis">
+<code class="descclassname">s3dlib.surface.</code><code class="descname">standardAxis</code><span class="sig-paren">(</span><em>axes</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#standardAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.standardAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set XYZ origin coordinate axis arrows, viewing angle, projection type and clear planes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="s3dlib.surface.rtv">
+<code class="descclassname">s3dlib.surface.</code><code class="descname">rtv</code><span class="sig-paren">(</span><em>direction</em>, <em>elev=None</em>, <em>azim=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#rtv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.rtv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform direction vector ‘relative to view’ axis viewing angles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="s3dlib.surface.elev_azim_2vector">
+<code class="descclassname">s3dlib.surface.</code><code class="descname">elev_azim_2vector</code><span class="sig-paren">(</span><em>elev</em>, <em>azim</em>, <em>inrad=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/s3dlib/surface.html#elev_azim_2vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#s3dlib.surface.elev_azim_2vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unit vector in the terms of angular position.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cmap_utilities.html" title="s3dlib.cmap_utilities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="surface.vect.html" title="s3dlib.surface.Vector3DCollection"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >S3Dlib API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,740 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Examples &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Sources" href="referenceData.html" />
+    <link rel="prev" title="Color Mapping Using Functions" href="../tutorials/surface_color/cmap_functions_tut.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../index.html"><img src="../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../inst_index.html">Installation</a></li>
+            <li><a href="../doc_index.html">Documentation</a></li>
+            <li><a href="../tutorials/index.html">Tutorials</a></li>
+            <li><a href="#">Examples</a></li>
+            <li><a href="../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="referenceData.html" title="Data Sources"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/surface_color/cmap_functions_tut.html" title="Color Mapping Using Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" accesskey="U">Documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#matplotlib-examples">Matplotlib Examples</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#function-plots">Function Plots</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#image-mapping">Image Mapping</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#datagrid-surfaces">Datagrid Surfaces</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#composite-surfaces">Composite Surfaces</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-based-surfaces">Data Based Surfaces</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#animations">Animations</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../tutorials/surface_color/cmap_functions_tut.html"
+                        title="previous chapter">Color Mapping Using Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="referenceData.html"
+                        title="next chapter">Data Sources</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples">
+<span id="example"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>These examples demonstrate the various capabilities using S3Dlib. Click on any image to see
+the full image, source code and discussion describing construction techniques.
+Since many of these examples also are annotated, in many instances, more code is used
+for the annotation than creating the surface.</p>
+<p>Numerous examples use a <em>rez</em> with a value from 5 to 7.  Although such higher values
+reduce the interactive response time during development, the plots are clearer and more detailed.  This is
+particulary the case for surfaces with higher curvatures or mapped images.
+Script development is generally done at a lower <em>rez</em> and
+then increased for producing final static or animation images.</p>
+<p>Introductory tutorials to get started using S3Dlib are found in the <a class="reference internal" href="../tutorials/index.html#tutorial"><span class="std std-ref">Tutorial</span></a> pages.
+More detailed explanations of objects and functions are given in the <a class="reference internal" href="../guides/index.html#guides"><span class="std std-ref">Guides</span></a> pages.</p>
+<p>Various surfaces use functional mapping and, if available, references are given
+regarding the functions in the specific example page.
+Source data for these examples are found in <a class="reference internal" href="referenceData.html#data-reference"><span class="std std-ref">Data Sources</span></a> page.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="matplotlib-examples">
+<span id="matplot-examples"></span><h2>Matplotlib Examples<a class="headerlink" href="#matplotlib-examples" title="Permalink to this headline">¶</a></h2>
+<p>The following examples are based on examples in the
+<a class="reference external" href="https://matplotlib.org/3.1.1/gallery/index.html#d-plotting">3D plotting Gallery</a>
+of Matplotlib. Several examples first illustrate the geometries without using a color map for z-coordinate values.
+The examples are then color mapped similar to the Matplotlib example with the simple addition of
+one code statement.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/demo3D.html">
+<div class="docbutton">
+<span class="tooltiptext">A very basic plot of a 3D surface using a solid color.</span><img alt="../_images/demo3D.png" class="docfig" src="../_images/demo3D.png" />
+<p>3D Surface</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/cyl_coor.html">
+<div class="docbutton">
+<span class="tooltiptext">Polar surface in native polar coordinates.</span><img alt="../_images/cyl_coor.png" class="docfig" src="../_images/cyl_coor.png" />
+<p>3D Surface in Polar Coordinates</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/wave.html">
+<div class="docbutton">
+<span class="tooltiptext"> Solid color surface with shading for topological perception.</span><img alt="../_images/wave.png" class="docfig" src="../_images/wave.png" />
+<p>Shading</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/pringle.html">
+<div class="docbutton">
+<span class="tooltiptext"> Color mapping applied to surface normals for topological perception.</span><img alt="../_images/pringle.png" class="docfig" src="../_images/pringle.png" />
+<p>Color Mapping Normals</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/twistribbon.html">
+<div class="docbutton">
+<span class="tooltiptext"> Matplotlib example using cylindrical coordinates.</span><img alt="../_images/twistribbon.png" class="docfig" src="../_images/twistribbon.png" />
+<p>Cylindrical Coordinates</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/mp_wire.html">
+<div class="docbutton">
+<span class="tooltiptext"> Use of the surface edge property to construct a wire frame plot from a datagrid.</span><img alt="../_images/mp_wire.png" class="docfig" src="../_images/mp_wire.png" />
+<p>Datagrid Wireframe Plot</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/wireframe.html">
+<div class="docbutton">
+<span class="tooltiptext">Comparison among functional, datagrid and meshgrid methods for constructing wireframe plots.</span><img alt="../_images/wireframe.png" class="docfig" src="../_images/wireframe.png" />
+<p>Functional, Datagrid and Meshgrid wireframe plots</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/jacksboro.html">
+<div class="docbutton">
+<span class="tooltiptext"> Use of a topographic data set to create a 3D visualization.</span><img alt="../_images/jacksboro.png" class="docfig" src="../_images/jacksboro.png" />
+<p>Datagrid Geometry</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="matplot_ex/data_mesh.html">
+<div class="docbutton">
+<span class="tooltiptext">Comparison between Datagrid and Meshgrid surface representations.</span><img alt="../_images/data_mesh.png" class="docfig" src="../_images/data_mesh.png" />
+<p>Datagrid and Meshgrid surfaces</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="function-plots">
+<span id="functional-maps"></span><h2>Function Plots<a class="headerlink" href="#function-plots" title="Permalink to this headline">¶</a></h2>
+<p>The following are examples of creating surface color and geometry using functional mapping.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="functional/hw_example.html">
+<div class="docbutton">
+<span class="tooltiptext">Simple example of multiple operations and settings for surface plotting.</span><img alt="../_images/hw_example1.png" class="docfig" src="../_images/hw_example1.png" />
+<p>Hello World Example</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/cube.html">
+<div class="docbutton">
+<span class="tooltiptext">Construction of surfaces from vertex and face arrays.</span><img alt="../_images/cube1.png" class="docfig" src="../_images/cube1.png" />
+<p>Base Class Surface</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/funcplots.html">
+<div class="docbutton">
+<span class="tooltiptext">Basic plotting demonstrated with multiple functions.</span><img alt="../_images/funcplots1.png" class="docfig" src="../_images/funcplots1.png" />
+<p>Function Plots, z = f(x,y)</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/cyclic_mirror.html">
+<div class="docbutton">
+<span class="tooltiptext">Usage comparison between cyclic versus mirrored colormaps.</span><img alt="../_images/hsv_torus1.png" class="docfig" src="../_images/hsv_torus1.png" />
+<p>Cyclic and Mirrored Colormaps</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/radial_torus.html">
+<div class="docbutton">
+<span class="tooltiptext">Color map used to indicate radial position.</span><img alt="../_images/radial_torus1.png" class="docfig" src="../_images/radial_torus1.png" />
+<p>Radial Color Mapped</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/screw.html">
+<div class="docbutton">
+<span class="tooltiptext">Extending the angular coordinate domain to &plusmn;&pi;.</span><img alt="../_images/screw1.png" class="docfig" src="../_images/screw1.png" />
+<p>Sliced Polar Surface</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/normalize.html">
+<div class="docbutton">
+<span class="tooltiptext">Surface domain is changed from [-1,1] to [0,1], scaled, and then shown on scaled axis.</span><img alt="../_images/normalize1.png" class="docfig" src="../_images/normalize1.png" />
+<p>Normalization and Scaling</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/sph_harm.html">
+<div class="docbutton">
+<span class="tooltiptext"> Alternative method of representing a function of two variables in spherical coordinates. </span><img alt="../_images/sph_harm_r1.png" class="docfig" src="../_images/sph_harm_r1.png" />
+Two Methods of Representing f(&theta;,&phi;)</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/complex.html">
+<div class="docbutton">
+<span class="tooltiptext"> Two methods of visualizing complex numbers using either a polar, planar or cylindrical surface.</span><img alt="../_images/complex1.png" class="docfig" src="../_images/complex1.png" />
+<p>Complex Number Representation, Geometry and Colormap</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/complex_hsv.html">
+<div class="docbutton">
+<span class="tooltiptext"> Two methods of visualizing complex numbers using color attributes of hue and value.</span><img alt="../_images/complex_hsv1.png" class="docfig" src="../_images/complex_hsv1.png" />
+<p>Complex Number Representation, Hue and Value</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/facenormals.html">
+<div class="docbutton">
+<span class="tooltiptext">Demonstration of visualizing the normals of a surface object.</span><img alt="../_images/facenormals1.png" class="docfig" src="../_images/facenormals1.png" />
+<p>Face Normals Vector Field</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/tube_disp.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization of vibration modes of a cylinder.</span><img alt="../_images/tube_disp1.png" class="docfig" src="../_images/tube_disp1.png" />
+<p>Surface Displacements in Cylindrical Coordinates</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/tube_disp2.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization of displacements of a vibrating cylinder.</span><img alt="../_images/tube_disp21.png" class="docfig" src="../_images/tube_disp21.png" />
+<p>Vector Field in Cylindrical Coordinates</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/cat2heli_disp.html">
+<div class="docbutton">
+<span class="tooltiptext">Displacement of transitions from one parametric surface to another surface.</span><img alt="../_images/cat2heli_disp1.png" class="docfig" src="../_images/cat2heli_disp1.png" />
+<p>Surface Displacement Vector Field</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/dini.html">
+<div class="docbutton">
+<span class="tooltiptext">Using a polar surface object for visualizing parametric equations.</span><img alt="../_images/dini1.png" class="docfig" src="../_images/dini1.png" />
+<p>Polar Coordinates to XYZ</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/bour.html">
+<div class="docbutton">
+<span class="tooltiptext">Another example of using a polar surface object for visualizing parametric equations.</span><img alt="../_images/bour1.png" class="docfig" src="../_images/bour1.png" />
+<p>Polar Coordinates to XYZ, 2</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/roman.html">
+<div class="docbutton">
+<span class="tooltiptext">Using a spherical surface object for visualizing parametric equations.</span><img alt="../_images/roman1.png" class="docfig" src="../_images/roman1.png" />
+<p>Spherical Coordinates to XYZ</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/klein_bottle.html">
+<div class="docbutton">
+<span class="tooltiptext">Simple example of a complex surface geometry.</span><img alt="../_images/klein_bottle1.png" class="docfig" src="../_images/klein_bottle1.png" />
+<p>Klein Bottle, Spherical to XYZ</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/klein_figure8.html">
+<div class="docbutton">
+<span class="tooltiptext">Simple example of a complex surface geometry.</span><img alt="../_images/klein_figure81.png" class="docfig" src="../_images/klein_figure81.png" />
+<p>Figure 8 Klein Bottle</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/transform.html">
+<div class="docbutton">
+<span class="tooltiptext">Transformed surface showing both origin and transformed coordinates.</span><img alt="../_images/transform1.png" class="docfig" src="../_images/transform1.png" />
+<p>Coordinate Transform</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/twisted_torus.html">
+<div class="docbutton">
+<span class="tooltiptext">Demonstration of operation order on color visualization.</span><img alt="../_images/twisted_torus1.png" class="docfig" src="../_images/twisted_torus1.png" />
+<p>Order of Operation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/color_tri.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualizing the subtle geometric variations using a normalized color map.</span><img alt="../_images/color_tri1.png" class="docfig" src="../_images/color_tri1.png" />
+<p>Base Face Variations</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/triple.html">
+<div class="docbutton">
+<span class="tooltiptext">Applying combined surface coloring methods to emphasize geometry.</span><img alt="../_images/triple1.png" class="docfig" src="../_images/triple1.png" />
+<p>Cmapped Normals, Shading and Highlighting</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/orange_peel.html">
+<div class="docbutton">
+<span class="tooltiptext">Demonstrations of applying a surface texture using geometry or color.</span><img alt="../_images/orange_peel1.png" class="docfig" src="../_images/orange_peel1.png" />
+<p>Surface Texture</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/knot.html">
+<div class="docbutton">
+<span class="tooltiptext">Applying geometric mapping to an already mapped surface.</span><img alt="../_images/knot1.png" class="docfig" src="../_images/knot1.png" />
+<p>Multiple Geometric Maps</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/intermediate.html">
+<div class="docbutton">
+<span class="tooltiptext">Surface creation functions for further mapping.</span><img alt="../_images/intermediate1.png" class="docfig" src="../_images/intermediate1.png" />
+<p>Intermediate Surfaces</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/star.html">
+<div class="docbutton">
+<span class="tooltiptext">An intermediate surface further mapped.</span><img alt="../_images/star1.png" class="docfig" src="../_images/star1.png" />
+<p>Multiple Geometric Maps 2</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/candy.html">
+<div class="docbutton">
+<span class="tooltiptext">Creating and using a compounded binary color map.</span><img alt="../_images/candy1.png" class="docfig" src="../_images/candy1.png" />
+<p>Compound Color Maps</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/surface_edges.html">
+<div class="docbutton">
+<span class="tooltiptext">Simple plot with edges emphasized instead of surface faces.</span><img alt="../_images/surface_edges1.png" class="docfig" src="../_images/surface_edges1.png" />
+<p>Wireframe Plots</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/RGB_sphere.html">
+<div class="docbutton">
+<span class="tooltiptext">Using geometric mapping into RGB color space.</span><img alt="../_images/RGB_sphere1.png" class="docfig" src="../_images/RGB_sphere1.png" />
+<p>Functional RGB Color Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/HSV_washer.html">
+<div class="docbutton">
+<span class="tooltiptext">Using geometric mapping into HSV color space.</span><img alt="../_images/HSV_washer.png" class="docfig" src="../_images/HSV_washer.png" />
+<p>Functional HSV Color Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/param_set.html">
+<div class="docbutton">
+<span class="tooltiptext">Multiple plots using different values for a function parameter.</span><img alt="../_images/param_set1.png" class="docfig" src="../_images/param_set1.png" />
+<p>Parametric Set</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/param_set2.html">
+<div class="docbutton">
+<span class="tooltiptext">Use of a diverging colormap.</span><img alt="../_images/param_set21.png" class="docfig" src="../_images/param_set21.png" />
+<p>Parametric Set 2</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/four_levels.html">
+<div class="docbutton">
+<span class="tooltiptext">Two methods of selecting four values from a Cmap using angular position.</span><img alt="../_images/four_levels1.png" class="docfig" src="../_images/four_levels1.png" />
+<p>Segmented Cmap Operation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/Lab_space.html">
+<div class="docbutton">
+<span class="tooltiptext">Using native coordinates, map surfaces into RGB, HSV and Lab color spaces.</span><img alt="../_images/Lab_space1.png" class="docfig" src="../_images/Lab_space1.png" />
+<p>Color Space</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="functional/hirez.html">
+<div class="docbutton">
+<span class="tooltiptext">Basic functional plot requiring a high rez visualization.</span><img alt="../_images/hirez1.png" class="docfig" src="../_images/hirez1.png" />
+<p>High Resolution Example</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="image-mapping">
+<span id="image-maps"></span><h2>Image Mapping<a class="headerlink" href="#image-mapping" title="Permalink to this headline">¶</a></h2>
+<p>Color data values from images are applied to control the surface color and geometry in
+the following examples.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/wmap_sphere.html">
+<div class="docbutton">
+<span class="tooltiptext">Mapping a 2D image onto a spherical surface.</span><img alt="../_images/wmap_sphere1.png" class="docfig" src="../_images/wmap_sphere1.png" />
+<p>Spherical Image Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/mars_cyl.html">
+<div class="docbutton">
+<span class="tooltiptext">Mapping a 2D image onto a disk and cylinder.</span><img alt="../_images/mars_cyl1.png" class="docfig" src="../_images/mars_cyl1.png" />
+<p>Polar and Cylindrical Image Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/stinkbug.html">
+<div class="docbutton">
+<span class="tooltiptext">Image mapped to a section of a spherical surface.</span><img alt="../_images/stinkbug1.png" class="docfig" src="../_images/stinkbug1.png" />
+<p>Mapping to a Viewport</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/retinal_scan.html">
+<div class="docbutton">
+<span class="tooltiptext">Image mapped to a section of a spherical surface which is then geometrically mapped.</span><img alt="../_images/retinal_scan1.png" class="docfig" src="../_images/retinal_scan1.png" />
+<p>Function and Image Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/image_to_geom.html">
+<div class="docbutton">
+<span class="tooltiptext">Two examples of geometric mapping using either Hue or Value obtained from an image.</span><img alt="../_images/image_to_geom1.png" class="docfig" src="../_images/image_to_geom1.png" />
+<p>Image Geometric Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/earth_shaded.html">
+<div class="docbutton">
+<span class="tooltiptext">Image Color mapping and Geometry mapping are combined with additional shading.</span><img alt="../_images/earth_shaded1.png" class="docfig" src="../_images/earth_shaded1.png" />
+<p>Geometric and Color Image Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/cmap_mod.html">
+<div class="docbutton">
+<span class="tooltiptext">Image data is translated from one colormap to another using geometric mapping.</span><img alt="../_images/cmap_mod1.png" class="docfig" src="../_images/cmap_mod1.png" />
+<p>Data Colormap Modification</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="imagemap/imaginary_earth.html">
+<div class="docbutton">
+<span class="tooltiptext">Just for fun.</span><img alt="../_images/imaginary_earth1.png" class="docfig" src="../_images/imaginary_earth1.png" />
+<p>Imaginary Earth</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="datagrid-surfaces">
+<span id="id1"></span><h2>Datagrid Surfaces<a class="headerlink" href="#datagrid-surfaces" title="Permalink to this headline">¶</a></h2>
+<p>Values from datagrids are applied to control the surface color and geometry in the
+following examples.  The first six examples use the same data set and show the analogy
+between an image and datagrid, when compared to the <em>Image Mapping</em> examples above.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/jacks_sphere.html">
+<div class="docbutton">
+<span class="tooltiptext">Mapping a 2D datagrid onto a spherical surface.</span><img alt="../_images/jacks_sphere1.png" class="docfig" src="../_images/jacks_sphere1.png" />
+<p>Spherical Datagrid Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/jacks_cyl.html">
+<div class="docbutton">
+<span class="tooltiptext">Mapping a 2D datagrid onto a disk and cylinder.</span><img alt="../_images/jacks_cyl1.png" class="docfig" src="../_images/jacks_cyl1.png" />
+<p>Polar and Cylindrical Datagrid Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/jacks_viewport.html">
+<div class="docbutton">
+<span class="tooltiptext">Datagrid mapped to a section of a spherical surface.</span><img alt="../_images/jacks_viewport1.png" class="docfig" src="../_images/jacks_viewport1.png" />
+<p>Datagrid Mapping to a Viewport</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/datagrid_to_geom.html">
+<div class="docbutton">
+<span class="tooltiptext">Example of datagrid mapping to polar and cylindrical surface.</span><img alt="../_images/datagrid_to_geom1.png" class="docfig" src="../_images/datagrid_to_geom1.png" />
+<p>Datagrid Geometric Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/jacks_shaded.html">
+<div class="docbutton">
+<span class="tooltiptext">Datagrid color and geometry mapping are combined with shading.</span><img alt="../_images/jacks_shaded1.png" class="docfig" src="../_images/jacks_shaded1.png" />
+<p>Geometric and Color Datagrid Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/jacks_shaded2.html">
+<div class="docbutton">
+<span class="tooltiptext">Datagrid color and geometry mapping are combined with shading.</span><img alt="../_images/jacks_shaded21.png" class="docfig" src="../_images/jacks_shaded21.png" />
+<p>Geometric and Color Datagrid Mapping 2</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="datagridmap/mandelbrot.html">
+<div class="docbutton">
+<span class="tooltiptext">Just for fun.  A visualization tool wouldn't be complete without a Mandelbrot demo ;-)</span><img alt="../_images/mandelbrot1.png" class="docfig" src="../_images/mandelbrot1.png" />
+<p>Datagrid Alternative to Image Construction</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="composite-surfaces">
+<span id="id2"></span><h2>Composite Surfaces<a class="headerlink" href="#composite-surfaces" title="Permalink to this headline">¶</a></h2>
+<p>Composite surfaces are those constructed by combining several surface objects into one object.
+Operations of color and geometric mapping can be applied before or after the individual
+objects are combined to form the final single object.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="composite/chainlinks.html">
+<div class="docbutton">
+<span class="tooltiptext">Simple example of combining two surfaces to form one surface.</span><img alt="../_images/chainlinks1.png" class="docfig" src="../_images/chainlinks1.png" />
+<p>Surface Addition</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/clipping.html">
+<div class="docbutton">
+<span class="tooltiptext">Diplaying sections of the surface.</span><img alt="../_images/clipping1.png" class="docfig" src="../_images/clipping1.png" />
+<p>Clipping a Surface</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/dipole.html">
+<div class="docbutton">
+<span class="tooltiptext">One surface constructed from multiple surfaces using a parametric function .</span><img alt="../_images/dipole1.png" class="docfig" src="../_images/dipole1.png" />
+<p>Parametric Set of Surfaces</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/cat2heli.html">
+<div class="docbutton">
+<span class="tooltiptext">Combining two surfaces, both based on a single parametric function.</span><img alt="../_images/cat2heli1.png" class="docfig" src="../_images/cat2heli1.png" />
+<p>Parametric Set of Surfaces 2</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/nacl.html">
+<div class="docbutton">
+<span class="tooltiptext">Composite of similar surfaces translated to multiple locations.</span><img alt="../_images/nacl1.png" class="docfig" src="../_images/nacl1.png" />
+<p>Sub-surface Translation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/sliced_earth.html">
+<div class="docbutton">
+<span class="tooltiptext">Spherical and Polar surfaces are separately image mapped and then combined.</span><img alt="../_images/sliced_earth1.png" class="docfig" src="../_images/sliced_earth1.png" />
+<p>Composite surface composed of different sub-surface types</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/saturn.html">
+<div class="docbutton">
+<span class="tooltiptext">Spherical and Cylindrical surfaces are separately image mapped and then combined.</span><img alt="../_images/saturn1.png" class="docfig" src="../_images/saturn1.png" />
+<p>Alpha Channel Adjustments</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/fullerene.html">
+<div class="docbutton">
+<span class="tooltiptext">Use of face coordinates to construct a multiple object surface.</span><img alt="../_images/fullerene1.png" class="docfig" src="../_images/fullerene1.png" />
+<p>Face Center Translation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/double_helix.html">
+<div class="docbutton">
+<span class="tooltiptext">Map color to a surface, then a geometric operation.</span><img alt="../_images/double_helix1.png" class="docfig" src="../_images/double_helix1.png" />
+<p>Angular 4-Color Color Map</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/avacado.html">
+<div class="docbutton">
+<span class="tooltiptext">Just for fun.</span><img alt="../_images/avacado1.png" class="docfig" src="../_images/avacado1.png" />
+<p>Texture Surface with Geometric Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="composite/pycube.html">
+<div class="docbutton">
+<span class="tooltiptext">Just for fun.</span><img alt="../_images/pycube1.png" class="docfig" src="../_images/pycube1.png" />
+<p>Composite of Copies</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="data-based-surfaces">
+<span id="data-plots"></span><h2>Data Based Surfaces<a class="headerlink" href="#data-based-surfaces" title="Permalink to this headline">¶</a></h2>
+<p>Data is used to control the surface geometry and color in the following examples.
+Surface geometry is then applied to color the data points in the scatter plots.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="data_surface/conf_ellip.html">
+<div class="docbutton">
+<span class="tooltiptext">Plot a standard deviations ellipsoids of a three-dimensional dataset.</span><img alt="../_images/conf_ellip1.png" class="docfig" src="../_images/conf_ellip1.png" />
+<p>Standard Deviations Ellipsoids</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="data_surface/pcnt.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization of the percent of outliers in a 3D dataset.</span><img alt="../_images/pcnt1.png" class="docfig" src="../_images/pcnt1.png" />
+<p>Percentile Visualization</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="data_surface/pca.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization of principal components of a data set.</span><img alt="../_images/pca1.png" class="docfig" src="../_images/pca1.png" />
+<p>Principal Components Analysis</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="data_surface/irisPCA.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization surfaces for PCA of the iris dataset.</span><img alt="../_images/irisPCA1.png" class="docfig" src="../_images/irisPCA1.png" />
+<p>PCA Iris Data-set</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="data_surface/penguins.html">
+<div class="docbutton">
+<span class="tooltiptext">Visualization surfaces for PCA of the Palmer penguin dataset.</span><img alt="../_images/penguins1.png" class="docfig" src="../_images/penguins1.png" />
+<p>Penguin Data-set</p>
+</div></a><div style='clear:both'></div></div>
+<div class="section" id="animations">
+<span id="animations-plots"></span><h2>Animations<a class="headerlink" href="#animations" title="Permalink to this headline">¶</a></h2>
+<p>Animations can be created by time varying geometry, color, and orientation.
+The following examples were constructed using Matplotlib
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.FuncAnimation.html#matplotlib.animation.FuncAnimation">FuncAnimation</a> .
+Final conversion to animated png file format used
+<a class="reference external" href="https://ezgif.com/apng-maker">ezGIF</a>
+with the temporary frame files generated by the <em>writer</em> in the call to <em>ani.save</em>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_retinal_scan.html">
+<div class="docbutton">
+<span class="tooltiptext">Azimuthal variation producing a stationary object perception with a rotating viewer.</span><img alt="../_images/static_retinal_scan.png" class="docfig" src="../_images/static_retinal_scan.png" />
+<p>Figure View_init() Reset</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_tube_disp.html">
+<div class="docbutton">
+<span class="tooltiptext">Geometric surface animation producing a vibrating cylinder.</span><img alt="../_images/static_tube_disp.png" class="docfig" src="../_images/static_tube_disp.png" />
+<p>Time Sequence Animation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_cat2heli.html">
+<div class="docbutton">
+<span class="tooltiptext">Parametric changes between a catenoid to helicoid surface.</span><img alt="../_images/static_cat2heli.png" class="docfig" src="../_images/static_cat2heli.png" />
+<p>Parametric Animation</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_earth_moon.html">
+<div class="docbutton">
+<span class="tooltiptext">Rotation of a 3D colored surface.</span><img alt="../_images/static_earth_moon.png" class="docfig" src="../_images/static_earth_moon.png" />
+<p>Transform and Shade</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_bases.html">
+<div class="docbutton">
+<span class="tooltiptext">Azimuthal variation producing a rotating object perception with a rotating view.</span><img alt="../_images/static_bases.png" class="docfig" src="../_images/static_bases.png" />
+<p>View_init() Azim Reset and Shading</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_pycube.html">
+<div class="docbutton">
+<span class="tooltiptext">Elevation and azimuthal variation producing a rotating object perception with a rotating view.</span><img alt="../_images/static_pycube.png" class="docfig" src="../_images/static_pycube.png" />
+<p>View_init() Elev and Azim Reset and Shading</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_rgb_cube.html">
+<div class="docbutton">
+<span class="tooltiptext">Producing a 3D solid object slicing perception in RGB color space.</span><img alt="../_images/static_rgb_cube.png" class="docfig" src="../_images/static_rgb_cube.png" />
+<p>RGB Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_hsv_cylinder.html">
+<div class="docbutton">
+<span class="tooltiptext">Producing a 3D solid object slicing perception in HSV color space.</span><img alt="../_images/static_hsv_cylinder.png" class="docfig" src="../_images/static_hsv_cylinder.png" />
+<p>HSV Mapping</p>
+</div></a><div class="toctree-wrapper compound">
+</div>
+<a href="animations/anim_lab_rot.html">
+<div class="docbutton">
+<span class="tooltiptext">Azimuthal variation producing a rotating object perception with a rotating view.</span><img alt="../_images/static_lab_rot.png" class="docfig" src="../_images/static_lab_rot.png" />
+<p>Lab Mapping</p>
+</div></a><div style='clear:both'></div></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="referenceData.html" title="Data Sources"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/surface_color/cmap_functions_tut.html" title="Color Mapping Using Functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

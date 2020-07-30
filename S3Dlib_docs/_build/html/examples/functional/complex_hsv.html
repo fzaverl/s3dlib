@@ -1,0 +1,229 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Complex Number Representation, Hue and Value &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Face Normals Vector Field" href="facenormals.html" />
+    <link rel="prev" title="Complex Number Representation, Geometry and Colormap" href="complex.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="facenormals.html" title="Face Normals Vector Field"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="complex.html" title="Complex Number Representation, Geometry and Colormap"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="complex.html"
+                        title="previous chapter">Complex Number Representation, Geometry and Colormap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="facenormals.html"
+                        title="next chapter">Face Normals Vector Field</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/functional/complex_hsv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="complex-number-representation-hue-and-value">
+<span id="complex-hsv"></span><h1>Complex Number Representation, Hue and Value<a class="headerlink" href="#complex-number-representation-hue-and-value" title="Permalink to this headline">¶</a></h1>
+<img alt="../../_images/complex_hsv.png" class="sphx-glr-single-img" src="../../_images/complex_hsv.png" />
+<p>In this simple example, r and <span class="raw-html">&theta;</span> represent the real
+and imaginary components of the function, respectively.  To differentiate
+these two components, the value and hue of the surface color is used, along
+with the surface geometry.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+<span class="c1">#.. Complex Number Representation, Hue and Value</span>
+
+<span class="c1"># 1. Define function to examine .....................................</span>
+<span class="n">Hlow</span><span class="p">,</span> <span class="n">Hhi</span> <span class="o">=</span> <span class="mf">0.783</span><span class="p">,</span> <span class="mf">1.258</span>  <span class="c1"># Hue limits</span>
+
+<span class="k">def</span> <span class="nf">screwfunc</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">t</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">T</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">Z</span>
+
+<span class="k">def</span> <span class="nf">hsv_color</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">z</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>   <span class="c1"># 0 &lt; N &lt; 1</span>
+    <span class="n">Hrange</span> <span class="o">=</span> <span class="n">Hlow</span> <span class="o">+</span> <span class="p">(</span><span class="n">Hhi</span><span class="o">-</span><span class="n">Hlow</span><span class="p">)</span><span class="o">*</span><span class="n">N</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span> <span class="n">Hrange</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="hll">    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+</span><span class="hll">    <span class="n">v</span> <span class="o">=</span> <span class="n">r</span>
+</span>    <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span>
+
+<span class="c1"># 2. Setup and map surfaces .........................................</span>
+<span class="n">rez</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">purple2green</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">([</span><span class="n">Hlow</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="n">Hhi</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">valmap</span> <span class="o">=</span> <span class="n">cmu</span><span class="o">.</span><span class="n">hsv_cmap_gradient</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">screw</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">PolarSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;hex_s&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">purple2green</span><span class="p">)</span>
+<span class="n">screw</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">screwfunc</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">)</span>
+<span class="hll"><span class="n">screw</span><span class="o">.</span><span class="n">map_color_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">hsv_color</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span><span class="n">rgb</span><span class="o">=</span><span class="kc">False</span> <span class="p">)</span>
+</span>
+<span class="c1"># 3. Construct figures, add surface, plot ...........................</span>
+
+<span class="n">fcc</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;     f: $\mathrm{\mathbb</span><span class="si">{C}</span><span class="s1">}$ $\to$  $\mathrm{\mathbb</span><span class="si">{C}</span><span class="s1">}$&#39;</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">axlim</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">minmax</span><span class="p">,</span> <span class="n">zminmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">axlim</span><span class="p">,</span><span class="n">axlim</span><span class="p">)</span> <span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="n">axlim</span><span class="p">,</span><span class="mi">8</span><span class="o">*</span><span class="n">axlim</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">zlim</span><span class="o">=</span><span class="n">zminmax</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span> <span class="sa">r</span><span class="s1">&#39;f(z) = $\frac</span><span class="si">{d}{dz}</span><span class="s1"> \mathcal</span><span class="si">{ln}</span><span class="s1">(z)$&#39;</span> <span class="o">+</span> <span class="n">fcc</span> <span class="p">)</span>
+
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">screw</span><span class="o">.</span><span class="n">cBar_ScalarMappable</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=-.</span><span class="mi">1</span> <span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Imaginary, color Hue ( 3$\pi$ )&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">sm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">valmap</span><span class="p">)</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">([])</span>
+<span class="n">cbar2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=.</span><span class="mi">05</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span> <span class="p">)</span>
+<span class="n">cbar2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;Real, color Value&#39;</span><span class="p">,</span> <span class="n">labelpad</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">screw</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To construct the colorbars, two colormaps were created using the
+<em>hsv_cmap_gradient</em> method.  The <em>purple2green</em> colormap was
+assigned as the default colormap for the surface object during instantiation.
+However, this map was only used for the creation of the Imaginary colorbar
+using the surface object property <em>cBar_ScalarMappable</em>.</p>
+<p>To use the color saturation as the visual indicator of the Real
+component, the two highlighted lines in the <em>hsv_color</em> method is
+simply changed as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">r</span>
+</pre></div>
+</div>
+<p>to produce the following figure.  The <em>valmap</em> color map was modified
+to reflect the description in the Real colorbar along with the labeled text.
+In addition, shading of 0.7 was applied to enhance the 3D visualization.</p>
+<img alt="../../_images/complex_hsv2.png" class="sphx-glr-single-img" src="../../_images/complex_hsv2.png" />
+<p>The <em>map_color_from_op</em> method was also used in the <a class="reference internal" href="RGB_sphere.html#rgb-sphere"><span class="std std-ref">Functional RGB Color Mapping</span></a> example.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="facenormals.html" title="Face Normals Vector Field"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="complex.html" title="Complex Number Representation, Geometry and Colormap"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

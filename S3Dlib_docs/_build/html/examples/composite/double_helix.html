@@ -1,0 +1,238 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Angular 4-Color Color Map &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Texture Surface with Geometric Mapping" href="avacado.html" />
+    <link rel="prev" title="Face Center Translation" href="fullerene.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../../index.html"><img src="../../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../../inst_index.html">Installation</a></li>
+            <li><a href="../../doc_index.html">Documentation</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../index.html">Examples</a></li>
+            <li><a href="../../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="avacado.html" title="Texture Surface with Geometric Mapping"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fullerene.html" title="Face Center Translation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fullerene.html"
+                        title="previous chapter">Face Center Translation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="avacado.html"
+                        title="next chapter">Texture Surface with Geometric Mapping</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/composite/double_helix.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="angular-4-color-color-map">
+<span id="double-helix"></span><h1>Angular 4-Color Color Map<a class="headerlink" href="#angular-4-color-color-map" title="Permalink to this headline">¶</a></h1>
+<img alt="../../_images/double_helix.png" class="sphx-glr-single-img" src="../../_images/double_helix.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">LinearLocator</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span> 
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+<span class="kn">import</span> <span class="nn">s3dlib.cmap_utilities</span> <span class="k">as</span> <span class="nn">cmu</span>
+
+<span class="c1">#.. Angular 4-Color Color Map</span>
+
+<span class="c1"># 1. Define functions to examine ....................................</span>
+
+<span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;AGATTCAGTACTAGAGTCCGAGATAGGAT&quot;</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>                 <span class="c1"># number of twists</span>
+<span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">21.0</span>   <span class="c1"># double helix spacing</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">p1</span><span class="o">/</span><span class="p">(</span><span class="n">p1</span><span class="o">+</span><span class="n">p2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">basePairs</span><span class="p">(</span> <span class="n">codeString</span> <span class="p">)</span> <span class="p">:</span>
+    <span class="n">innerMap</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">}</span>
+    <span class="n">outerMap</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span><span class="mi">3</span> <span class="p">}</span>
+    <span class="n">posMap</span><span class="p">,</span> <span class="n">negMap</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codeString</span> <span class="p">:</span> 
+        <span class="n">posMap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outerMap</span><span class="p">[</span><span class="n">code</span><span class="p">])</span>
+        <span class="n">negMap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">innerMap</span><span class="p">[</span><span class="n">code</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="n">posMap</span><span class="p">,</span><span class="n">negMap</span><span class="p">]</span> <span class="p">)</span>
+
+<span class="n">indexMap</span> <span class="o">=</span> <span class="n">basePairs</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getColorIndex</span><span class="p">(</span><span class="n">rtz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">codeLen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexMap</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">posNeg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">z</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)))</span>
+    <span class="n">codeMap</span> <span class="o">=</span> <span class="n">indexMap</span><span class="p">[</span><span class="n">posNeg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span>
+    <span class="n">tNorm</span> <span class="o">=</span> <span class="p">(</span><span class="n">codeLen</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">tColor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span> <span class="n">tNorm</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">codeMap</span><span class="p">)</span> <span class="p">)</span>  
+    <span class="k">return</span> <span class="n">tColor</span>
+
+<span class="k">def</span> <span class="nf">nacidShape</span><span class="p">(</span><span class="n">rtz</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">Rmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">delta</span>   
+    <span class="n">R</span> <span class="o">=</span> <span class="n">Rmin</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">z</span><span class="o">*</span><span class="n">delta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">Z</span>
+
+<span class="k">def</span> <span class="nf">riboShape</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span> <span class="n">isPos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">rtz</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">ratio</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">ratio</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">z</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">t</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">Z</span> <span class="o">+</span> <span class="n">T</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">ofset</span> <span class="o">=</span> <span class="o">-</span><span class="n">delta</span>
+    <span class="k">if</span> <span class="n">isPos</span> <span class="p">:</span> <span class="n">ofset</span> <span class="o">=</span> <span class="n">delta</span>
+    <span class="k">return</span> <span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="o">+</span><span class="n">ofset</span><span class="p">,</span><span class="n">Z</span>
+    
+<span class="c1"># 2. Setup and map surfaces .........................................</span>
+<span class="n">rez</span><span class="o">=</span> <span class="mi">6</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;blue&#39;</span><span class="p">])</span>
+
+<span class="n">nacid</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">)</span>
+<span class="n">nacid</span><span class="o">.</span><span class="n">map_cmap_from_op</span><span class="p">(</span><span class="n">getColorIndex</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">nacid</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="n">nacidShape</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">riboA</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkgoldenrod&#39;</span><span class="p">)</span>
+<span class="n">riboA</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">riboShape</span><span class="p">(</span><span class="n">rtz</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span><span class="o">.</span><span class="n">hilite</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">riboB</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">CylindricalSurface</span><span class="p">(</span><span class="n">rez</span><span class="p">,</span> <span class="n">basetype</span><span class="o">=</span><span class="s1">&#39;squ_s&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkgoldenrod&#39;</span><span class="p">)</span>
+<span class="n">riboB</span><span class="o">.</span><span class="n">map_geom_from_op</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">rtz</span> <span class="p">:</span> <span class="n">riboShape</span><span class="p">(</span><span class="n">rtz</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span><span class="o">.</span><span class="n">hilite</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+
+<span class="n">dna</span> <span class="o">=</span> <span class="n">nacid</span> <span class="o">+</span> <span class="n">riboA</span> <span class="o">+</span> <span class="n">riboB</span>
+
+<span class="c1"># 3. Construct figure, add surfaces, and plot ......................</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figaspect</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span><span class="mf">0.975</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">dna</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;smaller&#39;</span><span class="p">,</span> <span class="n">multialignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">tL</span><span class="p">,</span> <span class="n">tB</span><span class="p">,</span> <span class="n">tD</span> <span class="o">=</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.137</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tL</span><span class="p">,</span><span class="n">tB</span><span class="p">,</span>     <span class="s1">&#39;Adenine&#39;</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tL</span><span class="p">,</span><span class="n">tB</span><span class="o">+</span><span class="mi">1</span><span class="o">*</span><span class="n">tD</span><span class="p">,</span><span class="s1">&#39;Guanine&#39;</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tL</span><span class="p">,</span><span class="n">tB</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">tD</span><span class="p">,</span><span class="s1">&#39;Thymine&#39;</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tL</span><span class="p">,</span><span class="n">tB</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">tD</span><span class="p">,</span><span class="s1">&#39;Cytosine&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">),</span> <span class="n">zlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">nacid</span><span class="o">.</span><span class="n">cBar_ScalarMappable</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="avacado.html" title="Texture Surface with Geometric Mapping"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fullerene.html" title="Face Center Translation"
+             >previous</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

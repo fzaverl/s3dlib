@@ -1,0 +1,40 @@
+{% extends "!layout.html" %}
+
+{% block rootrellink %}
+        <li><a href="{{ pathto('index') }}">home</a>|&nbsp;</li>
+        <li><a href="{{ pathto('search') }}">search</a>|&nbsp;</li>
+{% endblock %}
+
+
+{% block relbar1 %}
+
+<div style="background-color: white; text-align: left">
+        
+<a href="{{ pathto('index') }}"><img src="{{ pathto('_static/s3dliblogo.png', 1) }}"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="{{ pathto('inst_index') }}">Installation</a></li>
+            <li><a href="{{ pathto('doc_index') }}">Documentation</a></li>
+            <li><a href="{{ pathto('tutorials/index') }}">Tutorials</a></li>
+            <li><a href="{{ pathto('examples/index') }}">Examples</a></li>
+            <li><a href="{{ pathto('docs/index') }}">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+{{ super() }}
+{% endblock %}
+
+{# put the sidebar before the body #}
+{% block sidebar1 %}{{ sidebar() }}{% endblock %}
+{% block sidebar2 %}{% endblock %}
+

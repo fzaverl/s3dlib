@@ -1,0 +1,267 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Face and Edge Colors &#8212; s3dlibdoc 20.07.23 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/s3dlib.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/s3dliblogo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image and Datagrid Mapping" href="image_mapping.html" />
+    <link rel="prev" title="Shading, Highlighting and Color Mapped Normals" href="shading.html" /> 
+  </head><body>
+
+<div style="background-color: white; text-align: left">
+        
+<a href="../index.html"><img src="../_static/s3dliblogo.png"></a>
+
+
+<nav class="main-nav">
+        <ul>
+            <li><a href="../inst_index.html">Installation</a></li>
+            <li><a href="../doc_index.html">Documentation</a></li>
+            <li><a href="../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../examples/index.html">Examples</a></li>
+            <li><a href="../docs/index.html">API</a>&nbsp;</li>
+        </ul>
+</nav>
+
+
+</div>
+
+
+
+
+
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="image_mapping.html" title="Image and Datagrid Mapping"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shading.html" title="Shading, Highlighting and Color Mapped Normals"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Guides</a> &#187;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Face and Edge Colors</a><ul>
+<li><a class="reference internal" href="#solid-colors">Solid Colors</a></li>
+<li><a class="reference internal" href="#transparency">Transparency</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shading.html"
+                        title="previous chapter">Shading, Highlighting and Color Mapped Normals</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image_mapping.html"
+                        title="next chapter">Image and Datagrid Mapping</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/face_edge.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="face-and-edge-colors">
+<span id="face-edge"></span><h1>Face and Edge Colors<a class="headerlink" href="#face-and-edge-colors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="solid-colors">
+<h2>Solid Colors<a class="headerlink" href="#solid-colors" title="Permalink to this headline">¶</a></h2>
+<p>The colors of surface faces and edges are setup during the object
+instantiation using the named argument assignments of <em>color</em>, <em>facecolor</em>, and <em>edgecolor</em>.
+With no assignments,
+the default color for faces and edges is the Matplotlib color
+‘C0’.  The assignment of three arguments can be made in several
+combinations and, at first, slightly confusing.
+From the Matplotlib <em>Poly3DCollection</em> code comments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Note that this class does a bit of magic with the _facecolors</span>
+<span class="sd">and _edgecolors properties.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<p>The logic for how colors are assigned is:</p>
+<ol class="arabic simple">
+<li>If color is not assigned, the color will be the ‘C0’ default color (blue).</li>
+<li>If facecolor is not assigned, facecolor will be the color.</li>
+<li>If edgecolor is not assigned, edgecolor will be the facecolor only if the color is <strong>not</strong> assigned, otherwise it will be the color.</li>
+</ol>
+<p>Using three different colors for the three arguments, the eight combinations for assignment
+to a SphericalSurface are shown below.  The most confusing is when edgecolor is not assigned, in which
+case it will take the value of the facecolor or color argument value ( <em>F</em> or <em>CF</em> ).  In general, either
+use just facecolor or the combination of both facecolor and edgecolor to avoid unexpected results.</p>
+<img alt="../_images/CFEcolor.png" class="sphx-glr-single-img" src="../_images/CFEcolor.png" />
+<p>When the facecolors are changed after instantiation, either by colormap operations, colormapping normals
+or shading, the edgecolors will be reassigned.  This is shown for the shading case where shading has
+been applied to the surface. If edges are to be shown, use the object method after shade:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="n">edgecolor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The script to generate the above plots is given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">s3dlib.surface</span> <span class="k">as</span> <span class="nn">s3d</span>
+ 
+<span class="c1"># 2. Setup and map surfaces .........................................</span>
+<span class="n">rez</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">C</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="n">E</span> <span class="o">=</span> <span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span>
+
+<span class="n">surf_C</span> <span class="o">=</span>    <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">C</span> <span class="p">)</span>
+<span class="n">surf_F</span> <span class="o">=</span>    <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">F</span> <span class="p">)</span>
+<span class="n">surf_E</span> <span class="o">=</span>    <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">E</span> <span class="p">)</span>
+<span class="n">surf_CF</span> <span class="o">=</span>   <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">F</span> <span class="p">)</span>
+<span class="n">surf_CE</span> <span class="o">=</span>   <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">E</span> <span class="p">)</span>
+<span class="n">surf_FE</span> <span class="o">=</span>   <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">E</span> <span class="p">)</span>
+<span class="n">surf_0</span> <span class="o">=</span>    <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span> <span class="p">)</span>
+<span class="n">surf_CFE</span> <span class="o">=</span>  <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">E</span> <span class="p">)</span>
+<span class="n">surf_CFEs</span> <span class="o">=</span> <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">E</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span>
+
+<span class="c1"># 3. Construct figure, add surfaces, and plot .....................</span>
+
+<span class="n">title</span> <span class="o">=</span> <span class="p">[</span>    <span class="s1">&#39;C&#39;</span><span class="p">,</span>    <span class="s1">&#39;F&#39;</span><span class="p">,</span>    <span class="s1">&#39;E&#39;</span><span class="p">,</span>    <span class="s1">&#39;CF&#39;</span><span class="p">,</span>    <span class="s1">&#39;CE&#39;</span><span class="p">,</span>    <span class="s1">&#39;FE&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>    <span class="s1">&#39;CFE&#39;</span><span class="p">,</span>  <span class="s1">&#39;CFE.shade&#39;</span><span class="p">]</span>
+<span class="n">surf</span> <span class="o">=</span>  <span class="p">[</span> <span class="n">surf_C</span><span class="p">,</span> <span class="n">surf_F</span><span class="p">,</span> <span class="n">surf_E</span><span class="p">,</span> <span class="n">surf_CF</span><span class="p">,</span> <span class="n">surf_CE</span><span class="p">,</span> <span class="n">surf_FE</span><span class="p">,</span>    <span class="n">surf_0</span><span class="p">,</span> <span class="n">surf_CFE</span><span class="p">,</span>   <span class="n">surf_CFEs</span> <span class="p">]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">minmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-.</span><span class="mi">7</span><span class="p">,</span><span class="o">.</span><span class="mi">7</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">331</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">zlim</span><span class="o">=</span><span class="n">minmax</span> <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">surf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transparency">
+<h2>Transparency<a class="headerlink" href="#transparency" title="Permalink to this headline">¶</a></h2>
+<p>When the facecolor has an alpha channel value less than one, the edgecolor is not assigned
+the alpha and retains the full opacity.  This effect is seen in the following plot for the
+first surface on the left.  Even when the edgecolor is assigned transparent and shading applied,
+only the facecolor RGB channels are assigned to the edges.  The edge alpha is set to one.
+This case is shown for the middle surface.</p>
+<p><strong>To hide the edges</strong> when using facecolor with a transparency, assign the <em>linewidth</em> to zero,
+as shown for the right surface.</p>
+<img alt="../_images/CFEcolor2.png" class="sphx-glr-single-img" src="../_images/CFEcolor2.png" />
+<p>The script fragment to generate the above plot is given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fa</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">Ea</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">)</span>
+
+<span class="n">surf_Fa_s</span> <span class="o">=</span>    <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">Fa</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span>
+<span class="n">surf_FaEa_a</span> <span class="o">=</span>  <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Fa</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">Ea</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span>
+<span class="n">surf_FaW0_a</span> <span class="o">=</span>  <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">Fa</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>To hide the faces</strong> but still apply shading or a color map to the edges, use the
+object method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">transparent_color</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <em>transparent_color</em> is any color with the alpha channel set to zero.</p>
+<img alt="../_images/CFEcolor3.png" class="sphx-glr-single-img" src="../_images/CFEcolor3.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As described in the <a class="reference internal" href="../tutorials/surface_geom/helloworld.html#helloworld"><span class="std std-ref">Hello World</span></a> tutorial, edges can be displayed using
+the object property <em>edges</em>.  However, <strong>only</strong> a solid color can be assigned to
+this property with the object constructor.  Color variations are not available.</p>
+</div>
+<p>The script fragment to generate the above plot is given below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surf_Fs</span> <span class="o">=</span>  <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">F</span> <span class="p">)</span><span class="o">.</span><span class="n">shade</span><span class="p">()</span>
+<span class="n">surf_Fs</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">surf_cmap</span> <span class="o">=</span>  <span class="n">s3d</span><span class="o">.</span><span class="n">SphericalSurface</span><span class="p">(</span> <span class="n">rez</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">F</span> <span class="p">)</span>
+<span class="n">surf_cmap</span><span class="o">.</span><span class="n">map_cmap_from_normals</span><span class="p">(</span><span class="s1">&#39;hsv&#39;</span><span class="p">)</span>
+<span class="n">surf_cmap</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="image_mapping.html" title="Image and Datagrid Mapping"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shading.html" title="Shading, Highlighting and Color Mapped Normals"
+             >previous</a> |</li>
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../search.html">search</a>|&nbsp;</li>
+
+          <li class="nav-item nav-item-1"><a href="../doc_index.html" >Documentation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Guides</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, frank zaverl.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>
