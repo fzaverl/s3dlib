@@ -17,7 +17,7 @@ generate various figures in the S3Dlib documentation.
 | G_9.py  |    2    | Guides: Orientation | Object Rotations, surface object rotations |
 | G_10.py |    1    | Guides: Vector Fields | Vectors at a Coordinate, uvw aves |
 | G_11.py |    4    | Guides: Vector Fields | surface with vector plots |
-| G_12.py |    8    | Guides: Color Map Utilities | color map swatches |
+| G_12.py |   10    | Guides: Color Map Utilities | custom colormap swatches |
 | G_13.py |    3    | Guides: Color Map Utilities | Named color swatches |
 | T_14.py |    3    | Tutorial: Coor. and Fncts | Function Coordinates |
 
