@@ -4,18 +4,19 @@
  */
 
 :root {
-	--navbar-color: rgb(146, 161, 85);
+	--navbar-color: rgb(97, 64, 41);
 	--pagebkgd-color: rgb(84, 154, 171);
 	--pagebkgd-color3: rgb(123, 168, 213);
-	--sphxfoot-color: rgb(81, 136, 155);
+	--sphxfoot-color: rgb(97, 64, 41);
 	--topic-color: rgb(84, 154, 171);
-	--hdtitle-color: rgb(81, 136, 155);
-	--hd2title-color: rgb(146, 161, 85);
-	--link-color: rgb(224, 30, 38);
+	--hdtitle-color: rgb(97, 64, 41);
+	--hd2title-color: rgb(89, 116, 0);
+	--hd34title-color: rgb(81, 136, 155);
+	--link-color: rgb(219, 89, 0);
 	--over-color: rgb(55, 123, 191);
 	--exlink-color: rgb(81, 136, 155);
 	--exover-color: rgb(37, 107, 111);
-	--notebg-color: rgb(152, 211, 133);
+	--notebg-color: rgb(186, 121, 74);
 }
 
 
@@ -317,6 +318,7 @@ h2 {
 }
 
 h3 {
+    color: var(--hd34title-color);
     margin: 1em 0 -0.3em 0;
     font-size: 1.2em;
 }
