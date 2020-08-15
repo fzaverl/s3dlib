@@ -6,9 +6,9 @@ The studies are used to note limitations and functional improvements to the pack
 
 ---
 
-![Knot](escher_5.png)
+![Knot](images/an_escher1.png)
 
-> ### escher_an.py  
+> ### an_escher1.py  
 >
 > Inspired by M.C.Escher - [Knots](https://mcescher.com/gallery/mathematical/)  
 > The knot function is based on a trefoil knot, described in [Wikipedia](https://en.wikipedia.org/wiki/Trefoil_knot)  
@@ -26,7 +26,7 @@ The studies are used to note limitations and functional improvements to the pack
 
 ---
 
-![Knot2](escher2.png)
+![Knot2](images/escher2.png)
 
 > ### escher2.py  
 >
@@ -46,6 +46,43 @@ The studies are used to note limitations and functional improvements to the pack
 > - mirrored shading and highlighting (effectively having two opposing light sources)
 > - allow geometric transforms for compound surfaces, iff sub-surfaces are of the same derived class.
 >   In such cases, the native coordinates are known and transforms can be made using the sub-class coor transform. 
+
+---
+
+![Knot2](images/escher3.png)
+
+> ### escher3.py  
+>
+> Inspired by M.C.Escher - [Knots](https://mcescher.com/gallery/mathematical/)  
+> Third in the set using a torus geometry.  
+>
+> As in the previous case, a compound surface was constructed. Again, the same restriction on
+> compound surfaces requiring the work around. Also for surface with alpha set, the edges are shown
+> if the linewidth is not set to zero, hence the need for this assignment.  
+>
+> Dev notes for future versions:
+> - evaluate the issue of requiring linewidth to be set to zero for faces with non-unity alphas. 
+
+---
+
+
+![Knot2](images/an_escher4.png)
+
+> ### an_escher4.py  
+>
+> Exploration of creating visualiztion of movement without changes in orientation or geometry.  
+>
+> Using the geometries in the previous case, the s3dlib.cmap_utilites were used to create
+> custom stiched color maps with gradients in the alpha channels. The maps were simply applied
+> to varying angular positions of the geometry.  
+>
+> Demonstration of using a:
+> - color map with changes in alpha.
+> - compound color map with regions having alpha set to zero.
+> - color map applied to various coordinates of the surface geometry. 
+
+> Dev notes for future versions:
+> - display a Matplotlib colorbar which is semi-transparent or transparent. 
 
 ---
 
