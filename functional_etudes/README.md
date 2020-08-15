@@ -72,15 +72,15 @@ The studies are used to note limitations and functional improvements to the pack
 >
 > Exploration of creating visualiztion of movement without changes in orientation or geometry.  
 >
-> Using the geometries in the previous case, the s3dlib.cmap_utilites were used to create
-> custom stiched color maps with gradients in the alpha channels. The maps were simply applied
+> The s3dlib.cmap_utilites were used to create custom stiched color maps with gradients in the alpha
+> channels. Using the geometries in the previous case, the maps were simply applied
 > to varying angular positions of the geometry.  
 >
 > Demonstration of using a:
 > - color map with changes in alpha.
 > - compound color map with regions having alpha set to zero.
-> - color map applied to various coordinates of the surface geometry. 
-
+> - color map applied to various coordinates of the surface geometry.  
+>
 > Dev notes for future versions:
 > - display a Matplotlib colorbar which is semi-transparent or transparent. 
 
