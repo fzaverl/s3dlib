@@ -49,7 +49,7 @@ The studies are used to note limitations and functional improvements to the pack
 
 ---
 
-![Knot2](images/escher3.png)
+![Knot3](images/escher3.png)
 
 > ### escher3.py  
 >
@@ -70,7 +70,7 @@ The studies are used to note limitations and functional improvements to the pack
 
 > ### an_escher4.py  
 >
-> Exploration of creating visualiztion of movement without changes in orientation or geometry.  
+> Exploration of creating visualization of movement without changes in orientation or geometry.  
 >
 > The s3dlib.cmap_utilites were used to create custom stiched color maps with gradients in the alpha
 > channels. Using the geometries in the previous case, the maps were simply applied
@@ -83,6 +83,34 @@ The studies are used to note limitations and functional improvements to the pack
 >
 > Dev notes for future versions:
 > - display a Matplotlib colorbar which is semi-transparent or transparent. 
+
+---
+
+
+![power](images/an_power.png)
+
+> ### an_power.py  
+>
+> Exploration of an alternative visualization for three line plots over a periodic interval.
+> The following 2D plots of the data used in the above plot are shown below. 
+>
+> ![powerplot](images/power_plot.png)
+>
+> This data was obtained by modifying the
+> [powerdata](https://picower.mit.edu/news/information-flows-through-brains-heirarchy-higher-regions-use-higher-frequency-waves) 
+> to create a period over the frames range with a value range of 0 to 1.
+> >
+> Notes:
+> - Only problem during code development was noting that the frame argument
+>   passed into the update_fig() function was of type float.  This argument value
+>   is an index array and needed to be passed as an int to the data3D() method.  
+> - This 3D method of visualization does not provide any new conceptional information 
+>   for this particular data set.  However, this visulization method may be useful for other
+>   types of data sets, particularly when the frames represent a cyclic time sequence.
+> - The alternative 3D object can be obtained by xyz scaling ( ellipsoid ) or modidying the
+>   expression for F in the data3D method ( power of F results in sharpening or smoothing ).
+> - The simplest coloring of the surface was obtained by directly using RGB space.
+> - More complex coloring could define a function to pass as an argument to map_geom_from_op().  
 
 ---
 
