@@ -20,7 +20,7 @@ cmu.stitch_cmap('ABk', 'inferno', name='Abk_inf' )
 cmaps = [ 'BuA', 'BuYwA','BuABu', 'BuAARd' ,'inf_Clr', 'Abk_inf' ]
 
 # ===================================================================
-def show_trans_cmap(ax,cmap,Lstr=None,aspect=26) :
+def show_trans_cmap(ax,cmap,Lstr=None,aspect=24) :
     # ...............................................
     def over_color(lower_color, upper_color) :  
         opaque, transparent = 0.99, 0.01
