@@ -3,7 +3,7 @@
 This directory contains Python scripts and companion
 figures using the [S3Dlib](https://s3dlib.org) package.
 The studies are used to note limitations and functional improvements to the package.
-Complex surfaces requiring multiple operations were used to identify any
+Complex composite surfaces requiring multiple operations were used to identify any
 code errors which might not be realized with simple unit tests.  The Escher 3D
 surfaces were useful for this purpose.
 
@@ -16,7 +16,7 @@ surfaces were useful for this purpose.
 
 Inspired by M.C.Escher - [Spirals](https://mcescher.com/gallery/mathematical/)  
 
-Although a surface object has a defined surface normals, Matplotlib 3D renders the surface
+Although a surface object has defined surface normals, Matplotlib 3D renders the surface
 color the same regardless of projection of the normal to the view (i.e., there is
 no 'front' or 'back' surface).  To provide a realistic view of the twisted ribbons,
 the two sides of the surface needed to be illuminated relative to which side
@@ -40,6 +40,16 @@ The following default values were set to match the Escher figure.
 - colors and illumination direction.
 
 Dev notes  
+- Future surface object method: *rev_mormals()*.  
+  Shadows and highlight were applied to inner and outer surfaces prior to being
+  added together as a composite. With the rev_normals() method, the inner surface
+  normals could be reversed, then added with the outer surface.  The shadows and
+  highlights could then be applied to the composite.  Method would be to simply
+  reverse the face indices by switching two columns of the array (cheap one-liner numpy method).
+- A future Future surface object method: *dual()*.  
+  Create an inner and outer surface as a composite.  More computationally costly
+  to translate surface vectors twice, translation amount, when to apply the method, etc.
+  Also, would use the *rev_dual* for the second surface ( hence above method needed first ).
 - The toroidal reduction was linear with angular position for this surface object,
   however it appears in the Escher figure to decrease more rapidly initially. 
 - The method of creating inner and outer surfaces isn't applicable for non-orientable
@@ -68,29 +78,39 @@ To reproduce a similar twist, an expression for twisting was developed so that
 the rate was maximum at the poles and minimum at the equator.
 
 Dev notes  
-- Surfaces with ransparent faces, with opaque edges are still an issue when 
+- Surfaces with transparent faces, with opaque edges are still an issue when 
   used in composite objects.  Edge arrays need to be combined in the add method. 
+- When using *set_surface_alpha()*, need to distiguish if affect is either
+  faces, edges, or both.
 
 ---
 ---
 
 ![Planetoid](images/planetoid.png)
 
-## planetoid.py  
+## planetoid.py  tetraplanetoid.py
 
 Inspired by M.C.Escher - [Double Planetoid](https://mcescher.com/gallery/mathematical/)  
 
-This surface is fairly simple.  Use a pair of Tetrahedron surfaces, as shown in the
+These surfaces are fairly simply constructed.
+
+For the figure on the left, use a pair of Tetrahedron surfaces, as shown in the
 'Intermediate Surfaces' documention example. Flip one over and rotate it 180 degrees.
 Add the two together. Randomly generated surface textures were created similar to the
 'Surface Texture' documentation example,
 with the addition of increasing the deviation with increasing distance from the center.
 The blue circular background is simply a polar surface, rotated back from the view.
 
+For the right figure, a single Tetrahedron surface is used.  The circular shapes on the
+triangular faces are constructed by setting the radius from the origin to a constant.
+The sphere color is a map with a gradient in the alpha channel.
+
 Dev Note:  
 
 - Setting the face color in the constructer didn't appear to work for the tetrahedron.
   As a result, the color was set after the object was constructed.  Need to look into this. 
+- As noted in the previous example, edge arrays need to be controlled for appropriate
+  rendering of composite surfaces with transparencies.  
 
 ---
 ---
