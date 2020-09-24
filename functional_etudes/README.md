@@ -115,6 +115,19 @@ Dev Note:
 ---
 ---
 
+![Earth Moon Planetoid](images/em_planetoid.png)
+
+## em_planetoid.py
+
+Inspired by M.C.Escher - [Double Planetoid](https://mcescher.com/gallery/mathematical/)  
+
+From the previos example, this is just a very trivial modification to the
+*planetoid.py* script.  Surface color and geometry were just image mapped to the surface,
+as described in the S3Dlib documentation examples.
+
+---
+---
+
 ![Knot](images/an_escher1.png)  
 
 ## an_escher1.py  
