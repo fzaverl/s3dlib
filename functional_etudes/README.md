@@ -83,6 +83,37 @@ Dev notes
 - When using *set_surface_alpha()*, need to distiguish if affect is either
   faces, edges, or both.
 
+--- 
+---
+
+![Mobius Strip](images/an_mobius_grid.png)  
+
+## an_mobius_grid.py   
+
+Inspired by M.C.Escher - [Mobius Strip](https://mcescher.com/gallery/mathematical/)  
+
+This study investigates using front and back faces of a strip, but using a continuous
+surface that is twisted and wrapped around twice to create a Mobius *looking* double
+sided surface.   The contiuous surface idea came from watching a
+[DING/Vsauce](https://www.youtube.com/watch?v=v4AYJ7K_fMM&feature=youtu.be) *Mobius Bagels*
+video on YouTube.
+
+The basic functionality for a Mobius strip is just a linearly variation of twist around a
+flat circular ring.  This method was demonstrated in the S3Dlib examples and the
+[Matplotlib](https://matplotlib.org/3.1.1/gallery/mplot3d/trisurf3d_2.html?highlight=mobius)
+example.  However, the Escher figure has numerous non-linearities
+that are necessary to construct to produce a similar visualization.  The twist is not linear,
+the plane of the ring is not flat, the ring is skewed and the strip varies in thickness. 
+Even with simple functional relations, the parameter numerical values needed to be investigated
+to produce a similar rendering to the Escher figure. The grid on the strip is just a image
+of a grid mapped onto the original cylindrical surface. 
+
+Dev notes  
+- For images which require detailed mapping, a high rez is needed for an adequate rendering.  
+- Although interesting to develope, this figure is beyond the intended scope of S3Dlib usage.
+  However, it does demonstrate the level of complexity which S3Dlib can handle.  Actual surface
+  constructions is relatively easy once the functions have been define.   
+
 ---
 ---
 
