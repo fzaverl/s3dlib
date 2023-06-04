@@ -7,7 +7,7 @@
 [s3dlib.org](https://s3dlib.org)**
 
 ---
-##Usage
+## Usage
 
 S3Dlib simplifies the construction of 3D objects by the functional mapping of predefined geometries in planar, polar, cylindrical and spherical coordinates.  Using these geometries removes the development effort of constructing a network of vertex coordinates.
 
@@ -96,7 +96,7 @@ plt.show()
 
 
 ---
-##Surface Contours
+## Surface Contours
 
 Line contours can be constructed directly from 3D surfaces. The contours are line objects which also have mapping functionality.
 The following figure, contours are initially generated from the surface. The line color is taken, by default, from the surface.
@@ -144,7 +144,7 @@ plt.show()
 ```
 
 ---
-##Ruled Surfaces
+## Ruled Surfaces
 
 Just as line objects can be created from surface objects, ruled surfaces can be created from line objects. Considering the case of a hyperboloid of revolution, the surface is generated using two circles:
 
