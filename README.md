@@ -258,7 +258,7 @@ In the following figure, surfaces are parameterized by the u,v coordinates with 
 The Python script to construct the above figure is located in the *examples* directory.
 
 ---
-##General
+## General
 
 **Version** 1.1.0
 
