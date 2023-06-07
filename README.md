@@ -250,12 +250,11 @@ Consider the 'DualCmap' shown below.
 <p align='center'><img src='images/cmap_uv_dualcmap.png#center'></p>
 
 
-In the following figure, surfaces are parameterized by the u,v coordinates with values indicated by this two-dimensional colormap.
+In the following figure ( [source code](/examples/uv_dualcmap.py) ), surfaces are parameterized by the u,v coordinates with values indicated by this two-dimensional colormap.
  
 
 <p align='center'><img src='images/uv_dualcmap.png#center'></p>
 
-The Python script to construct the above figure is located in the *examples* directory.
 
 ---
 ## General
