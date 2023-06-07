@@ -55,7 +55,7 @@ An effect of a single parameter is shown below by visually comparing the shape o
 
 <p align='center'><img src='images/twist_set.png#center'></p>
 
-Likewise, a table of surfaces can represent a two-parameter function.  The example below  ( [source](/examples/sph_harm.py) ) shows the shapes for spherical harmonics using the [scipy function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.sph_harm.html).
+Likewise, a table of surfaces can represent a two-parameter function.  The example below  ( [source code](/examples/sph_harm.py) ) shows the shapes for spherical harmonics using the [scipy function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.sph_harm.html).
 
 <p align='center'><img src='images/sph_harm.png#center'></p>
 
