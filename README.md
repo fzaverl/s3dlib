@@ -51,11 +51,11 @@ produces the figure:
 
 ---
 This approach is particularly useful when visualizing the effect of function parameter values on surface geometry. 
-An effect of a single parameter is shown below by visually comparing the shape of the twisted strip. The code for generating this figure is in the *examples* directory.
+An effect of a single parameter is shown below by visually comparing the shape of the twisted strip  ( [source code](/examples/twist_set.py) ).
 
 <p align='center'><img src='images/twist_set.png#center'></p>
 
-Likewise, a table of surfaces can represent a two-parameter function.  The example below shows the shapes for spherical harmonics using the [scipy function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.sph_harm.html).
+Likewise, a table of surfaces can represent a two-parameter function.  The example below  ( [source](/examples/sph_harm.py) ) shows the shapes for spherical harmonics using the [scipy function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.sph_harm.html).
 
 <p align='center'><img src='images/sph_harm.png#center'></p>
 
