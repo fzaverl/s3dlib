@@ -150,7 +150,7 @@ Just as line objects can be created from surface objects, ruled surfaces can be 
 
 <p align='center'><img src='images/hyperboloid.png#center'></p>
 
-For this case, the following function and object construction are shown below.  The complete script with the Matplotlib figure creation is given in the *examples* directory.
+For this case, the following function and object construction are shown below.  The complete [source code](/examples/hyperboloid.py) with the Matplotlib figure creation is given in the *examples* directory.
 
 ```python
 # 1. Define functions to examine ....................................
