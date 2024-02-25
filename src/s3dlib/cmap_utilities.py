@@ -16,17 +16,10 @@ import copy
 
 import numpy as np
 
-from matplotlib import cm, colors
+import matplotlib as mpl
+from matplotlib import colors     # update for v_1.2.0
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
-# +---------------------------------------------------------+
-# |  NOTE: depricated from 3.6:                             |
-# |            matplotlib.cm.get(name)                      |
-# |        to  matplotlib.colormaps[name]                   |
-# |  Note: depricated from 3.6:                             |
-# |            matplotlib.cm.register_cmap(name)            |
-# |        to  matplotlib.colormaps.register(name)          |
-# +---------------------------------------------------------+
 
 def rgb_cmap_gradient(lowColor='k', highColor='w', name=None, mirrored=False) :
     """
@@ -73,7 +66,7 @@ def rgb_cmap_gradient(lowColor='k', highColor='w', name=None, mirrored=False) :
     if mirrored : clist = [lowColor,highColor,lowColor]
     cmap = LinearSegmentedColormap.from_list(call_name, clist )
     if name is not None :
-        cm.register_cmap(name,cmap)
+        mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     return cmap
 
 def _smoothHue(lowHue,hiHue,eps,numbSegs) :
@@ -146,7 +139,7 @@ def hsv_cmap_gradient(lowHSV=[0,1,1], hiHSV=[1,1,1], name=None, mirrored=False, 
     # ............................................................
     def stringToHSV(sVal) :
         addOne = False
-        if sVal[0] is '+':
+        if sVal[0] == '+':
             addOne = True
             sVal = sVal[1:]
         h,s,v = colors.rgb_to_hsv(colors.to_rgb(sVal))
@@ -187,7 +180,7 @@ def hsv_cmap_gradient(lowHSV=[0,1,1], hiHSV=[1,1,1], name=None, mirrored=False, 
         if smooth is None :
             h = np.mod(h, 1)
         else: h = hH[i]
-        r,g,b = cm.mpl.colors.hsv_to_rgb([h,s,v])
+        r,g,b = colors.hsv_to_rgb([h,s,v])     # update for v_1.2.0
         clist.append([r,g,b,a])  
     cmap = ListedColormap(clist)
     if mirrored :
@@ -196,7 +189,7 @@ def hsv_cmap_gradient(lowHSV=[0,1,1], hiHSV=[1,1,1], name=None, mirrored=False, 
     
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
         
     return cmap
@@ -246,7 +239,7 @@ def binary_cmap(negColor='b', posColor='r', name=None, bndry=None ) :
 
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -291,10 +284,10 @@ def hue_cmap(lowHue=0, hiHue=None, smooth=1.6, name=None ) :
     # ............................................................
     def stringToHue(sVal) :
         addOne = False
-        if sVal[0] is '+':
+        if sVal[0] == '+':
             addOne = True
             sVal = sVal[1:]
-        h,s,v = colors.rgb_to_hsv(colors.to_rgb(sVal))
+        h,_,_ = colors.rgb_to_hsv(colors.to_rgb(sVal))
         if addOne : h += 1
         return h    
     # ............................................................
@@ -321,12 +314,13 @@ def hue_cmap(lowHue=0, hiHue=None, smooth=1.6, name=None ) :
 
     one = np.ones(len(h))
     hsv = np.transpose([h,one,one])
-    rgb = cm.mpl.colors.hsv_to_rgb(hsv)
+    #rgb = cm.mpl.colors.hsv_to_rgb(hsv)
+    rgb = colors.hsv_to_rgb(hsv)     # update for v_1.2.0
     cmap = colors.ListedColormap(rgb)
 
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
 
     return cmap
@@ -373,10 +367,10 @@ def stitch_cmap( *maps, bndry=None, name=None) :
             raise ValueError(strgMsg.format(numbBndry,numbMaps))
     bndry.append(1.0)
 
-    colormaps = []
+    cmapList = []
     for cmap in maps :
-        if isinstance(cmap,str) : cmap = cm.get_cmap(cmap)  
-        colormaps.append(cmap)
+        if isinstance(cmap,str) : cmap = mpl.colormaps[cmap]     # update for v_1.2.0
+        cmapList.append(cmap)
 
     N = 256
     Nbndry = np.subtract(np.multiply(bndry,N),1)
@@ -388,11 +382,11 @@ def stitch_cmap( *maps, bndry=None, name=None) :
             colorIndexStart = i
         d = 1/(Nbndry[mapIndex]-colorIndexStart)
         index = d*(i-colorIndexStart)
-        clist.append( colormaps[mapIndex](index) )
+        clist.append( cmapList[mapIndex](index) )
     cmap = ListedColormap(clist)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -446,7 +440,7 @@ def stitch_color(*colorArr, bndry=None, name=None ) :
     cmap = ListedColormap(RGBA)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
 
     return cmap
@@ -484,7 +478,7 @@ def alpha_cmap( cmap, alpha, constant=False, name=None )  :
         raise ValueError('alpha must be between 0 and 1, found {}'.format(alpha))       
     
     if isinstance(cmap,str) : 
-        cmap = cm.get_cmap(cmap)
+        cmap = mpl.colormaps[cmap]      # update for v_1.2.0
     if name is None :
         name = cmap.name + '_a'
 
@@ -492,8 +486,9 @@ def alpha_cmap( cmap, alpha, constant=False, name=None )  :
         # LinearSegmentedColormap ...
         cdict = copy.copy(cmap._segmentdata)
         cdict['alpha'] = [ (0.0, alpha,alpha),(1.0, alpha,alpha) ]
-        cm.register_cmap(name, data=cdict)
-        newCmap = cm.get_cmap(name)
+        newCmap = LinearSegmentedColormap(name,cdict)
+        mpl.colormaps.register(newCmap,name=name)     # update for v_1.2.0
+
     else :
         # ListedColormap ............
         colorArr = copy.copy(cmap.colors)
@@ -502,7 +497,7 @@ def alpha_cmap( cmap, alpha, constant=False, name=None )  :
             if colorArr.shape[1] == 4 : alpha = alpha*colorArr[:,3]
         colorArr = np.insert(colorArr,3,alpha,axis=1)[:,:4]
         newCmap = ListedColormap(colorArr,name)
-        cm.register_cmap(name,newCmap)
+        mpl.colormaps.register(newCmap,name=name)     # update for v_1.2.0
     return newCmap
 
 def mirrored_cmap( cmap, name=None, rev=False) :
@@ -522,7 +517,7 @@ def mirrored_cmap( cmap, name=None, rev=False) :
 
     """  
     if isinstance(cmap,str) : 
-        cmap = cm.get_cmap(cmap)
+        cmap = mpl.colormaps[cmap]     # update for v_1.2.0
     if name is None :
         name = cmap.name + '_m'
         if rev : name += 'r'
@@ -534,7 +529,7 @@ def mirrored_cmap( cmap, name=None, rev=False) :
     clist =cmap(n)
     cmap = ListedColormap(clist)
    
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -555,14 +550,26 @@ def reversed_cmap( cmap, name=None ) :
 
     # for convenience to eliminate need for extra import.
     # Basically, same as Matplot colors.Colormap .reversed() method
-    if isinstance(cmap,str) : 
-        cmap = cm.get_cmap(cmap)    
-    cmap = cmap.reversed()
-    if name is None :
-        name = cmap.name  # note: reverse returns name + '_r'
     
-    cm.register_cmap(name,cmap)
-    cmap.name = name
+    current_name = None
+
+    if isinstance(cmap,str) : 
+        current_name = cmap
+        cmap = mpl.colormaps[cmap]     # update for v_1.2.0
+    else:
+        current_name = cmap.name
+
+    # determine if revered cmap already exists.
+    new_name = current_name + '_r'
+    if name is not None : new_name = name
+    try:
+        cmap = mpl.colormaps[new_name]
+        return cmap
+    except : pass
+
+    cmap = cmap.reversed()
+    mpl.colormaps.register(cmap,name=new_name)     # update for v_1.2.0
+    cmap.name = new_name
     return cmap
 
 def op_cmap(operation,rgb=True,name=None):
@@ -611,20 +618,22 @@ def op_cmap(operation,rgb=True,name=None):
     x = np.linspace(0.0,1.0,num=numbSegs)
     clist = operation(x)    
     clist = np.array(clist).T
-    hasAlpha = clist.shape[1] is 4
+    hasAlpha = clist.shape[1] == 4
     if not rgb :
         if hasAlpha :
             alp = clist[:,[3]]
             clist = clist[:,[0,1,2]]
-            clist = cm.colors.hsv_to_rgb(clist)
+            #clist = cm.colors.hsv_to_rgb(clist)
+            clist = colors.hsv_to_rgb(clist)     # update for v_1.2.0
             clist = np.append(clist,alp,1)
         else :
-            clist = cm.colors.hsv_to_rgb(clist)      
+            #clist = cm.colors.hsv_to_rgb(clist)      
+            clist = colors.hsv_to_rgb(clist)     # update for v_1.2.0
     
     cmap = ListedColormap(clist)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     
     return cmap
@@ -681,7 +690,7 @@ def op_alpha_cmap(cmap,operation,fit=True,name=None):
     # ----------------------------------------
     name = getFunctionName(operation,name)
     if isinstance(cmap,str) : 
-        cmap = cm.get_cmap(cmap)
+        cmap = mpl.colormaps[cmap]    # update for v_1.2.0
     if name is None :
         name = cmap.name + '_a'
 
@@ -692,7 +701,7 @@ def op_alpha_cmap(cmap,operation,fit=True,name=None):
     colorList = cmap(x).T
     colorList[3:] = alphalist
     newCmap = ListedColormap(colorList.T, name=name)
-    cm.register_cmap(name,newCmap)
+    mpl.colormaps.register(newCmap,name=name)     # update for v_1.2.0
     return newCmap
 
 def section_cmap(cmap,lowIndx,hiIndx,name=None) :
@@ -725,8 +734,8 @@ def section_cmap(cmap,lowIndx,hiIndx,name=None) :
     """
 
     # ------------------------------------------------
-    def opFunc(t) : 
-        return cm.get_cmap(cmap)(lowIndx + (hiIndx-lowIndx)*t).T
+    def opFunc(t,cmap) :      # update for v_1.2.0
+        return mpl.colormaps.get_cmap(cmap)(lowIndx + (hiIndx-lowIndx)*t).T     # update for v_1.2.0
     # ------------------------------------------------
 
     if ( lowIndx <0.0 or lowIndx >0.97) :
@@ -739,7 +748,10 @@ def section_cmap(cmap,lowIndx,hiIndx,name=None) :
 
     if name is None : 
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    return op_cmap(opFunc,name=name)
+    if isinstance(cmap,str) : 
+        cmap = mpl.colormaps[cmap]     # update for v_1.2.0
+    op_lFunc = lambda t : opFunc(t,cmap)        # update for v_1.2.0 
+    return op_cmap(op_lFunc,name=name)     # update for v_1.2.0
 
 
 
@@ -765,10 +777,11 @@ class DualCmap() :
             name to identify the dual colormap.
         """
         # FutDev: possible blend color modes?
+        #         Need documentation explaination for 'kind'.
 
         self._name = name if name is not None else ''
-        if isinstance(xcmap,str) : xcmap = cm.get_cmap(xcmap)
-        if isinstance(ycmap,str) : ycmap = cm.get_cmap(ycmap)
+        if isinstance(xcmap,str) : xcmap = mpl.colormaps[xcmap]     # update for v_1.2.0
+        if isinstance(ycmap,str) : ycmap = mpl.colormaps[ycmap]     # update for v_1.2.0
 
         self.xmap = xcmap
         self.ymap = ycmap
@@ -859,6 +872,6 @@ class DualCmap() :
 
 
 # =================================================================================+
-# DevNote : would be nice to have a function to create a 2D colorbar which could   |
-#           be added to the Matplotlib 3D Axes.                                    |
+# FutDev : would be nice to have a function to create a 2D colorbar which could    |
+#          be added to the Matplotlib 3D Axes.                                     |
 # =================================================================================+

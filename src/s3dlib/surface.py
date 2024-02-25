@@ -11,9 +11,9 @@ from functools import reduce
 
 import numpy as np
 from scipy import interpolate, spatial
+from skimage import measure
 
-#import matplotlib as mpl
-from matplotlib import cm, colors, image
+from matplotlib import cm, colors, image, tri
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
 #.. simple warning string
@@ -42,19 +42,13 @@ _DFT_ALR = 0.25   # default axis length ratio, head size to vector magnitude.
 _DFT_VIEW = [  30, -60 ]            # default, axes elev and azim
 
 
+# +----------------------------------------------------------+
+# |  S#Dlib v_1.2.0 was developed using Matplotlib v_3.8.0   |
+# +----------------------------------------------------------+
+
 # FutDev: Future Development notes.
 # MROI:   Minimum Return On coding effort Investment.
 #         (the juice isn't worth the squeeze for current release)
-
-# +------------------------------------------------------------------------------+
-# |  The current verion of s3dlib was developed using Matplotlib version 3.0.2   |
-# |  As a result, the following Matplotlib 3DCollection 'private' properties     |
-# |  were needed for development:                                                |
-# |     _facecolors, _edgecolors, _facecolors3d, _edgecolors3D                   |
-# |  Note: further versions of Matplotlib include methods:                       |
-# |     get_facecolor() ,       get_edgecolor()                                  |
-# |  Private properties to be removed in future S3Dlib versions, MROI.           |
-# +------------------------------------------------------------------------------+
 
 
 class Surface3DCollection(Poly3DCollection):
@@ -97,6 +91,64 @@ class Surface3DCollection(Poly3DCollection):
             temp[i] = [a,b,c] if dotprod>0 else [c,b,a]
         fIndices = temp
         surface = Surface3DCollection(verts,fIndices, **kargs)
+        return surface
+
+    @staticmethod
+    def implsurf(operation, drez=2.0, domain=1, name=None, **kwargs) :
+        """
+        Surface3DCollection defined by an implicit function f(x,y,z) = 0.
+
+        Parameters
+        ----------
+        operation : function object
+            Implicit function that takes one
+            argument, a 3xN Numpy array of x,y,z coordinates.
+            The function returns a single scalar value.
+            The value of zero defines the implicit surface.
+
+        drez : Float, optional, default: 2.0
+            Multiplier for the number of subdivisions within the domain.
+            Frez values range from 1 to 10.  Function evaluation will be
+            the order of frez cubed.
+
+        domain : a number, list or array, default: 1
+            The domain of the function evaluation.  For a number, n,
+            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
+            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
+            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
+            three coordinate axes.
+
+        Returns
+        -------
+        Surface3DCollection object
+
+        """
+        #.....................................    
+        def get_VF(op,N,dm) :
+            XD,YD,ZD = dm[0],dm[1],dm[2]
+            dmT = dm.T
+            A = dmT[1]-dmT[0]
+            B=np.array( [ XD[0],YD[0],ZD[0] ])
+            sp,level = 1/N, 0.001    # FutDev: level should not be a constant.
+            Nj = (N+1)*1j
+            xyz = np.mgrid[XD[0]:XD[1]:Nj,YD[0]:YD[1]:Nj, ZD[0]:ZD[1]:Nj ]
+            verts, fvIndices, _, _ = measure.marching_cubes(op(xyz), level, spacing=(sp, sp, sp))
+            C = np.empty([len(verts),3])
+            C[:] = A
+            verts = C*verts + B
+            return verts,fvIndices
+        #.....................................    
+        dftDm = Surface3DCollection._interpret_domain(domain)
+        if not isinstance(drez, (int,float)) : 
+            raise ValueError("Incorrect drez argument datatype passed to impf:", drez)
+        if drez<1 or drez>10 :
+            raise ValueError("Error: incorrect value drez passed to impf:", drez)
+        N = int( 10*drez )
+        verts, faces = get_VF(operation,N,dftDm)
+        surface = Surface3DCollection( verts, faces, **kwargs)
+
+        if name is None: name = _getFunctionName(operation,name)
+        if name is not None: surface._geomName = name
         return surface
 
     @staticmethod
@@ -340,7 +392,7 @@ class Surface3DCollection(Poly3DCollection):
         return indexObj ,vertexCoor
 
     @staticmethod
-    def coor_convert(xyz, tocart=True) :
+    def coor_convert(xyz, tocart=False) :
         """Coordinate transformation.
         
            To be overriddden by any subclass not in Cartesian coordinates.
@@ -349,10 +401,46 @@ class Surface3DCollection(Poly3DCollection):
         return xyz
 
     @staticmethod
+    def _interpret_domain(domain) :
+        """
+        Process domain argument for implsurf and CubicSurface.domain to
+        the domain for x,y,z domains.
+        """
+        errCode = 0
+        if isinstance(domain, (int,float)) : 
+            dftDm = np.array( [ [-domain,domain ], [-domain,domain ], [-domain,domain ] ] )
+        else :
+            correctDomain = True
+            try :
+                    npDm = np.array(domain, dtype=float)
+                    shDm = npDm.shape
+                    nbDm = npDm.ndim
+                    correctDomain = nbDm==1 or nbDm==2
+                    errCode = 1
+            except :
+                correctDomain = False
+                errCode = 2
+            if correctDomain :
+                if nbDm == 1 : 
+                    dftDm = np.array( [ domain, domain, domain] )
+                    correctDomain = shDm[0] == 2
+                    errCode=3
+                elif nbDm == 2 : 
+                    dftDm = np.array( domain )
+                    correctDomain = shDm[0]==3 and shDm[1]==2
+                    errCode=4
+                else :
+                    correctDomain = False
+                    errCode=5
+            if not correctDomain :
+                raise ValueError("Incorrect domain argument passed to impf.", errCode)
+        return dftDm
+
+    @staticmethod
     def _map3Dto2Dsquare(xyz) :
         """ Map surface to rectangular unit coordinates (0,1). """
 
-        x,y,z = xyz
+        x,y,_ = xyz
         a = (x+1)/2
         b = (y+1)/2
         return [a,b]
@@ -558,13 +646,14 @@ class Surface3DCollection(Poly3DCollection):
             if they are assigned.
         """
         N = len(self.fvIndices)      # number of faces
-        initFC = self._facecolors
+        initFC = self._dfacecolors   # update for v_1.2.0
         inLen = len(initFC)          # number of facecolors
         if inLen == N : return
         if isinstance(initFC,np.ndarray) : initFC = initFC.tolist()
         n = math.ceil(N/inLen)
         colorcoll = initFC*n
         if onlyFaces : self.set_facecolor(colorcoll[0:N])
+        #if onlyFaces : self._dfacecolors = colorcoll[0:N]   # update for v_1.2.0
         else :         self.set_color(colorcoll[0:N])
         return
 
@@ -580,7 +669,7 @@ class Surface3DCollection(Poly3DCollection):
         self.efIndicesList = self._edgeCommonFaceIndices()
         return
 
-    def __init__(self, vertexCoor, faceIndices, name=None, **kwargs):
+    def __init__(self, vertexCoor, faceIndices, name=None, vcolor=None, **kwargs) :
         """ 
         3D surface of connected F faces, each face with N number of vertices.
         The surface has V number of vertices and E number of edges.
@@ -597,6 +686,10 @@ class Surface3DCollection(Poly3DCollection):
         name : string, optional, default: None.
             Descriptive identifier for the geometry.
 
+        vcolor : V x 3 float array-like, default: None.
+            An array of V number of vertex colors.
+            (not implemented, reserved for future development)
+
         Other Parameters
         ----------------
         **kwargs
@@ -607,7 +700,7 @@ class Surface3DCollection(Poly3DCollection):
 
         self.vertexCoor = np.array(vertexCoor,dtype=float)
         self.baseVertexCoor = np.array(vertexCoor,dtype=float)
-        self.fvIndices = np.array(faceIndices)
+        self.fvIndices = np.array(faceIndices, dtype=object)  # update for v_1.2.0
         
         if self.fvIndices.ndim == 1 :
             # assume input is a list of faces with different number of edges.
@@ -632,7 +725,8 @@ class Surface3DCollection(Poly3DCollection):
                     kwargs['facecolor'] = faceColorsNew 
                     kwargs['color'] = faceColorsNew 
             self.fvIndices = np.array(fvIndNew)
-
+        else :
+            self.fvIndices = np.array(faceIndices)  # update for v_1.2.0
         self._set_index_relations()
         f = self.fvIndices
         v = self.vertexCoor
@@ -646,17 +740,17 @@ class Surface3DCollection(Poly3DCollection):
         self.valuesName = None
         # ========================================================================
         self.coorType = _COORSYS["XYZ"]
-        self.baseSurfaceColor = np.array(self._facecolors3d[0]).flatten().tolist()
+        self.baseSurfaceColor = np.array(self._dfacecolors[0]).flatten().tolist()  # update for v_1.2.0
        
-        self.vertexColor = np.array(self._facecolors3d[0]).copy()[np.newaxis,:]
+        self.vertexColor = np.array(self._dfacecolors[0]).copy()[np.newaxis,:]     # update for v_1.2.0
         # following assigned when surface color applied using an operation
         self.vertexValues = None
         self.faceValues = None
 
-        if len (self._edgecolors3d) is  0 :
+        if len (self._dedgecolors) ==  0 :     # update for v_1.2.0
             self.baseEdgeColor = self.baseSurfaceColor 
         else :
-            self.baseEdgeColor = np.array(self._edgecolors3d[0]).flatten().tolist()
+            self.baseEdgeColor = np.array(self._dedgecolors[0]).flatten().tolist()     # update for v_1.2.0
         
         self.isSurfaceColored     = False       # flag set True for color array export.
         self.onlyColoredFaces     = False       # flag set True for cmap normals.
@@ -672,6 +766,7 @@ class Surface3DCollection(Poly3DCollection):
         self.scale = [1,1,1]                    # for axis when transformed.
         self.translation = [0,0,0]              # for axis when transformed.
         self.rotation =  np.identity(3)         # for axis when transformed.
+        self._rez = 0                           # used by child classes.
 
         self._bounds = {}
         self._set_geometric_bounds()
@@ -679,7 +774,18 @@ class Surface3DCollection(Poly3DCollection):
         self._bounds['vertvlim'] = _DFT_VERTVLIM 
     
     def __add__(self, othr) :
-        """Surface3DCollection object from vertices, faces and colors of two surface objects. """
+        """
+        Combine two surface objects into a single surface object.
+
+        Parameters
+        ----------
+        othr : Surface3DCollection object 
+
+        Returns
+        -------
+        Surface3DCollection object
+
+        """
 
         if not isinstance(othr, Surface3DCollection) :
             raise ValueError('Add operations can only apply between Surface3DCollection objects.')
@@ -700,11 +806,11 @@ class Surface3DCollection(Poly3DCollection):
         obj._isCompositeSurface = True
         
         top_onearr = np.ones( len(topFVindices) )[:, np.newaxis]
-        top_orig_colors = self._facecolors
+        top_orig_colors = self._dfacecolors  # update for v_1.2.0
         if len(top_orig_colors) == 1 : top_orig_colors = top_orig_colors*top_onearr
 
         bot_onearr = np.ones( len(botFVindices) )[:, np.newaxis]
-        bot_orig_colors = othr._facecolors
+        bot_orig_colors = othr._dfacecolors  # update for v_1.2.0
         if len(bot_orig_colors) == 1 : bot_orig_colors = bot_orig_colors*bot_onearr
 
         total_colors = np.append(top_orig_colors,bot_orig_colors,axis=0)
@@ -856,7 +962,7 @@ class Surface3DCollection(Poly3DCollection):
         # ---------------------------------------------------------------
         # get the surface colors which will be applied to the default contour colors
         self._postProc_surfaceColors()
-        surf_colors = self._facecolors
+        surf_colors = self._dfacecolors  # update for v_1.2.0
 
         if type(args[0]) is tuple : args=args[0]
         line = None
@@ -975,7 +1081,7 @@ class Surface3DCollection(Poly3DCollection):
         return Av,Bv,inViewport
 
     def _triangulate_faceIndices(self,fvIndx) :
-        fvIndices, fColors = self._triangulate_faceIndices_faceColors(fvIndx)
+        fvIndices, _ = self._triangulate_faceIndices_faceColors(fvIndx)
         return fvIndices
 
     def _triangulate_faceIndices_faceColors(self,fvIndx,faceColors=None) :
@@ -1099,6 +1205,28 @@ class Surface3DCollection(Poly3DCollection):
         return edgeList
 
     @property
+    def _dfacecolors(self) :
+        """
+        Direct access to the private property _facecolor.
+
+        Appears that the self.get_facecolor() needs a call to the
+        self.do_3d_projection() which will 'sort the 2D version by view depth'.
+        for render construction.  Need the original order of colors.
+        BANDAID fix: update for v_1.2.0
+
+        FutDev: define a separate private property to hold these values
+                and not use the Matplotlib inherited value?
+        """
+        return self._facecolors
+
+    @property
+    def _dedgecolors(self) :
+        """
+        Direct access to the private property _edgecolor.
+        """
+        return self._edgecolors
+
+    @property
     def vlim(self) :
         '''Range of values associated with color'''
         return self._bounds['vlim']
@@ -1188,7 +1316,7 @@ class Surface3DCollection(Poly3DCollection):
         v = self.vertexCoor
         e = self._get_edges_from_faces(self.fvIndices)  # accounts for clipping...
         lcol = ColorLine3DCollection(v,e,'edges')
-        lcol._edgecolors = get_edge_color()
+        lcol._ledgecolors = get_edge_color()  # update for v_1.2.0
         return lcol
 
     @property
@@ -1225,7 +1353,7 @@ class Surface3DCollection(Poly3DCollection):
     def facecolors(self) :
         """A N x 4 array of surface face colors."""
         self._postProc_surfaceColors()
-        return self._facecolors
+        return self._dfacecolors  # update for v_1.2.0
 
     @property
     def svd_dict(self) :
@@ -1250,7 +1378,7 @@ class Surface3DCollection(Poly3DCollection):
     def area_h2b(self) :
         """ A 2 x N array of normalized N face areas and shapes."""
         f,v = self.fvIndices, self.vertexCoor
-        if f.shape[1] is 3 : # triangular
+        if f.shape[1] == 3 : # triangular
             A = v[ f[:,1] ] - v[ f[:,0] ]
             B = v[ f[:,2] ] - v[ f[:,0] ]
             C = v[ f[:,2] ] - v[ f[:,1] ]
@@ -1320,7 +1448,7 @@ class Surface3DCollection(Poly3DCollection):
             self.fvIndices = self._triangulate_faceIndices(self.fvIndices)
 
             newFaceColors = []
-            for fColor in self._facecolors :
+            for fColor in self._dfacecolors :  # update for v_1.2.0
                 newFaceColors += [fColor]*subDiv
             self.set_facecolor( np.array(newFaceColors) )
 
@@ -1340,7 +1468,7 @@ class Surface3DCollection(Poly3DCollection):
         if rez != 0 :
             newFaceColors = []
             subDiv = 4**rez
-            for fColor in self._facecolors :
+            for fColor in self._dfacecolors :  # update for v_1.2.0
                 newFaceColors += [fColor]*subDiv
             self.set_facecolor( np.array(newFaceColors) )
 
@@ -1451,7 +1579,7 @@ class Surface3DCollection(Poly3DCollection):
         # --- 1.1 mod --------------------
         lcol.coorType = self.coorType
         lcol.uvwOrientationType = _COORSYS["XYZ"]
-        if color is None : lcol._set_vectColor(self._facecolors)
+        if color is None : lcol._set_vectColor(self._dfacecolors)  # update for v_1.2.0
         return lcol
 
     def dispfield_from_op(self, operation, **kargs) :
@@ -1695,8 +1823,8 @@ class Surface3DCollection(Poly3DCollection):
         height, width = np.subtract(img.shape[:2],1)
         M_index = ( (1-b)*height ).astype(int)
         N_index = ( a*width ).astype(int)
-        #'''
-        orig_colors = self._facecolors
+        
+        orig_colors = self._dfacecolors  # update for v_1.2.0
 
         if len(orig_colors) == 1 :
             onearr = np.ones( len(faceCenterCoor) )[:, np.newaxis]
@@ -1727,7 +1855,7 @@ class Surface3DCollection(Poly3DCollection):
         if rgb : RGB = colors
         else :   RGB = cm.colors.hsv_to_rgb(colors)
 
-        if RGB.shape[1] is 3 :  # add alpha channel.
+        if RGB.shape[1] == 3 :  # add alpha channel.
             ones = np.array( [np.ones( RGB.shape[0] )] ).T
             RGB = np.concatenate( (RGB, ones ), axis=1  )
 
@@ -1819,7 +1947,7 @@ class Surface3DCollection(Poly3DCollection):
             colorMap = np.where(inViewport[:, np.newaxis], temp, orig_colors )
 
         # FutDev: set_color used instead of set_facecolor to eliminate 'gaps' between faces,  <<<<<
-        # however, set_edgecolor required after illumination if edges are to be displayed.    <<<<<
+        # however, set edgecolor required after illumination if edges are to be displayed.    <<<<<
         # HOWEVER !!!!  if colorMap has a alpha<1, these don't register with the edges.       <<<<<
 
         #self.vertexValues = d   <<<< NO.. interpolated values only in viewport,
@@ -1888,7 +2016,7 @@ class Surface3DCollection(Poly3DCollection):
                 self.set_cmap(cmap)
         cmap = self.get_cmap()
         
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
 
         if len(orig_colors) == 1 :
             onearr = np.ones( len(faceCenterCoor) )[:, np.newaxis]
@@ -1902,7 +2030,7 @@ class Surface3DCollection(Poly3DCollection):
             colorMap = np.where(inViewport[:, np.newaxis], temp, orig_colors )
 
         # FutDev: set_color used instead of set_facecolor to eliminate 'gaps' between faces,
-        # however, set_edgecolor required after illumination if edges are to be displayed.
+        # however, set edgecolor required after illumination if edges are to be displayed.
         # HOWEVER !!!!  if colorMap has a alpha<1, these don't register with the edges.
         self.set_color(colorMap)
         self.isSurfaceColored = True
@@ -2028,7 +2156,8 @@ class Surface3DCollection(Poly3DCollection):
             Function that takes one argument,
             a 3xN Numpy array of native coordinates.
             The function returns a Numpy array of scalar values.
-            If function is None, function will map in the z-direction.
+            If function is None, function will map in the z-direction
+            or r-direction, dependent on the native coordinates.
 
         cmap : str or Colormap, optional
             A Colormap instance or registered colormap name.
@@ -2044,8 +2173,14 @@ class Surface3DCollection(Poly3DCollection):
 
         """
 
+        dftDirName = None
         if operation is None :
-            operation = lambda c : c[2]
+            opDir = 2
+            dftDirName = 'Z-direction'
+            if self.coorType == _COORSYS["SPHERICAL"] :   opDir = 0
+            if self.coorType == _COORSYS["CYLINDRICAL"] : opDir = 0
+            if opDir == 0 : dftDirName = 'R-direction'
+            operation = lambda c : c[opDir]
 
         if cmap is not None :
             if isinstance(cmap,str) : 
@@ -2066,14 +2201,19 @@ class Surface3DCollection(Poly3DCollection):
         
         colorMap = cmap(norm(v))
         # FutDev: set_color used instead of set_facecolor to eliminate 'gaps' between faces,
-        # however, set_edgecolor required after illumination if edges are to be displayed.
+        # however, set edgecolor required after illumination if edges are to be displayed.
         # HOWEVER !!!!  if colorMap has a alpha<1, these don't register with the edges.
         self.set_color(colorMap)
         self.isSurfaceColored = True
         self._bounds['vlim'] = [ vmin, vmax ] 
 
-        cname = _getFunctionName(operation,cname)
-        if cname is not None : self.valuesName = cname
+        #cname = _getFunctionName(operation,cname)
+        trialName = None
+        if cname is None :
+            if dftDirName is not None : trialName = dftDirName
+            else :  trialName =  _getFunctionName(operation,None)
+        else: trialName = cname
+        self.valuesName = trialName
         # ========================================================================
         self._map_cmap_from_op_vert(operation, cmap)
         # ========================================================================
@@ -2336,7 +2476,7 @@ class Surface3DCollection(Poly3DCollection):
         faceCenterCoor = self._get_face_centers(verts)
 
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
 
         xyz = np.transpose(faceCenterCoor)
         if usexyz is False :  xyz = self.coor_convert(xyz)
@@ -2385,7 +2525,7 @@ class Surface3DCollection(Poly3DCollection):
 
         """
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
 
         if useval :
             orig_hsv = colors.rgb_to_hsv(orig_colors[:,:3])
@@ -2500,7 +2640,7 @@ class Surface3DCollection(Poly3DCollection):
         faceNormalCoor = self._get_face_normals(verts)
 
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
 
         shouldKeep = np.dot(faceNormalCoor,direction) > 0.0
 
@@ -2576,7 +2716,7 @@ class Surface3DCollection(Poly3DCollection):
             raise ValueError('surface alpha must be between 0 and 1, found {}'.format(alpha))
 
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
         if constant :
             np.put_along_axis(orig_colors, np.array([[3]]), alpha, axis=1)
             colorMap = orig_colors
@@ -2584,7 +2724,7 @@ class Surface3DCollection(Poly3DCollection):
             colorMap = np.multiply(orig_colors,np.array([1.0,1.0,1.0,alpha]))
         self.set_color(colorMap)      
         if adjustlw : 
-            # heuristic approach to hidding face edges.
+            # heuristic approach to hiding face edges.  BANDAID
             lw =  0.0063*np.exp(4.2*alpha)
             self.set_linewidth(lw)
         return self   
@@ -2660,7 +2800,7 @@ class Surface3DCollection(Poly3DCollection):
         
         # extract HSV, leaving alpha unchanged.
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
         alphas = orig_colors[:,3:4]
         fc_less_alpha = orig_colors[:,:3]
         hsv_vals = cm.colors.rgb_to_hsv(fc_less_alpha)
@@ -2742,7 +2882,7 @@ class Surface3DCollection(Poly3DCollection):
 
         # extract HSV, leaving alpha unchanged.
         self._postProc_surfaceColors()
-        orig_colors = self._facecolors
+        orig_colors = self._dfacecolors  # update for v_1.2.0
         alphas = orig_colors[:,3:4]
         fc_less_alpha = orig_colors[:,:3]
         hsv_vals = cm.colors.rgb_to_hsv(fc_less_alpha)
@@ -2802,7 +2942,7 @@ class Surface3DCollection(Poly3DCollection):
         faceCenterCoor = self._get_face_centers(verts)
 
         self._postProc_surfaceColors()
-        colors = self._facecolors
+        colors = self._dfacecolors  # update for v_1.2.0
         if len(faceCenterCoor) == 1 : return self # fade not available for single face line 
         dtprod = np.dot(faceCenterCoor,unitDirection)
         dprange = np.amax(dtprod)-np.amin(dtprod)
@@ -2812,7 +2952,12 @@ class Surface3DCollection(Poly3DCollection):
         orig_colors = colors
         fc_less_alpha = orig_colors[:,:3]
         faded_colors = np.concatenate((fc_less_alpha, fadex[:,np.newaxis] ), axis=1)
-        self.set_color(faded_colors)   
+        self.set_color(faded_colors) 
+        # heuristic approach to hidding face edges.  BANDAID update for v_1.2.0
+        alpha = (depth+1)/2  # take the midpoint of the gradient.
+        lw =  0.0063*np.exp(4.2*alpha)
+        self.set_linewidth(lw)
+          
         return self
 
     def transform(self, rotate=None, scale=1.0, translate=[0,0,0] )  :
@@ -3213,6 +3358,50 @@ class CubicSurface(Surface3DCollection) :
         self._basetype = basetype
         return
 
+    def domain(self, xlim, ylim=None, zlim=None) :
+        """
+        Set the domain of the cubic surface.
+
+        Used for setting the min,max values of the base cube.
+        
+        Note: this CubicSurface method uses an alternative list of arguments
+        from the base class domain method.  Using the xlim arg abbreviates setting
+        identical domains for all three axes. 
+
+        Parameters
+        ----------
+        xlim : a number, list or array, default: 1
+            The domain of the function evaluation.  For a number, n,
+            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
+            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
+            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
+            three coordinate axes.
+            Must be a 2D array if ylim or zlim is set.
+
+        ylim, zlim : 2D array, default: None
+            Set the ylim and/or zlim.
+
+        Returns
+        -------
+        self : CubicSurface object
+
+        """
+        # the following allows alternative 'arg list' used in super.
+        test = ylim is None and zlim is None
+        if not test:
+            super().domain(xlim,ylim,zlim)
+            return self
+        domain = Surface3DCollection._interpret_domain(xlim)
+
+        scl = lambda min,max : (max-min)/2
+        trn = lambda min,max : (max+min)/2
+        scale =     [ scl(d[0],d[1]) for d in domain ]
+        translate = [ trn(d[0],d[1]) for d in domain ]
+        self.transform(None,scale,translate)
+        return self
+
+
+
 class PlanarSurface(Surface3DCollection) :
     """
     Flat square 3D surface in Cartesian coordinates.
@@ -3275,6 +3464,7 @@ class PlanarSurface(Surface3DCollection) :
         xydata = np.array([x,y]).T
         tess = spatial.Delaunay(xydata)
 
+        if name is None : name = 'random mesh'
         surface = PlanarSurface(name=name,**kargs)  # set to the class default object
         # reset verts, faceIndices and edges (retain class coordinate system).
         verts = np.zeros( (N,3))
@@ -3433,6 +3623,45 @@ class PlanarSurface(Surface3DCollection) :
         return surface
 
     @classmethod
+    def pntsurf(cls, xyz_points, name=None, **kargs) :
+        """
+        PlanarSurface from points in Cartesian coordinates.
+
+        Parameters
+        ----------
+        xyz_points : array, required.
+            An N X 3 array of N Cartesian coordinate points.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the point surface.
+
+        Returns
+        -------
+        surface : PlanarSurface object
+
+        """
+        dataPts = np.array(xyz_points)
+        xyzPts = dataPts.T
+
+        fvIndices = tri.Triangulation(xyzPts[0],xyzPts[1]).triangles
+        base_surface = Surface3DCollection(dataPts, fvIndices, color='tan').shade()
+        faceIndices = base_surface.fvIndices
+        verts = dataPts
+
+        if name is None : name = 'point surface'
+        surface = PlanarSurface(name=name,**kargs) 
+        surface.vertexCoor = verts
+        surface.fvIndices = faceIndices
+        surface.evIndices = surface._get_edges_from_faces(faceIndices)
+        surface.vfIndicesList = surface._vertexCommonFaceIndices()
+        surface.efIndicesList = surface._edgeCommonFaceIndices()
+        surface.set_verts( verts[faceIndices] )
+        surface._set_geometric_bounds()
+        surface._rez = surface._calc_rez(4)
+        surface._basetype = 'pntsurf'
+        return surface
+
+    @classmethod
     def _Xfev(cls,rez, basetype=None) :
         """
         Calculates the number of faces, edges, and vertices of a PlanarSurface.
@@ -3455,8 +3684,30 @@ class PlanarSurface(Surface3DCollection) :
         return super()._fev(rez,basetype,cls)
 
     @staticmethod
-    def meshgrid(X,Y,Z,revnormal=False,grid=False) :
-        """PlanarSurface object based on a meshgrid."""
+    def meshgrid(X,Y,Z,revnormal=False,grid=False, name=None) :
+        """
+        PlanarSurface object based on a meshgrid.
+        
+        Parameters
+        ----------
+        X,Y,Z : N x M arrays
+            Cartesian x,y,z coordinate values.
+
+        revnormal : { True, False }, boolean, default: False
+            Reverse the face normal directions if True.
+
+        grid : { True, False }, boolean, default: False
+            If True, polygon faces are rectangular.  If
+            False, polygon faces are triangular.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the mesh surface.
+
+        Returns
+        -------
+        surface : PlanarSurface object
+        
+        """
 
         vertCoor = np.reshape(np.stack((X,Y,Z), axis=2 ), (-1,3) )
         lenY, lenX = Z.shape
@@ -3491,6 +3742,8 @@ class PlanarSurface(Surface3DCollection) :
         obj.set_verts(v[fvi])
 
         if not grid : obj.triangulate()
+        if name is None : name = 'meshgrid'
+        obj.name = name
 
         return obj
 
@@ -3534,7 +3787,7 @@ class PlanarSurface(Surface3DCollection) :
         baseSurfObj = self._base_surfaces[basetype]
         baseVcoor = baseSurfObj['baseVerticesCoor']
         baseFaceVertexIndices =baseSurfObj['baseFaceIndices']
-        if basetype is 'squ' :
+        if basetype == 'squ' :
             indexObj,vertexCoor = self.rectangulateBase(rez,baseVcoor,baseFaceVertexIndices, self._midVectorFun)
         else :    
             indexObj,vertexCoor = self.triangulateBase(rez,baseVcoor,baseFaceVertexIndices, self._midVectorFun)
@@ -3550,13 +3803,11 @@ class PlanarSurface(Surface3DCollection) :
 
     def scale_dataframe(self,X,Y,Z) :
         """
-        Linear scale and translate the surface.
-
-        Used for scaling a surface geometry based on a datagrid.
+        Scaling the surface geometry based on a datagrid.
 
         Parameters
         ----------
-        X, Y, Z : 2d arrays
+        X, Y, Z : N x M arrays
             Minimum and maximum values of the arrays are used to scale
             and translate the surface from an intial domain of
             [ (-1,1), (-1,1), (0,1) ]
@@ -3686,6 +3937,7 @@ class PolarSurface(Surface3DCollection) :
         rtdata = data[:,:2]
         tess = spatial.Delaunay(rtdata)
 
+        if name is None : name = 'random mesh'
         surface = PolarSurface(name=name,**kargs)  # set to the class default object
         # reset verts, faceIndices and edges (retain class coordinate system).
         verts = np.zeros( (N,3))
@@ -3772,7 +4024,7 @@ class PolarSurface(Surface3DCollection) :
     @staticmethod
     def _map3Dto2Dsquare(xyz) :
         """Override map surface to rectagular unit coordinates (0,1)."""
-        x,y,z = xyz
+        x,y,_ = xyz
         theta = np.arctan2(y,x)
         theta = np.where( theta<0, 2.0*np.pi + theta ,theta)
         a = theta/(2*np.pi)
@@ -3785,16 +4037,13 @@ class PolarSurface(Surface3DCollection) :
     @staticmethod
     def coor_convert(xyz, tocart=False) :
         """
-        Override coordinate transformation.
-
         Tranformation between polar and Cartesian coordinates.
         The angular coordinate is in radians with domain 0 to 2pi.
 
         Parameters
         ----------
         xyz : 3xN array
-            N number of vectors in either polar or cartesian coordinates,
-            including the z coordinate( which remains unchanged).
+            N number of vectors in either polar or cartesian coordinates.
 
         tocart : { True, False }, default: False
             If True, input is polar and output is cartesian.
@@ -3878,6 +4127,45 @@ class PolarSurface(Surface3DCollection) :
         return surface
 
     @classmethod
+    def pntsurf(cls, rtz_points, name=None, **kargs) :
+        """
+        PolarSurface from points in polar coordinates.
+
+        Parameters
+        ----------
+        rtz_points : array, required.
+            An N X 3 array of N polar coordinate points.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the point surface.
+
+        Returns
+        -------
+        surface : PolarSurface object
+
+        """
+        dataPts = np.array(rtz_points)
+        xyzPts = PolarSurface.coor_convert(dataPts.T,True)
+
+        fvIndices = tri.Triangulation(xyzPts[0],xyzPts[1]).triangles
+        base_surface = Surface3DCollection(dataPts, fvIndices, color='tan').shade()
+        faceIndices = base_surface.fvIndices
+        verts = xyzPts.T
+
+        if name is None : name = 'point surface'
+        surface = PolarSurface(name=name,**kargs) 
+        surface.vertexCoor = verts
+        surface.fvIndices = faceIndices
+        surface.evIndices = surface._get_edges_from_faces(faceIndices)
+        surface.vfIndicesList = surface._vertexCommonFaceIndices()
+        surface.efIndicesList = surface._edgeCommonFaceIndices()
+        surface.set_verts( verts[faceIndices] )
+        surface._set_geometric_bounds()
+        surface._rez = surface._calc_rez(4)
+        surface._basetype = 'pntsurf'
+        return surface
+
+    @classmethod
     def _Xfev(cls,rez, basetype=None, minrad=None) :
         """
         Calculates number of faces, edges, and vertices of a PolarSurface.
@@ -3900,7 +4188,7 @@ class PolarSurface(Surface3DCollection) :
             nrad = rez[0]
             nang = rez[1]
             # only check is ending in s
-            isSplit = basetype[ len(basetype)-1] is 's'
+            isSplit = basetype[ len(basetype)-1] == 's'
             if minrad is None :
                 f = 2*nrad*nang - nang
                 e = 3*nrad*nang - nang
@@ -3939,8 +4227,8 @@ class PolarSurface(Surface3DCollection) :
             Z = 0*z
             return R,t,Z
         # .................................................
-        if basetype is 'squ_c' : cylbase = 'squ_s' 
-        if basetype is 'hex_c' : cylbase = 'tri_s'
+        if basetype == 'squ_c' : cylbase = 'squ_s' 
+        if basetype == 'hex_c' : cylbase = 'tri_s'
         cyl_obj = CylindricalSurface(rez,cylbase, **kwargs).map_geom_from_op(cyl2pol)
         baseFaceVertexIndices = cyl_obj._base_surfaces[cylbase] ['baseFaceIndices']    
         fvIndices = cyl_obj.fvIndices
@@ -3989,7 +4277,7 @@ class PolarSurface(Surface3DCollection) :
             raise ValueError('Incorrest rez of {}, must be an int, 0 <= rez <= {}'.format(rez,_MAXREZ))
         if basetype is None : basetype = self._default_base
         # ... check for 'special case' (ugly code but needed)
-        if basetype is 'squ_c' or basetype is 'hex_c' :
+        if basetype == 'squ_c' or basetype == 'hex_c' :
             vertexCoor, faceIndices, edgeIndices, bfvi = self._flat_split_cyclinder(rez,basetype,minrad, **kwargs)
             baseFaceVertexIndices = bfvi
         else :
@@ -4055,9 +4343,71 @@ class CylindricalSurface(Surface3DCollection) :
 
     @staticmethod
     def rand(rez=0,seed=None,name=None,kind=None,**kargs) :
-        """(reserved, not implemented)"""
-        surface = CylindricalSurface(rez,name=name,**kargs)
-        warnings.warn('Default CylindricalSurface object, not rand, returned')
+        """
+        CylindricalSurface with random triangular faces.
+
+        Parameters
+        ----------
+        rez : number, optional, default: 0
+            Number of 'recursive' subdivisions of the triangulated base faces.
+            Rez values range from 0 to 7.
+
+        seed : integer, optional, default: None
+            An initialization seed for random generation.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the geometry.
+
+        kind : string, optional, default: None
+            (reserved, not implemented) 
+
+        Raises
+        ------
+        ValueError
+            If rez is not an integer in range 0 to 7.
+            If basetype is not recognized for this surface constructor.
+
+        Other Parameters
+        ----------------
+        **kwargs
+            All other parameters are passed on to 's3dlib.surface.Surface3DCollection'.
+        
+        Returns
+        -------
+        surface : CylindricalSurface object.
+
+        """
+        #.........................................................
+        def random_sinDist(size) :
+            nLoop,nControl,samples = 0, 10**6, []
+            while len(samples)<size and nLoop<nControl:
+                x=np.random.random_sample()
+                prob=np.sin(x*np.pi)/2
+                assert prob>=0 and prob<=1
+                if np.random.random_sample() <=prob: samples += [x]
+                nLoop+=1
+            return np.array(samples)
+        #.........................................................
+
+        if not isinstance(rez, (int, float)) :
+            raise ValueError('Incorrect rez type, must be a number.')
+        if (rez<0) or (rez>_MAXREZ) :
+            raise ValueError('Incorrest rez of {}, must be a number, 0 <= rez <= {}'.format(rez,_MAXREZ))
+
+        if seed is not None :
+            if not isinstance(seed, int) :
+                raise ValueError('Incorrect seed type, must ba of type int') 
+            np.random.seed(seed)
+
+        N = int(12*(4**rez)/2 + 3*(2**rez))
+        r = np.ones( N )
+        t = np.random.uniform(0,2*np.pi, N)
+        z = np.random.uniform(-1,1, N)
+        dataPts = np.array( [r,t,z] ).T
+        if name is None : name = 'random mesh'
+        surface = CylindricalSurface.pntsurf(dataPts, name=None, **kargs)
+        surface._rez = str(rez) if isinstance(rez,int) else '{:.1f}'.format(rez)
+        surface._basetype = 'rand_'+str(seed)
         return surface
 
     @staticmethod
@@ -4295,8 +4645,6 @@ class CylindricalSurface(Surface3DCollection) :
     @staticmethod
     def coor_convert(xyz, tocart=False) :
         """
-        Override coordinate transformation.
-
         Transformation between cylindrical and Cartesian coordinates.
         The angular coordinate is in radians with domain 0 to 2pi.
 
@@ -4506,6 +4854,65 @@ class CylindricalSurface(Surface3DCollection) :
         return surface       
 
     @classmethod
+    def pntsurf(cls, rtz_points, name=None, **kargs) :
+        """
+        CylindricalSurface from points in cylindrical coordinates.
+
+        Parameters
+        ----------
+        rtz_points : array, required.
+            An N X 3 array of N cylindrical coordinate points.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the point surface.
+
+        Returns
+        -------
+        surface : CylindricalSurface object
+
+        """
+        dataPts = np.array(rtz_points)
+
+        cylPts = np.array(dataPts.T)
+        cylPts[0] = np.amax(cylPts[0])
+        xyz_cylPts = CylindricalSurface.coor_convert(cylPts,True)
+        minZ,maxZ = np.amin(cylPts[2]), np.amax(cylPts[2])
+        offsetZ = (maxZ+minZ)/2
+        xyz_cylPts[2] = xyz_cylPts[2] - offsetZ
+
+        sphPts = SphericalSurface.coor_convert(xyz_cylPts,False)
+        rmax = np.amax(sphPts[0])
+        sphPts[0] = rmax
+        xyz_sphPts = SphericalSurface.coor_convert(sphPts,True)
+        ptTop,ptBtm = [0,0,rmax], [0,0,-rmax]
+        xyz_sphPts = np.append(xyz_sphPts.T,[ptTop,ptBtm],axis=0).T
+
+        # note: the following surface method chull corrects face normal
+        # orientations so spatial.ConvexHull was not directly used.
+        hull_surface = Surface3DCollection.chull(xyz_sphPts.T)
+
+        verts = CylindricalSurface.coor_convert(dataPts.T,True).T
+        # remove faces attached to the two top & bottom vertices.
+        N = len(dataPts)
+        fvIndices = hull_surface.fvIndices
+        maxIndices = np.max(fvIndices,axis=1)
+        shouldkeep = np.where(maxIndices < N)
+        faceIndices = fvIndices[shouldkeep]
+
+        if name is None : name = 'point surface'
+        surface = CylindricalSurface(name=name,**kargs) 
+        surface.vertexCoor = verts
+        surface.fvIndices = faceIndices
+        surface.evIndices = surface._get_edges_from_faces(faceIndices)
+        surface.vfIndicesList = surface._vertexCommonFaceIndices()
+        surface.efIndicesList = surface._edgeCommonFaceIndices()
+        surface.set_verts( verts[faceIndices] )
+        surface._set_geometric_bounds()
+        surface._rez = surface._calc_rez(12)
+        surface._basetype = 'pntsurf'
+        return surface
+
+    @classmethod
     def _Xfev(cls,rez, basetype=None, minrad=None) :
         """
         Calculates number of faces, edges, and vertices of a CylindricalSurface.
@@ -4528,7 +4935,7 @@ class CylindricalSurface(Surface3DCollection) :
             nver = rez[0]
             nang = rez[1]
             # only check is ending in s
-            isSplit = basetype[ len(basetype)-1] is 's'
+            isSplit = basetype[ len(basetype)-1] == 's'
             f = 2*nver*nang
             e = 3*nver*nang + nang
             v = (nver + 1)*nang
@@ -4709,6 +5116,7 @@ class SphericalSurface(Surface3DCollection) :
         data = SphericalSurface.coor_convert([r,t,p],True).T
         hullsurf = Surface3DCollection.chull(data)
 
+        if name is None : name = 'random mesh'
         surface = SphericalSurface(name=name,**kargs)  # set to the class default object
         # reset verts, faceIndices and edges (retain class coordinate system).
         verts = hullsurf.vertexCoor
@@ -4727,7 +5135,32 @@ class SphericalSurface(Surface3DCollection) :
 
     @staticmethod
     def platonic(rez=0,basetype=None,name=None, **kwargs) :
-        """Platonic Solid surfaces."""
+        """
+        Platonic Solid surfaces.
+        
+        Parameters
+        ----------
+        rez : integer, optional, default: 0
+            Number of recursive subdivisions of the triangulated base faces.
+            Rez values range from 0 to 7.
+            
+        basetype : {'tetra','octa','icosa','cube','dodeca'}, optional, default: 'icosa'
+            Starting surface geometries from which the surface is
+            constructed using recursive subdivisions of the triangular faces.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the geometry.
+
+        Returns
+        -------
+        SphericalSurface object
+
+        Other Parameters
+        ----------------
+        **kwargs
+            All other parameters are passed on to 's3dlib.surface.SphericalSurface'.
+
+        """
         #.....................................
         def fev_cube_a() :
             v = [ [-1,-1,-1],[-1, 1,-1],[ 1, 1,-1],[ 1,-1,-1],
@@ -4769,14 +5202,13 @@ class SphericalSurface(Surface3DCollection) :
         if basetype not in baseCheck :
             raise ValueError('Basetype {} is not recognized. Possible values are: {}'.format(basetype,baseCheck) )
 
-        if basetype is 'cube_a' :
+        if basetype == 'cube_a' :
             surface = SphericalSurface(basetype='cube',name=name, **kwargs)
         else :    
             surface = SphericalSurface(basetype=basetype,name=name, **kwargs)
 
         surface._rez = rez
-
-        if basetype is 'cube_a' :
+        if basetype == 'cube_a' :
             v,f,e = fev_cube_a()
             surface.vertexCoor = v
             surface.fvIndices = f
@@ -4784,7 +5216,7 @@ class SphericalSurface(Surface3DCollection) :
             surface.vfIndicesList = surface._vertexCommonFaceIndices()
             surface.efIndicesList = surface._edgeCommonFaceIndices()
             surface.set_verts( v[f] )
-        if basetype is 'cube' :
+        if basetype == 'cube' :
             v,f,e = SphericalSurface.get_cube()
             surface.vertexCoor = v
             surface.fvIndices = f
@@ -4792,10 +5224,10 @@ class SphericalSurface(Surface3DCollection) :
             surface.vfIndicesList = surface._vertexCommonFaceIndices()
             surface.efIndicesList = surface._edgeCommonFaceIndices()
             surface.set_verts( v[f] )
-        if basetype is 'dodeca' :
+        if basetype == 'dodeca' :
             v,f,e = SphericalSurface.get_dodecahedron()
             if rez>0 :
-                fc = surface._facecolors
+                fc = surface._dfacecolors  # update for v_1.2.0
                 v,f,e,fc = _preTriangulateDodoc(v,f,e,fc)
                 surface.set_facecolor(fc)
                 rez -= 1
@@ -4805,13 +5237,14 @@ class SphericalSurface(Surface3DCollection) :
             surface.vfIndicesList = surface._vertexCommonFaceIndices()
             surface.efIndicesList = surface._edgeCommonFaceIndices()
             surface.set_verts( v[f] )
+
         surface._postProc_surfaceColors(True)
         if rez > 0 :
             surface.triangulate(rez)
       
         surface._set_geometric_bounds()
         surface._basetype = basetype + '*'   
-        surface.name = baseDict[basetype] if name is None else None
+        surface.name = baseDict[basetype] if name is None else name
         return surface
 
     @staticmethod
@@ -5056,8 +5489,8 @@ class SphericalSurface(Surface3DCollection) :
             Fo = len(baseFaces)
             return { 'baseFaceIndices' : baseFaces , 'baseVerticesCoor' : baseVert, 'fevParam' : [Fo,0,2] }
         # ....................................................
-        if getArrays is 'cube' : return get_cube()
-        if getArrays is 'dodeca' : return get_dodecahedron()
+        if getArrays == 'cube' : return get_cube()
+        if getArrays == 'dodeca' : return get_dodecahedron()
 
         surfacesDictionary = {}
         surfacesDictionary['tetra']  = construct_tetrahedron()
@@ -5099,8 +5532,6 @@ class SphericalSurface(Surface3DCollection) :
     @staticmethod
     def coor_convert(xyz, tocart=False) :
         """
-        Override coordinate transformation.
-
         Transformation between spherical and Cartesian coordinates.
         The azimuthal coordinate is in radians with domain 0 to 2pi.
         The polar angle is in radians with domain 0 to pi.
@@ -5195,6 +5626,48 @@ class SphericalSurface(Surface3DCollection) :
         return surface
 
     @classmethod
+    def pntsurf(cls, rtp_points, name=None, **kargs) :
+        """
+        SphericalSurface from points in spherical coordinates.
+
+        Parameters
+        ----------
+        rtp_points : array, required.
+            An N X 3 array of N spherical coordinate points.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the point surface.
+
+        Returns
+        -------
+        surface : SphericalSurface object
+
+        """
+        dataPts = np.array(rtp_points)
+
+        sphPts = dataPts.T
+        xyzPts = SphericalSurface.coor_convert(dataPts.T,True)
+        rmax = np.amax(sphPts[0])
+        sphPts[0] = rmax
+        xyz_sphPts = SphericalSurface.coor_convert(sphPts,True)
+        hull_surface = Surface3DCollection.chull(xyz_sphPts.T)
+        verts = xyzPts.T
+        faceIndices = hull_surface.fvIndices
+
+        if name is None : name = 'point surface'
+        surface = SphericalSurface(name=name,**kargs) 
+        surface.vertexCoor = verts
+        surface.fvIndices = faceIndices
+        surface.evIndices = surface._get_edges_from_faces(faceIndices)
+        surface.vfIndicesList = surface._vertexCommonFaceIndices()
+        surface.efIndicesList = surface._edgeCommonFaceIndices()
+        surface.set_verts( verts[faceIndices] )
+        surface._set_geometric_bounds()
+        surface._rez = surface._calc_rez(20)
+        surface._basetype = 'pntsurf'
+        return surface
+
+    @classmethod
     def _Xfev(cls, rez, basetype=None, minrad=None) :
         """
         Calculates number of faces, edges, and vertices of a SphericalSurface.
@@ -5217,7 +5690,7 @@ class SphericalSurface(Surface3DCollection) :
             nlat = rez[0]
             nlng = rez[1]
             # only check is ending in s
-            isSplit = basetype[ len(basetype)-1] is 's'
+            isSplit = basetype[ len(basetype)-1] == 's'
             if minrad is None :
                 f = 2*nlat*nlng - 2*nlng
                 e = 3*nlat*nlng - 3*nlng
@@ -5256,8 +5729,8 @@ class SphericalSurface(Surface3DCollection) :
             R = np.cos(phi)
             return R,t,Z
         # .................................................
-        if basetype is 'octa_c' : cylbase = 'squ_s' 
-        if basetype is 'cube_c' :    cylbase = 'tri_s'
+        if basetype == 'octa_c' : cylbase = 'squ_s' 
+        if basetype == 'cube_c' :    cylbase = 'tri_s'
         cyl_obj = CylindricalSurface(rez,cylbase, **kwargs).map_geom_from_op(cyl2sph)
         baseFaceVertexIndices = cyl_obj._base_surfaces[cylbase] ['baseFaceIndices']    
         fvIndices = cyl_obj.fvIndices
@@ -5308,7 +5781,7 @@ class SphericalSurface(Surface3DCollection) :
             raise ValueError('Incorrest rez of {}, must be an int, 0 <= rez <= {}'.format(rez,_MAXREZ))
         if basetype is None : basetype = self._default_base
         # ... check for 'special case' (ugly code but needed, MROI)
-        if basetype is 'octa_c' or basetype is 'cube_c' :
+        if basetype == 'octa_c' or basetype == 'cube_c' :
             vertexCoor, faceIndices, edgeIndices, bfvi = self._spherical_split_cylinder(rez,basetype,minrad, **kwargs)
             baseFaceVertexIndices = bfvi
         else :
@@ -5437,7 +5910,8 @@ class Vector3DCollection(Line3DCollection) :
         head = np.arange(len(color))
         tail = np.ravel( [ [head],[head] ] , order='F')
         index = np.append(head,tail)
-        self._edgecolors = color[index]
+        #self._edgecolors = color[index]
+        self.set_color(color[index])     # update for v_1.2.0
         return
 
     def __str__(self) :
@@ -5547,7 +6021,7 @@ class Vector3DCollection(Line3DCollection) :
         vect = self.baseVect
         if val is None : val = _DFT_ALR
         self._alr = val
-        lines,X,Y = self._quiverLines(location,vect,self._alr)
+        lines,_,_ = self._quiverLines(location,vect,self._alr)
         self.set_segments(lines)
         return
 
@@ -5647,7 +6121,7 @@ class Vector3DCollection(Line3DCollection) :
         if rgb : RGB = colors
         else :   RGB = cm.colors.hsv_to_rgb(colors)
 
-        if RGB.shape[1] is 3 :
+        if RGB.shape[1] == 3 :
             ones = np.ones(RGB.shape[0])[:,np.newaxis]
             RGB = np.concatenate((RGB,ones),axis=1)
 
@@ -5811,7 +6285,22 @@ class ColorLine3DCollection(Line3DCollection) :
 
     @staticmethod
     def meshgrid(X,Y,Z, name=None) :
-        """ColorLine3DCollection, a set of xy slice lines based on a meshgrid."""
+        """
+        ColorLine3DCollection, a set of xy slice lines based on a meshgrid.
+        
+        Parameters
+        ----------
+        X,Y,Z : N x M arrays
+            Cartesian x,y,z coordinate values.
+
+        name : string, optional, default: None.
+            Descriptive identifier for the mesh surface.
+
+        Returns
+        -------
+        surface : ColorLine3DCollection object
+        
+        """
 
         # Needs cleanup MROI
         x_lineVertsPts = np.array(X)[0]
@@ -5999,7 +6488,18 @@ class ColorLine3DCollection(Line3DCollection) :
         return lines
 
     def __add__(self, othr) :
-        """ColorLine3DCollection object from vertices, segments and colors of two line objects. """
+        """
+        Combine two line objects into a single line object.
+
+        Parameters
+        ----------
+        othr : ColorLine3DCollection object 
+        
+        Returns
+        -------
+        ColorLine3DCollection object
+
+        """
 
         # ............................................................................
         def get_lineColors( colors, lines) :
@@ -6038,8 +6538,8 @@ class ColorLine3DCollection(Line3DCollection) :
             totSegmIndices.append(line)
 
         # edgecolors are array-like
-        topEdgeColors = get_lineColors(self._edgecolors,topSegmIndices)  
-        botEdgeColors = get_lineColors(othr._edgecolors,botSegmIndices)
+        topEdgeColors = get_lineColors(self._ledgecolors,topSegmIndices)  # update for v_1.2.0  
+        botEdgeColors = get_lineColors(othr._ledgecolors,botSegmIndices)  # update for v_1.2.0
         totEdgeColors = np.append(topEdgeColors,botEdgeColors,axis=0)
 
         # FutDev: 'add' will not retain line collections.  Needed for export
@@ -6064,6 +6564,29 @@ class ColorLine3DCollection(Line3DCollection) :
         val = name + ': lines: {}, segs: {}, verts: {}'.format(numLines,numSeg,numVerts)
         return val
 
+    def _postProc_segmentColors(self) :
+        """ Matplotlib will 'fillin' colors during rendering using the
+            facecolor array. (this is NOT the assigned color to edges).
+            However, S3Dlib will use the inherited _edgecolors 
+            for the assigned edeg colors.
+            Whenever color is 'externally' assigned or reassigned,
+            need to directly assign colors for each edge for any
+            method that uses edgecolors.  This occurs initially
+            in the method before colors are assigned            
+            (set_color, +, clipping, shading, edges, etc.)
+            
+        """
+        N = len(self.segmIndices)    # number of segments
+        initEC = self._ledgecolors   # update for v_1.2.0
+        inLen = len(initEC)          # number of edgecolors
+        if inLen == N : return
+        if isinstance(initEC,np.ndarray) : initEC = initEC.tolist()
+        n = math.ceil(N/inLen)
+        colorcoll = initEC*n
+      
+        self.set_color(colorcoll[0:N])
+        return
+
     def _shred(self) :
         # convert multi-segment lines to multiple one-segment lines.
         # Required for application of non-uniform line color.
@@ -6082,7 +6605,7 @@ class ColorLine3DCollection(Line3DCollection) :
         return segments
 
     def _shred_segm_color(self,numDiv) :
-        initColors = self._edgecolors  # colors before line shredding
+        initColors = self._ledgecolors  # colors before line shredding  # update for v_1.2.0
         numColors = len(initColors)
         linesegs = self.segmIndices
         colors = []
@@ -6105,7 +6628,7 @@ class ColorLine3DCollection(Line3DCollection) :
         # Individual segemnt colors are needed for line
         # shading, clipping, and alpha setting.
 
-        initColors = self._edgecolors  # colors before line shredding
+        initColors = self._ledgecolors  # colors before line shredding  # update for v_1.2.0
         numColors = len(initColors)
         linesegs = self.lineIndices
         colors = []
@@ -6200,7 +6723,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
     def _map_cmap_from_datagrid_vert(self,g, delta, dmin, cmap) :
 
-        x,y,z = np.transpose(self.vertexCoor)
+        x,y,_ = np.transpose(self.vertexCoor)
 
         # normalize xy plane -1 to 1
         x = np.interp( x, (x.min(), x.max()), (-1.0, 1.0) )
@@ -6237,7 +6760,7 @@ class ColorLine3DCollection(Line3DCollection) :
         colors = np.clip(colors,0,1)
         if rgb : RGB = colors
         else :   RGB = cm.colors.hsv_to_rgb(colors)
-        if RGB.shape[1] is 3 :
+        if RGB.shape[1] == 3 :
             ones = np.ones(RGB.shape[0])[:,np.newaxis]
             RGB = np.concatenate((RGB,ones),axis=1)
         
@@ -6247,6 +6770,15 @@ class ColorLine3DCollection(Line3DCollection) :
         return
 
     # ---------------------------------------------------------------------
+
+    @property
+    def _ledgecolors(self) :
+        return self._edgecolors
+
+    @_ledgecolors.setter
+    def _ledgecolors(self,val) :
+        self._edgecolors = val
+        return
 
     @property
     def vlim(self) :
@@ -6316,7 +6848,7 @@ class ColorLine3DCollection(Line3DCollection) :
     @property
     def segmentcolors(self) :
         """A N x 4 array of segment colors."""
-        return self._edgecolors
+        return self._ledgecolors  # update for v_1.2.0
 
     @property
     def bounds(self) :
@@ -6434,7 +6966,7 @@ class ColorLine3DCollection(Line3DCollection) :
         if not self.isShredded :
             colors = self._shred_color()
             self._shred()
-            self._edgecolors = colors
+            self._ledgecolors = colors  # update for v_1.2.0
             # DEVNOTE: colors now refer to segment colors, not line colors.
         if rez==0: return self
         else :
@@ -6466,7 +6998,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self.vertexCoor = new_vertexCoor
         self.lineIndices = new_lineIndices
         self._shred()
-        self._edgecolors = colors
+        self._ledgecolors = colors  # update for v_1.2.0
         return self
     
     def map_cmap_from_sequence( self, cmap=None, sop=None, cname=None ) :
@@ -6516,7 +7048,10 @@ class ColorLine3DCollection(Line3DCollection) :
             vmin, vmax = v.min(), v.max()
 
         norm = colors.Normalize(vmin=vmin,vmax=vmax)
-        self._edgecolors = cm_colorMap(norm(v))
+        self._ledgecolors = cm_colorMap(norm(v))  # update for v_1.2.0
+        RGB = cm_colorMap(norm(v))
+        self.set_color(RGB)  # <<<<<<<<<<<<<<<<<<<<<<< debug
+
         self.segValues = v
         self._bounds['vlim'] = [ vmin, vmax ] 
         # .............................................
@@ -6575,11 +7110,14 @@ class ColorLine3DCollection(Line3DCollection) :
         vmin, vmax = v.min(), v.max()
         norm = colors.Normalize(vmin=v.min(),vmax=v.max())
 
-        self._edgecolors = cm_colorMap(norm(v))
+        self._ledgecolors = cm_colorMap(norm(v))  # update for v_1.2.0
+        RGB = cm_colorMap(norm(v))
+        self.set_color(RGB)  # <<<<<<<<<<<<<<<<<<<<<<< debug
+
         self.segValues = v
         self._bounds['vlim'] = [ vmin, vmax ] 
         # .............................................
-        self._map_cmap_from_direction_vert( self._edgecolors, self.segValues, self._bounds['vlim'] )
+        self._map_cmap_from_direction_vert( self._ledgecolors, self.segValues, self._bounds['vlim'] )  # update for v_1.2.0
         # .............................................
         return self
 
@@ -6588,6 +7126,22 @@ class ColorLine3DCollection(Line3DCollection) :
         Line color assignment using a 2D datagrid.
 
         Datagrid values are normalized in the range 0 to 1.
+
+        Parameters
+        ----------
+        datagrid : 2D float array
+
+        cmap : str or Colormap, optional
+            A Colormap instance or registered colormap name.
+            If not assigned, the surface Colormap is used.
+            The colormap maps the datagrid values to colors.
+
+        cname : string, optional, default: None.
+            Descriptive identifier for values indicated by color.
+
+        Returns
+        -------
+        self : line object
 
         """
 
@@ -6616,7 +7170,7 @@ class ColorLine3DCollection(Line3DCollection) :
             segments = self._shred()
         # -----------------------------------------
         segCoor = self._get_segment_centers(segments)
-        x,y,z = np.transpose(segCoor)
+        x,y,_ = np.transpose(segCoor)
 
         # normalize xy plane -1 to 1
         x = np.interp( x, (x.min(), x.max()), (-1.0, 1.0) )
@@ -6628,7 +7182,10 @@ class ColorLine3DCollection(Line3DCollection) :
         vmin, vmax = v.min(), v.max()
         norm = colors.Normalize(vmin=v.min(),vmax=v.max())
 
-        self._edgecolors = cm_colorMap(norm(v))
+        self._ledgecolors = cm_colorMap(norm(v))  # update for v_1.2.0
+        RGB = cm_colorMap(norm(v))
+        self.set_color(RGB)  # <<<<<<<<<<<<<<<<<<<<<<< debug
+
         self.segValues = v
         self._bounds['vlim'] = [ vmin, vmax ] 
 
@@ -6686,7 +7243,10 @@ class ColorLine3DCollection(Line3DCollection) :
         vmin, vmax = v.min(), v.max()
         norm = colors.Normalize(vmin=v.min(),vmax=v.max())
         
-        self._edgecolors = cm_colorMap(norm(v))
+        self._ledgecolors = cm_colorMap(norm(v))  # update for v_1.2.0
+        RGB = cm_colorMap(norm(v))
+        self.set_color(RGB)  # <<<<<<<<<<<<<<<<<<<<<<< debug
+
         self.segValues = v
         self._bounds['vlim'] = [ vmin, vmax ] 
         # ========================================================================
@@ -6737,11 +7297,13 @@ class ColorLine3DCollection(Line3DCollection) :
         colors = np.clip(colors,0,1)
         if rgb : RGB = colors
         else :   RGB = cm.colors.hsv_to_rgb(colors)
-        if RGB.shape[1] is 3 :
+        if RGB.shape[1] == 3 :
             ones = np.ones(RGB.shape[0])[:,np.newaxis]
             RGB = np.concatenate((RGB,ones),axis=1)
         
-        self._edgecolors = RGB
+        self._ledgecolors = RGB  # update for v_1.2.0
+        self.set_color(RGB)  # <<<<<<<<<<<<<<<<<<<<<<< debug
+
         self.segValues = None
         self._bounds['vlim'] = [ 0.0, 1.0 ] 
         # ========================================================================
@@ -6879,7 +7441,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
         """
         # -----------------------------------------
-        colors = self._edgecolors
+        colors = self._ledgecolors  # update for v_1.2.0
         segments = self._segments3d
 
         if self.restoredClip is None :
@@ -6892,9 +7454,9 @@ class ColorLine3DCollection(Line3DCollection) :
             # .... note:colors modified, not created
             colors = self._shred_color()
             segments = self._shred()
-            self._edgecolors = colors
+            self._ledgecolors = colors  # update for v_1.2.0
         else :
-            lenCol = len(self._edgecolors)
+            lenCol = len(self._ledgecolors)  # update for v_1.2.0
             lenSeg = len(segments)
             if lenCol != lenSeg : colors = self._shred_color()
         # -----------------------------------------
@@ -6913,6 +7475,7 @@ class ColorLine3DCollection(Line3DCollection) :
         clipCoor = self.vertexCoor[  np.array(clipIndices) ]   # the lineset is shredded so can do this.
         self.set_segments(clipCoor)
         self.set_color(clipColors)
+
         # FutDev: 'correct' definition should use nparrays for segmIndices not lists 
         # self.segmIndices = clipIndices  ... bug fix,  just a bandaid.
         self.segmIndices = clipIndices.tolist()
@@ -6978,6 +7541,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
         self.isShredded = self.restoredClip['isShredded']
         self.set_color( self.restoredClip['colors'] )
+
         self.segmIndices = self.restoredClip['indices']
         segmIndices = self.segmIndices
 
@@ -7009,14 +7573,14 @@ class ColorLine3DCollection(Line3DCollection) :
         if (alpha<0.0) or (alpha>1.0) :
             raise ValueError('line alpha must be between 0 and 1, found {}'.format(alpha))
 
-        orig_colors = self._edgecolors
+        orig_colors = self._ledgecolors  # update for v_1.2.0
         if constant :
             np.put_along_axis(orig_colors, np.array([[3]]), alpha, axis=1)
             colorMap = orig_colors
         else:
             colorMap = np.multiply(orig_colors,np.array([1.0,1.0,1.0,alpha]))
         
-        self._edgecolors = colorMap
+        self._ledgecolors = colorMap  # update for v_1.2.0
 
         return self
 
@@ -7056,15 +7620,15 @@ class ColorLine3DCollection(Line3DCollection) :
 
 
         # -----------------------------------------
-        colors = self._edgecolors
+        colors = self._ledgecolors  # update for v_1.2.0
         segments = self._segments3d
         if not self.isShredded :
             # .... note:colors modified, not created
             colors = self._shred_color()
             segments = self._shred()
-            self._edgecolors = colors
+            self._ledgecolors = colors  # update for v_1.2.0
         else :
-            lenCol = len(self._edgecolors)
+            lenCol = len(self._ledgecolors)  # update for v_1.2.0
             lenSeg = len(segments)
             if lenCol != lenSeg : colors = self._shred_color()
         # -----------------------------------------
@@ -7084,7 +7648,9 @@ class ColorLine3DCollection(Line3DCollection) :
         hsv_vals[:,2] = (cvm*hsv_vals[:,2:3])[:,0]
         rgb_vals =  cm.colors.hsv_to_rgb(hsv_vals)
         shade_colors = np.concatenate((rgb_vals, alphas), axis=1)
-        self._edgecolors = shade_colors
+        self._ledgecolors = shade_colors  # update for v_1.2.0
+        self.set_color(shade_colors)
+
         return self
 
     def fade(self,depth=0,elev=None,azim=None,ax=None) :
@@ -7127,15 +7693,18 @@ class ColorLine3DCollection(Line3DCollection) :
             raise ValueError('depth values, {}, must be between 0 and 1'.format(depth))
 
         # -----------------------------------------
-        colors = self._edgecolors
+        #colors = self._edgecolors
+        colors = self.get_edgecolor()  # update for v_1.2.0
         segments = self._segments3d
         if not self.isShredded :
             # .... note:colors modified, not created
             colors = self._shred_color()
             segments = self._shred()
-            self._edgecolors = colors
+            #self._edgecolors = colors
+            self.set_edgecolor(colors)  # update for v_1.2.0
         else :
-            lenCol = len(self._edgecolors)
+            #lenCol = len(self._edgecolors)
+            lenCol = len(colors)  # update for v_1.2.0
             lenSeg = len(segments)
             if lenCol != lenSeg : colors = self._shred_color()
         # -----------------------------------------
@@ -7150,7 +7719,10 @@ class ColorLine3DCollection(Line3DCollection) :
         fc_less_alpha = orig_colors[:,:3]
 
         faded_colors = np.concatenate((fc_less_alpha, fadex[:,np.newaxis] ), axis=1)
-        self._edgecolors = faded_colors   
+        #self._edgecolors = faded_colors   
+        self.set_edgecolor(faded_colors)  # update for v_1.2.0   
+        self.set_color(faded_colors)  # update for v_1.2.0   
+
         return self
 
     def transform(self, rotate=None, scale=1.0, translate=[0,0,0] )  :
@@ -7325,7 +7897,7 @@ class ColorLine3DCollection(Line3DCollection) :
                         indices.append(t)
                 vertIx = np.array(indices)
             else :
-                color = self._edgecolors
+                color = self._edgecolors  # update for v_1.2.0
                 vertIx= np.array(self.segmIndices)
             return vertIx, color
         #.....................................
@@ -7669,6 +8241,7 @@ class ParametricLine(ColorLine3DCollection) :
         if len(self.get_color() ) == 1 :
             c = self.get_color()[0]
             self.set_color( [c]*len(indices)   )
+
         self._set_geometric_bounds()
         self._planeNormal = planeNormal
         return self
@@ -7778,13 +8351,11 @@ class ParametricLine(ColorLine3DCollection) :
 
     def scale_dataframe(self,X,Y,Z) : 
         """
-        Linear scale and translate the lines.
-
-        Used for scaling a geometry based on a datagrid.
+        Scaling the line geometry based on a datagrid.
 
         Parameters
         ----------
-        X, Y, Z : 2d arrays
+        X, Y, Z : N x M arrays
             Minimum and maximum values of the arrays are used to scale
             and translate the surface from an intial domain of
             [ (-1,1), (-1,1), (0,1) ]
@@ -7830,6 +8401,23 @@ class SegmentLine(ColorLine3DCollection) :
 #           classes could use with multiple inheritence.  Instead, the following   |
 #           methods are common among these three classes.                          |
 #           FutDev may be useful to define such a class, but MROI.                 |
+#                                                                                  |
+#           Overall ColorLine3DCollection class needs a architectural change.      |
+#           Possibly a list of ColorSegment3DCollection objects which are          |
+#           contained within each ColorLine3DCollectio object. Each list           |
+#           is a basically a line.  Analogous to Surface collections which         |
+#           which are a collection of polyhedrons. This would be an advantage      |
+#           for writing and reading to files.                                      |
+#                                                                                  |
+#           Becoming a priority: Need to have separate object properties for       |
+#           face colors and edge colors, and don't use the Matplotlib properties   |
+#           for these in Poly3DCollection, Line3DCollection. Too much 'magic'      |
+#           happening which is out of control.  Then use set_color                 |
+#           when needed.  This applies to both surface and line objects.           |
+#           This also would allow constructing classes independent of              |
+#           Poly3DCollection, Line3DCollection for future developement,            |
+#           allowing an interface to matplotlib to be constructed instead          |
+#           inheritance.                                                           |             
 # =================================================================================+
 
 class KWprocessor():

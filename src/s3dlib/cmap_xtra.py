@@ -5,23 +5,19 @@
 Auxiliary functions for use with Matplotlib.
 
 '''
+# These functions use the colorspacious module for
+# creating Lab color space colormaps.
+
 import string 
 import random
 import numpy as np
 
-from matplotlib import cm, colors
+import matplotlib as mpl
+from matplotlib import colors     # update for v_1.2.0
 from matplotlib.colors import ListedColormap
 
 from colorspacious import cspace_converter
 
-# +---------------------------------------------------------+
-# |  NOTE: depricated from 3.6:                             |
-# |            matplotlib.cm.get(name)                      |
-# |        to  matplotlib.colormaps[name]                   |
-# |  Note: depricated from 3.6:                             |
-# |            matplotlib.cm.register_cmap(name)            |
-# |        to  matplotlib.colormaps.register(name)          |
-# +---------------------------------------------------------+
 
 def Lab_cmap_gradient(lowColor='k', highColor='w', name=None, mirrored=False) :
     """
@@ -89,7 +85,7 @@ def Lab_cmap_gradient(lowColor='k', highColor='w', name=None, mirrored=False) :
     cmap = ListedColormap(clist)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -122,7 +118,7 @@ def Hue_Lab_gradient( color, lowL=0.0, hiL=1.0, name=None ) :
     def get_arrays(hue,N) :
         hsv_0 = np.array([hue,1.0,1.0])
         rgb_0 = np.array(colors.hsv_to_rgb(hsv_0.T)).T
-        L_0,a,b = cspace_converter("sRGB1", "CAM02-UCS"  )(rgb_0.T).T
+        L_0,_,_ = cspace_converter("sRGB1", "CAM02-UCS"  )(rgb_0.T).T
         L_0 = L_0/100.0
         L = np.linspace(0.0,1.0,N)
         endS = (1.0 -L)/(1.0 - L_0)
@@ -134,7 +130,7 @@ def Hue_Lab_gradient( color, lowL=0.0, hiL=1.0, name=None ) :
         V = np.where( L>L0vals, ones, sttV )
         hsv = np.array( [H,S,V] )
         rgb = np.array(colors.hsv_to_rgb(hsv.T)).T
-        Lact,a,b = cspace_converter("sRGB1", "CAM02-UCS"  )(rgb.T).T
+        Lact,_,_ = cspace_converter("sRGB1", "CAM02-UCS"  )(rgb.T).T
         Lact = Lact/100.0
         Lact[0]=0.0
         Lact[len(Lact)-1] = 1.000001
@@ -150,10 +146,10 @@ def Hue_Lab_gradient( color, lowL=0.0, hiL=1.0, name=None ) :
     # ...............................................................
 
     if isinstance(color, str ): 
-        hue,s,v = colors.rgb_to_hsv(colors.to_rgb(color))
+        hue,_,_ = colors.rgb_to_hsv(colors.to_rgb(color))
         if name is None : name = color+'_L'
     elif isinstance(color,(list,tuple)) :
-        hue,s,v = colors.rgb_to_hsv(colors.to_rgb(color))
+        hue,_,_ = colors.rgb_to_hsv(colors.to_rgb(color))
     else :
         hue = color
         if hue<0.0 or hue>1.0 :
@@ -173,7 +169,7 @@ def Hue_Lab_gradient( color, lowL=0.0, hiL=1.0, name=None ) :
     cmap = ListedColormap(rgba)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -239,7 +235,7 @@ def Cmap_Lab_gradient( cmap, lowL=0.0, hiL=1.0, name=None ) :
         return yVal
     # ...............................................................
     if isinstance(cmap,str) : 
-        cmap = cm.get_cmap(cmap)
+        cmap = mpl.colormaps[cmap]      # update for v_1.2.0
     if name is None :
         name = cmap.name + '_L'
 
@@ -256,7 +252,7 @@ def Cmap_Lab_gradient( cmap, lowL=0.0, hiL=1.0, name=None ) :
     cmap = ListedColormap(rgba)
     if name is None :
         name = ''.join(random.choices(string.ascii_uppercase , k = 8))
-    cm.register_cmap(name,cmap)
+    mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
 
@@ -325,14 +321,14 @@ def show_cmaps( plt, cmaps, onlyColormaps=True, show=True) :
         return
     # ...................................................................
     def hasTransparency(cmap) :
-        if isinstance(cmap,str) : cmap = cm.get_cmap(cmap)
+        if isinstance(cmap,str) : cmap = mpl.colormaps[cmap]      # update for v_1.2.0
         N = 256
         alpha = cmap(np.linspace(0, 1, N))[:,3:4]
         return np.any( np.where(alpha<1,True,False) )
     # ...................................................................
     def Lstar(cmap) :
         # x,y arrays for ploting L* of a colormap.
-        if isinstance(cmap,str) : cmap = cm.get_cmap(cmap)
+        if isinstance(cmap,str) : cmap = mpl.colormaps[cmap]      # update for v_1.2.0
         N = 256
         rgb = cmap(np.linspace(0, 1, N))[:,0:3]
         lab = cspace_converter("sRGB1", "CAM02-UCS")(rgb)        
@@ -357,7 +353,7 @@ def show_cmaps( plt, cmaps, onlyColormaps=True, show=True) :
     for i in range(len(cmaps)):
         ax = axes[i]
         cmap=cmaps[i]
-        if isinstance(cmap,str) : cmap = cm.get_cmap(cmap)
+        if isinstance(cmap,str) : cmap = mpl.colormaps[cmap]      # update for v_1.2.0
         if hasTransparency(cmap) :
             show_trans_cmap(ax,cmap)
         else :
@@ -381,7 +377,7 @@ def show_cmaps( plt, cmaps, onlyColormaps=True, show=True) :
 
         for i in range(len(cmaps)):
             cmap = cmaps[i]
-            if isinstance(cmap,str) : cmap = cm.get_cmap(cmap)
+            if isinstance(cmap,str) : cmap = mpl.colormaps[cmap]      # update for v_1.2.0
             x,y,name = Lstar(cmap)
             grad =  np.float32(np.vstack((y, y)))
             ax = axes[i]
