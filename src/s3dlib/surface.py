@@ -2951,9 +2951,10 @@ class Surface3DCollection(Poly3DCollection):
 
         orig_colors = colors
         fc_less_alpha = orig_colors[:,:3]
+        fadex = fadex*orig_colors[:,3]  # update for v_1.2.0
         faded_colors = np.concatenate((fc_less_alpha, fadex[:,np.newaxis] ), axis=1)
         self.set_color(faded_colors) 
-        # heuristic approach to hidding face edges.  BANDAID update for v_1.2.0
+        # heuristic approach to hiding face edges.  BANDAID update for v_1.2.0
         alpha = (depth+1)/2  # take the midpoint of the gradient.
         lw =  0.0063*np.exp(4.2*alpha)
         self.set_linewidth(lw)
@@ -3120,9 +3121,9 @@ class Surface3DCollection(Poly3DCollection):
         color : color (default is the surface colors)
 
         coor : integer or string indicating the type of contour surface:
-            0, p, P, xyz,planar                 - planar (default)
-            1, c, C, cylinder,pplar,cylindrical - cylinder
-            2, s, S, sphere,spherical           - sphere
+            0, p, P, xyz,planar                 - planar (default, planar & polar)
+            1, c, C, cylinder,pplar,cylindrical - cylinder (default, cylindrical)
+            2, s, S, sphere,spherical           - sphere (default, spherical)
             3, x, X                             - y-z plane
             4, y, Y                             - x-z plane
             5, z, Z                             - x-y plane
@@ -3134,6 +3135,15 @@ class Surface3DCollection(Poly3DCollection):
         """
         extDft = { 'direction':[0,0,1.0], 'name': None, 'color': None }
         kargDft = { **_COOR_KWARGS, **extDft }
+        # reset default 'coor' for cylindrical and spherical coor surfaces.
+        coorVal = 0
+        if self.coorType == _COORSYS["CYLINDRICAL"] : coorVal = 1
+        if self.coorType == _COORSYS["SPHERICAL"] :   coorVal = 2
+        if coorVal != 0 :
+            temp = copy.deepcopy(_COOR_KWARGS)
+            temp['coor'][0] = [coorVal]
+            kargDft = { **temp, **extDft }
+
         KW = KWprocessor(kargDft,'contourLines',**kargs)
         cIndex = KW.getVal('coor')
         direction = KW.getVal('direction')
@@ -3174,9 +3184,9 @@ class Surface3DCollection(Poly3DCollection):
         color : color (default is the surface colors)
 
         coor : integer or string indicating the type of contour surface:
-            0, p, P, xyz,planar                 - planar (default)
-            1, c, C, cylinder,pplar,cylindrical - cylinder
-            2, s, S, sphere,spherical           - sphere
+            0, p, P, xyz,planar                 - planar (default, planar & polar)
+            1, c, C, cylinder,pplar,cylindrical - cylinder (default, cylindrical)
+            2, s, S, sphere,spherical           - sphere (default, spherical)
             3, x, X                             - y-z plane
             4, y, Y                             - x-z plane
             5, z, Z                             - x-y plane
@@ -3188,6 +3198,15 @@ class Surface3DCollection(Poly3DCollection):
         """
         extDft = { 'direction':[0,0,1.0], 'name': None, 'color': None }
         kargDft = { **_COOR_KWARGS, **extDft }
+        # reset default 'coor' for cylindrical and spherical coor surfaces.
+        coorVal = 0
+        if self.coorType == _COORSYS["CYLINDRICAL"] : coorVal = 1
+        if self.coorType == _COORSYS["SPHERICAL"] :   coorVal = 2
+        if coorVal != 0 :
+            temp = copy.deepcopy(_COOR_KWARGS)
+            temp['coor'][0] = [coorVal]
+            kargDft = { **temp, **extDft }
+        
         KW = KWprocessor(kargDft,'contourLineSet',**kargs)
         cIndex = KW.getVal('coor')
         direction = KW.getVal('direction')
@@ -7717,7 +7736,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
         orig_colors = colors
         fc_less_alpha = orig_colors[:,:3]
-
+        fadex = fadex*orig_colors[:,3]  # update for v_1.2.0 
         faded_colors = np.concatenate((fc_less_alpha, fadex[:,np.newaxis] ), axis=1)
         #self._edgecolors = faded_colors   
         self.set_edgecolor(faded_colors)  # update for v_1.2.0   

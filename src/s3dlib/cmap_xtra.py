@@ -13,11 +13,11 @@ import random
 import numpy as np
 
 import matplotlib as mpl
-from matplotlib import colors     # update for v_1.2.0
+from matplotlib import cm,colors     # update for v_1.2.0
 from matplotlib.colors import ListedColormap
-
 from colorspacious import cspace_converter
 
+import s3dlib.cmap_utilities as cmu
 
 def Lab_cmap_gradient(lowColor='k', highColor='w', name=None, mirrored=False) :
     """
@@ -174,7 +174,7 @@ def Hue_Lab_gradient( color, lowL=0.0, hiL=1.0, name=None ) :
     return cmap
 
 
-def Cmap_Lab_gradient( cmap, lowL=0.0, hiL=1.0, name=None ) :
+def _Cmap_Lab_gradient( cmap, lowL=0.0, hiL=1.0, name=None ) :
     """
     A linear-in-Lab-space Colormap with a hue matched to cmap and maximum saturation.
     
@@ -255,6 +255,67 @@ def Cmap_Lab_gradient( cmap, lowL=0.0, hiL=1.0, name=None ) :
     mpl.colormaps.register(cmap,name=name)     # update for v_1.2.0
     cmap.name = name
     return cmap
+
+
+def Cmap_Lab_gradient(cmap, lowL=None, hiL=None, name=None) :
+    """
+    A linear-in-Lab-space Colormap with a hue matched to cmap at maximum saturation.
+    
+    Parameters
+    ----------
+    cmap : colormap
+
+    lowL : number, optional, default: cmap min L* @ boundaries
+        The minimum L* lightness value in range 0 to <1
+
+    hiL  : number, optional, default: cmap max L* @ boundaries
+        The maximum L* lightness value in range >0 to 1.
+
+    name : str, optional, default: None
+        The registered name to identify the colormap.
+        If None, ‘_L’ will be appended to the colormap name.
+
+    Returns
+    -------
+    ListedColormap
+        An instance of a colormap.
+    """
+    
+    # DevNote: easier to just call the previous version of this function
+    # with reset defaults than to edit the previous function.
+
+    if isinstance(cmap,str) : 
+        cmap = mpl.colormaps[cmap]      # update for v_1.2.0
+
+    if lowL is None:
+        strRGB = cm.colors.to_rgb(cmap(0.0))
+        strLab = cspace_converter("sRGB1", "CAM02-UCS"  )(strRGB)
+        sLab = strLab[0]/100
+    else : sLab = 0.0
+
+    if hiL is None :
+        endRGB = cm.colors.to_rgb(cmap(1.0))
+        endLab = cspace_converter("sRGB1", "CAM02-UCS"  )(endRGB)
+        eLab = endLab[0]/100
+    else :  eLab = 1.0
+
+    if name is None :
+        name = cmap.name + '_L'
+
+    if sLab>eLab :   # then L* decrease from start to finish.
+        sLab, eLab = eLab, sLab
+        # don't want to auto-register the colormap name, use a tempName
+        # that's random so not to register an already given name.
+        tempName = ''.join(random.choices(string.ascii_uppercase , k=8))
+        cmap = cmu.reversed_cmap(cmap,name=tempName)
+        cmap = _Cmap_Lab_gradient(cmap, lowL=sLab, hiL=eLab)
+        newCmap = cmu.reversed_cmap(cmap,name=name)
+    else :
+        newCmap = _Cmap_Lab_gradient(cmap, lowL=sLab, hiL=eLab, name=name)
+    return newCmap
+
+
+
 
 
 def show_cmaps( plt, cmaps, onlyColormaps=True, show=True) :
