@@ -3,6 +3,7 @@
 
 '''
 Auxiliary functions for use with Matplotlib.
+
 '''
 # These functions use the colorspacious module for
 # creating Lab color space colormaps.

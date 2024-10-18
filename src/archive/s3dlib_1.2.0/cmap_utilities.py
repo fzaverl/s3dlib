@@ -754,6 +754,7 @@ def section_cmap(cmap,lowIndx,hiIndx,name=None) :
     return op_cmap(op_lFunc,name=name)     # update for v_1.2.0
 
 
+
 class DualCmap() :
     
     def __init__(self,xcmap,ycmap,kind='sum',norm=True,name=None) :
@@ -868,52 +869,6 @@ class DualCmap() :
         self.pow = p
         self._kind = 'pwr'
         return self
-
-
-# =================================================================================+
-
-
-def linsegfunc(v, arr) :
-    """
-    Linear segment function, y = f(x) with domain/range [0,1]
-
-    Parameters
-    ----------
-    v : float or array
-        Independent variable in the range 0 to 1.
-
-    arr : N X 2 array
-        An array of N values (x,y), with increasing values of x and, 
-        y in the range 0 to 1.
-
-    Returns
-    -------
-    float
-        Dependent values or array of values
-    
-    """
-    def recurs(L,R,x,V) :   # efficient enough for intended scope
-        T = (L+R)//2 
-        if L==(R-1) : return L
-        if x[T] < V : return recurs(T,R,x,V)
-        else :        return recurs(L,T,x,V)
-    x,y = np.array(arr).T
-    m = np.min(x)
-    d = np.max(x)-np.min(x)
-    x,y = (x-m)/d , np.clip(y,0.0,1.0)
-    R = len(x) - 1
-    slp, b = [None]*R , [None]*R
-    for i in range(R) :
-        j = i+1
-        slp[i] = ( y[j]-y[i] ) / ( x[j]-x[i] )
-        b[i]   = y[i]-slp[i]*x[i]
-    if isinstance(v,(int,float)) : v=[v]
-    vals = [None]*len(v)
-    for i,V in enumerate(v) :
-        m = recurs(0,R,x,V)
-        vals[i] = slp[m]*V+ b[m]
-    return vals
-
 
 
 # =================================================================================+
