@@ -10,8 +10,7 @@ from functools import reduce
 #from time import time
 
 import numpy as np
-from scipy.interpolate import RBFInterpolator, RectBivariateSpline
-from scipy.spatial import Delaunay, ConvexHull
+from scipy import interpolate, spatial
 from skimage import measure
 
 import matplotlib as mpl
@@ -47,10 +46,8 @@ _DFT_VIEW = [  30, -60 ]            # default, axes elev and azim
 _DFT_CMAP = rcParams['image.cmap']  # default, colormap
 
 # +----------------------------------------------------------+
-# |  S3Dlib v_1.4.0 was developed using Matplotlib v_3.8.0   |
+# |  S3Dlib v_1.3.0 was developed using Matplotlib v_3.8.0   |
 # +----------------------------------------------------------+
-
-# S3Dlib v_1.4 uses scipy.interpolate.RectBivariateSpline, to replace interp2d.
 
 # FutDev: Future Development notes.
 # MROI:   Minimum Return On coding effort Investment.
@@ -77,7 +74,7 @@ class Surface3DCollection(Poly3DCollection):
 
         """
         points = np.array(points)
-        hull = ConvexHull(points)
+        hull = spatial.ConvexHull(points)
         verts = points[hull.vertices]
         cPnt = verts.mean(axis=0)
         # set the faceIndices referencing the verts, not the points....
@@ -262,7 +259,7 @@ class Surface3DCollection(Poly3DCollection):
             three coordinate axes.
 
         fval : a number, default: 0.0
-            Scalar value of surface contour within the cloud.
+            Scalar value of surface contour within the cloude.
 
         name : string, optional, default: None.
             Descriptive identifier for the geometry.
@@ -355,190 +352,6 @@ class Surface3DCollection(Poly3DCollection):
 
         surface = Surface3DCollection._impl_cloud_surfset \
             (None,None,cloud,domain,numb,name,**kwargs)
-        return surface
-
-    @staticmethod
-    def pntcloud(points,drez,domain=None) :
-        """
-        Numpy array of scalar values from a set of point values.
-
-        Parameters
-        ----------
-        points : V X 4, float array-like 
-            An array of V number of xyz point coordinates and point scalar
-            values.
-
-        drez : Float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the datacloud.
-
-        domain : None or number, list or array, default: None
-            If None, coordinates are normalized over the point xyz coordinates.
-            The domain of the point cloud.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        Returns
-        -------
-        Numpy (N,N,N) shaped array of scaler values
-        """
-
-        coor, vals = Surface3DCollection._extract_vals_from_inputCoor(points)
-        if vals is None :
-            raise ValueError("Error: pntcloud 'points' requires a Nx4 array")
-        if drez<1 or drez>5 :
-            raise ValueError("Error: incorrect value 'drez' passed to pntcloud:", drez)
-        if domain is None :
-            tcoor = coor-np.min(coor,axis=0)
-            coor = np.divide(tcoor,np.max(tcoor,axis=0))
-            domain = [ [0,1], [0,1], [0,1] ]
-        else :
-            domain = _interpret_domain(domain)
-        dftDm = domain
-        rngX,rngY,rngZ = dftDm[0],dftDm[1],dftDm[2]
-        Np1 = int( 10*drez )+1
-        xyz = np.mgrid[ rngX[0]:rngX[1]:Np1*1j,
-                        rngY[0]:rngY[1]:Np1*1j,
-                        rngZ[0]:rngZ[1]:Np1*1j ]
-        xyzflat = xyz.reshape(3, -1).T
-        wflat = RBFInterpolator(coor, vals)(xyzflat)
-        wgrid = wflat.reshape(Np1, Np1, Np1)
-        return wgrid
-
-    @staticmethod
-    def _pntdensitycloud( data, pdg, drez, domain) :
-        # called from datasurface to create a cloud enclosing the data points.
-        dataPts, dataVals = Surface3DCollection._extract_vals_from_inputCoor(data)
-        hasVals = dataVals is not None
-        #isMapped = hasVals and not wts  .... vestigal code
-        #weight = dataVals if (wts and hasVals) else np.ones( dataPts.shape[0])
-        isMapped = hasVals
-        weight = np.ones( dataPts.shape[0])
-        if domain is None:
-            # extract from the data coordinates.
-            dm = np.array([np.min(dataPts,axis=0),np.max(dataPts,axis=0)]).T
-        else :
-            dm = _interpret_domain(domain)
-
-        A = dm.T[1] - dm.T[0]
-        B = np.array( [ dm[0][0], dm[1][0], dm[2][0] ])
-        C = np.empty([len(dataPts),3])
-        C[:] = A
-        norm_coor = (dataPts-B)/C
-        N = int( 10*drez )
-        Nj = (N+1)*1j
-        xyz = np.mgrid[0:1:Nj,0:1:Nj, 0:1:Nj ]
-        dens = np.zeros(xyz.T.shape[:3])
-        for i,org in enumerate(norm_coor) :
-            diff = (xyz.T - org)
-            R = np.linalg.norm(diff,axis=3)
-            dens = dens + weight[i]*np.exp(-(R/pdg)**2)
-
-        retVals = dataVals if isMapped else None
-        return dens.T,A,B,dataPts,retVals
-
-    @staticmethod
-    def pntdensitycloud(points, pdg=0.1, drez=2.0, domain=None) :
-        """
-        Numpy array of scalar values values from a dataset.
-
-        Parameters
-        ----------
-        points : V x 3, or V X 4, float array-like 
-            An array of V number of xyz point coordinates.
-            If V X 4, scaler values are assigned to each pont.
-
-        pdg : float, optional, default: 0.1
-            Data point coordinate standard deviation, normalized.
-            Value is 0.0 > pdg > 1.0.
-
-        drez : Float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the datacloud.
-
-        domain : a number, list or array, default: None
-            If None, coordinates are normalized over the point xyz coordinates.
-            The domain of the point cloud.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        Returns
-        -------
-        Numpy (N,N,N) shaped array of scaler values
-        """
-        domain = _interpret_domain(domain)
-        densT,_,_,_,_ = Surface3DCollection._pntdensitycloud( points, pdg, drez, domain)
-        return densT
-
-    @staticmethod
-    def pntdensitysurf(points, pdg=0.1, drez=2.0, domain=1, relden=None, name=None, **kwargs) :
-        """
-        Surface3DCollection for a constant density value of point values.
-
-        Parameters
-        ----------
-        points : V x 3, or V X 4, float array-like 
-            An array of V number of xyz point coordinates.
-            If V X 4, scaler values are assigned to each vertex.
-
-        pdg : float, optional, default: 0.1
-            Data point coordinate standard deviation, normalized.
-            Value is 0.0 > pdg > 1.0.
-
-        drez : float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the surface.
-
-        domain : a number, list or array, default: 1
-            The domain of the surface evaluation.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        relden : a number, default : 0.5
-            Scalar value(s) of the relative density surface enclosing the data points.
-            Value is 0.0 > relden > 1.0.
-
-        name : string, optional, default: None.
-            Descriptive identifier for the geometry.
-
-        Returns
-        -------
-        Surface3DCollection object
-        """
-        #.....................................    
-        def coor_vals(coor, points, vals) :
-            # Assign the coor values to the nearest data point values.
-            distanceVector = coor[:,None] - points
-            R = np.linalg.norm(distanceVector,axis=2)
-            ind = np.argsort(R)
-            return vals[ind[:,0]]
-        #.....................................
-        domain = _interpret_domain(domain)     
-        cloud,A,B,dataPts,dataVals = Surface3DCollection._pntdensitycloud( points, pdg, drez, domain)
-        minc,maxc = np.min(cloud), np.max(cloud)
-        fval = minc + (maxc-minc)*relden
-        verts,faces = Surface3DCollection._get_VF(cloud,fval,A,B)
-
-        surface = Surface3DCollection(verts,faces,name=name, **kwargs).evert()
-
-        if dataVals is not None :
-            cvals = coor_vals(surface.vertices.T, dataPts, dataVals)
-            surface.set_vertvals(cvals)
-            surface.triangulate(1)
-            surface.map_cmap_from_vertvals( surface.cmap )
-
         return surface
 
     @staticmethod
@@ -1126,6 +939,7 @@ class Surface3DCollection(Poly3DCollection):
         vertexCoor = np.array(vCoor)
         vertexValues = np.array(vVals) 
         phongNorms = np.array(pvNrm)
+        #print('[_triangulateBase]  shape of vertexCoor,phongNorms',vertexCoor.shape,phongNorms.shape)
         indexObj = { 'face': np.array(fvIndices) , 'edge': np.array(evIndices) }
         return indexObj ,vertexCoor, vertexValues, phongNorms
 
@@ -1583,14 +1397,6 @@ class Surface3DCollection(Poly3DCollection):
             vACt = vACt*ausf
         cross = np.cross(vABt,vACt)
         sz = np.linalg.norm(cross,axis=1)[:,np.newaxis]
-        # update for v_1.4.0 ...................
-        # note: if the cross product is 0, then the triangle is flat, no face area.
-        #       so the color is irrelavent (hence the unit normal is irrelavent)
-        # added to eliminate : RuntimeWarning: invalid value encountered in divide
-        #.......................................
-        indices = np.where(sz.flatten() == 0)[0]
-        cross[indices] =[1.,0.,0.]
-        sz[indices] =1.
         return np.divide(cross,sz)
 
     def _get_face_centers(self,faceCoor) :
@@ -1866,7 +1672,6 @@ class Surface3DCollection(Poly3DCollection):
         e = self._get_edges_from_faces(self.fvIndices)  # accounts for clipping...
         lcol = ColorLine3DCollection(v,e,'edges')
         lcol._ledgecolors = get_edge_color()  # update for v_1.2.0
-        lcol.set_color(lcol._ledgecolors)   # update for v_1.4.0
         return lcol
 
     @property
@@ -2071,9 +1876,8 @@ class Surface3DCollection(Poly3DCollection):
         Vector3DCollection object or array of unit direction vectors
 
         """
-        dft_vc = self.vertexColor            # update for v_1.4.0
-        #kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
-        kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':dft_vc, 'width':1, 'alr':_DFT_ALR  }
+
+        kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
         KW = KWprocessor(kargDft,'vectorfield_from_op',**kargs)
         scale = KW.getVal('scale')
         isV3D = KW.getVal('v3d')
@@ -2088,7 +1892,7 @@ class Surface3DCollection(Poly3DCollection):
         lcol = Vector3DCollection(verts,norms*scale,alr,name,colors=color, linewidths=width)
         lcol.coorType = self.coorType
         lcol.uvwOrientationType = _COORSYS["XYZ"]
-        #if color is None : lcol._set_vectColor( self.vertexColor ) # removed for v_1.4.0
+        if color is None : lcol._set_vectColor( self.vertexColor )
         return lcol
 
     def facenormals(self, **kargs) :
@@ -2120,9 +1924,8 @@ class Surface3DCollection(Poly3DCollection):
         Vector3DCollection object or array of unit direction vectors
 
         """
-        dft_fc = self._dfacecolors            # update for v_1.4.0
-        #kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
-        kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':dft_fc, 'width':1, 'alr':_DFT_ALR  }
+        #Note: default color:None so that can use as a flag to use face colors if not defined. 
+        kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
         KW = KWprocessor(kargDft,'vectorfield_from_op',**kargs)
         scale = KW.getVal('scale')
         isV3D = KW.getVal('v3d')
@@ -2139,7 +1942,7 @@ class Surface3DCollection(Poly3DCollection):
         # --- 1.1 mod --------------------
         lcol.coorType = self.coorType
         lcol.uvwOrientationType = _COORSYS["XYZ"]
-        #if color is None : lcol._set_vectColor(self._dfacecolors)  # removed for v_1.4.0
+        if color is None : lcol._set_vectColor(self._dfacecolors)  # update for v_1.2.0
         return lcol
 
     def dispfield_from_op(self, operation, **kargs) :
@@ -2479,13 +2282,11 @@ class Surface3DCollection(Poly3DCollection):
         dmin = np.amin(datagrid)
         xd = np.linspace(0, 1, data.shape[0] )
         yd = np.linspace(0, 1, data.shape[1] )
-        #g =  interp2d(yd, xd, data, kind='cubic')
-        r = RectBivariateSpline(yd, xd, data.T)    # update for v_1.4.0
+        g =  interpolate.interp2d(yd, xd, data, kind='cubic')
         d = []
         # FutDev: use numpy methods to optimize efficiency.
         for ab in np.transpose([a,b]) :
-            #d.append( g(ab[0],ab[1])[0] )   
-            d.append( r.ev(ab[0],ab[1]) )    # update for v_1.4.0
+            d.append( g(ab[0],ab[1])[0] )   
         d = np.where(inViewport,d,np.full(len(d),dmin))
         
         if cmap is not None :
@@ -2564,13 +2365,11 @@ class Surface3DCollection(Poly3DCollection):
         dmin = np.amin(datagrid)
         xd = np.linspace(0, 1, data.shape[0] )
         yd = np.linspace(0, 1, data.shape[1] )
-        #g =  interp2d(yd, xd, data, kind='cubic')
-        r = RectBivariateSpline(yd, xd, data.T)    # update for v_1.4.0
+        g =  interpolate.interp2d(yd, xd, data, kind='cubic')
         d = []
         # FutDev: use numpy methods to optimize efficiency.
         for ab in np.transpose([a,b]) :
-            #d.append( g(ab[0],ab[1])[0] )   
-            d.append( r.ev(ab[0],ab[1]) )    # update for v_1.4.0
+            d.append( g(ab[0],ab[1])[0] )   
         d = np.where(inViewport,d,np.full(len(d),dmin))
         
         if cmap is not None :
@@ -2900,14 +2699,12 @@ class Surface3DCollection(Poly3DCollection):
         data = (datagrid - dmin)/delta
         xd = np.linspace(0, 1, data.shape[0] )
         yd = np.linspace(0, 1, data.shape[1] )
-        #g =  interp2d(yd, xd, data, kind='cubic')
-        r = RectBivariateSpline(yd, xd, data.T)    # update for v_1.4.0
+        g =  interpolate.interp2d(yd, xd, data, kind='cubic')
 
         # FutDev: optimize efficiency (?).
         d = []
         for ab in np.transpose([a,b]) :
-            #d.append( g(ab[0],ab[1])[0] )
-            d.append( r.ev(ab[0],ab[1]) )    # update for v_1.4.0
+            d.append( g(ab[0],ab[1])[0] )
         d = np.where(inViewport,d,np.zeros(len(d)))
         d = d[:, np.newaxis]
 
@@ -3804,7 +3601,7 @@ class Surface3DCollection(Poly3DCollection):
 
         Returns
         -------
-        ColorLine3DCollection object
+        self : line object
 
         """
         extDft = { 'direction':[0,0,1.0], 'name': None, 'color': None }
@@ -3867,7 +3664,7 @@ class Surface3DCollection(Poly3DCollection):
 
         Returns
         -------
-        ColorLine3DCollection object
+        self : line object
 
         """
         extDft = { 'direction':[0,0,1.0], 'name': None, 'color': None }
@@ -4157,7 +3954,7 @@ class PlanarSurface(Surface3DCollection) :
         x = 2*np.random.rand( N ) - 1
         y = 2*np.random.rand( N ) - 1 
         xydata = np.array([x,y]).T
-        tess = Delaunay(xydata)
+        tess = spatial.Delaunay(xydata)
 
         if name is None : name = 'random mesh'
         surface = PlanarSurface(name=name,**kargs)  # set to the class default object
@@ -4636,7 +4433,7 @@ class PolarSurface(Surface3DCollection) :
         z = np.zeros( N )
         data = PolarSurface.coor_convert([r,t,z],True).T
         rtdata = data[:,:2]
-        tess = Delaunay(rtdata)
+        tess = spatial.Delaunay(rtdata)
 
         if name is None : name = 'random mesh'
         surface = PolarSurface(name=name,**kargs)  # set to the class default object
@@ -6583,24 +6380,6 @@ class Vector3DCollection(Line3DCollection) :
             Valid keywords include: colors, linewidths.
         
         """
-        # .........................................................
-        def get_lineCollection_colors(vlen,clist) :     # update for v_1.4.0
-            rgbaArr = colors.to_rgba_array(clist)
-            clen = len(rgbaArr)
-            a,b = vlen//clen, vlen % clen
-            if a==0 :
-                vcolors = rgbaArr[:b]
-            else :
-                vcolors  = np.tile(rgbaArr, (a,1)  )
-                if b!=0 :
-                    bottom = rgbaArr[:b]
-                    vcolors = np.append(vcolors,bottom, axis=0)
-            head = np.arange(len(vcolors))
-            tail = np.ravel( [ [head],[head] ] , order='F')
-            index = np.append(head,tail)
-            lines_colors = vcolors[index]
-            return lines_colors,vcolors
-        # .........................................................
         # note: self coor types primarially used for export info.
 
         self.coorType = _COORSYS["XYZ"]
@@ -6609,29 +6388,30 @@ class Vector3DCollection(Line3DCollection) :
         if alr is None : alr = _DFT_ALR
         self._alr = alr
 
-        lines,XYZ,UVW = self._quiverLines(location,vect,alr)
-        # NOTE: _quiverLines may remove zero length vect  < !!!!!!!!!!
-        self._location = XYZ
-        self._vect = UVW
-        self._vlines = np.array(lines)  # vector has 3 lines. update for v_1.4.0
+        self.baseLocation = np.array(location, dtype=float)
+        self.baseVect = np.array(vect, dtype=float)
 
-        kargDft = { 'colors':['k'] }
-        KW = KWprocessor(kargDft,'vector_init',False,**kwargs)
-        inputColors = KW.getVal('colors') # update for v_1.4.0
-        kwargs = KW.filter()
-        lines_colors,vcolors = get_lineCollection_colors(len(XYZ),inputColors)
-        self._linecolors = lines_colors   # update for v_1.4.0
-        self._vcolors = vcolors
+        lines,XYZ,UVW = self._quiverLines(location,vect,alr)
+        # note: _quiverLines may remove zero length vect
+        self.location = XYZ
+        self.vect = UVW
+
+        if 'color' in kwargs :
+            try:
+                test = colors.to_rgba( kwargs['color'] )
+            except:
+                del kwargs['color']
+                warnings.warn("Only a SINGLE color value may be used for vector instantiation")
 
         super().__init__(lines, **kwargs)
         #self._geomName = name    # Redunant from next line, internal tracking to determine if set...
-        self.set_color(self._linecolors)             # update for v_1.4.0
         self.name = name
         self.valuesName = None
         self.baseColor = np.array(self.get_color()[0]).flatten().tolist()
 
+
         self._bounds = {}
-        _set_geomBounds(self._location,self._bounds)
+        _set_geomBounds(self.location,self._bounds)
         self._bounds['vlim'] =     _DFT_VLIM         #.. from operation
         self._bounds['vertvlim'] = _DFT_VERTVLIM     #.. from direction or magnitude
 
@@ -6646,31 +6426,7 @@ class Vector3DCollection(Line3DCollection) :
         index = np.append(head,tail)
         #self._edgecolors = color[index]
         self.set_color(color[index])     # update for v_1.2.0
-        self._vcolors = color            # update for v_1.4.0
-        self._linecolors = color[index]  # update for v_1.4.0
-        return self
-
-    def _clip_vectors(self,keepers) :
-        # only retain vectors,lines and color with the keepers indices
-        # reset the line segments and  color.
-        #.......................
-        head = np.arange(len(self._location))
-        tail = np.ravel( [ [head],[head] ] , order='F')
-        index = np.append(head,tail)
-        tf_arr = np.isin(index,keepers)
-        nzero = np.array(tf_arr.nonzero(),dtype=int)[0]
-        #.......................
-        self._location   = self._location[keepers]
-        self._vect       = self._vect[keepers]
-        self._vcolors    = self._vcolors[keepers]
-        self._vlines     = self._vlines[nzero]
-        self._linecolors = self._linecolors[nzero]
-
-        self.set_segments(self._vlines)
-        self.set_color(self._linecolors)
-        _set_geomBounds(self._location,self._bounds)
-
-        return self
+        return
 
     def __str__(self) :
         # note: each vector representation is composed of 3 lines
@@ -6775,8 +6531,8 @@ class Vector3DCollection(Line3DCollection) :
 
     @alr.setter
     def alr(self, val) :
-        location = self._location
-        vect = self._vect
+        location = self.baseLocation
+        vect = self.baseVect
         if val is None : val = _DFT_ALR
         self._alr = val
         lines,_,_ = self._quiverLines(location,vect,self._alr)
@@ -6795,7 +6551,7 @@ class Vector3DCollection(Line3DCollection) :
 
     @property
     def name(self) :
-        """Descriptive identifier for the vector geometry. """
+        '''Descriptive identifier for the vector geometry.'''
         if self._geomName is None : return ''
         return self._geomName
 
@@ -6807,7 +6563,7 @@ class Vector3DCollection(Line3DCollection) :
 
     @property
     def cname(self) :
-        """Descriptive identifier for values indicated by color."""
+        '''Descriptive identifier for values indicated by color.'''
         if self.valuesName is None : return ''
         return self.valuesName
 
@@ -6815,40 +6571,6 @@ class Vector3DCollection(Line3DCollection) :
     def cname(self, val) :
         self.valuesName = val
         return
-
-    @property
-    def vectorlocations(self) :
-        """ A 3 x N array of vector locations. """
-        return self._location.T
-    
-    @property
-    def vectorcenters(self) :
-        ''' A 3 x N array of vector centers,
-            accounting for visualized scaling.
-        '''
-        lines = self._vlines
-        # note: use head,tail coor, not uvw direction since vectors
-        #       may be scaled in the visualization.
-        nvect = int(len(lines)/3)  # note: vect are the first third of seg colors
-        vHeadTail = lines[:nvect]
-        head2Tail = vHeadTail[:,0] - vHeadTail[:,1]
-        center = vHeadTail[:,1] + 0.5*head2Tail
-        return center.T
-
-    @property
-    def vectorcolors(self) :
-        """A N x 4 array of vector colors."""
-        return self._vcolors
-
-    @property
-    def vectormagnitude(self):
-        """ A N array of vector magnitudes. """
-        return np.linalg.norm(self._vect,axis=1)
-
-    @property
-    def vectordirection(self):
-        """ A 3 x N array of vector directions. """
-        return self._vect.T
 
     @property
     def bounds(self) :
@@ -6878,18 +6600,6 @@ class Vector3DCollection(Line3DCollection) :
 
         return self._bounds
 
-    def vectordot(self,direction,norm=True):
-        """
-        A N array of vectors dotted with a direction.
-        Vectors are normalize if norm=True (default)
-        """
-        vect = self._vect
-        if norm : 
-            vectMag = np.linalg.norm(self._vect,axis=1)[:,np.newaxis]
-            vect = np.divide(self._vect,vectMag)
-        unitDirection = np.divide( direction, np.linalg.norm(direction) )
-        return np.dot(vect,unitDirection)
-
     def map_color_from_op( self, operation, rgb=True, cname=None ) :
         """
         Assignment of vector color from a function.
@@ -6916,8 +6626,8 @@ class Vector3DCollection(Line3DCollection) :
         self : Vector3DCollection object
 
         """
-        xyz = np.transpose(self._location)
-        uvw = np.transpose(self._vect)
+        xyz = np.transpose(self.location)
+        uvw = np.transpose(self.vect)
         # .....
         colors = np.array(operation(xyz,uvw))
         colors = np.transpose(colors)
@@ -6970,8 +6680,8 @@ class Vector3DCollection(Line3DCollection) :
                 self.set_cmap(cmap)
         cm_colorMap = self.get_cmap()
 
-        xyz = np.transpose(self._location)
-        uvw = np.transpose(self._vect)
+        xyz = np.transpose(self.location)
+        uvw = np.transpose(self.vect)
         # .....
         v = np.array(operation(xyz,uvw))
         norm = colors.Normalize(vmin=v.min(),vmax=v.max())
@@ -7007,7 +6717,7 @@ class Vector3DCollection(Line3DCollection) :
                 self.set_cmap(cmap)
         cm_colorMap = self.get_cmap()
 
-        mag = np.linalg.norm(self._vect,axis=1)
+        mag = np.linalg.norm(self.vect,axis=1)
         norm = colors.Normalize(vmin=mag.min(),vmax=mag.max())
         color = cm_colorMap(norm(mag))
         self._set_vectColor(color)
@@ -7067,271 +6777,11 @@ class Vector3DCollection(Line3DCollection) :
                 self.set_cmap(cmap)
         cm_colorMap = self.get_cmap()
 
-        color = getColorMap(self._vect, cm_colorMap, direction)
+        color = getColorMap(self.vect, cm_colorMap, direction)
         self._set_vectColor(color)
         self.cname = cname
         if cname is None: self.cname = 'Direction, ' + str(direction)
 
-        return self
-
-    def clip(self,operation,locop=True) :
-        """
-        Remove vectors from the vector collection.
-        NOTE: all operations are in xyz coordinates.
-
-        Parameters
-        ----------
-        operation : function object
-            Function that takes one argument, a 3xN Numpy array.
-            The function returns N array of bool { True, False } indicating if
-            the vector is to be retained.
-
-        locop : boolean, default: True
-            If True, operation is passed the vector location.
-            If False, operation is passed the vector direction.
-
-        Returns
-        -------
-        self : Vector3DCollection object
-        """
-        abc = self._location if locop else self._vect
-        shouldKeep = np.array(operation(abc.T))
-
-        if np.any(shouldKeep) is None :
-            warnings.warn('WARNING: Clipping resulted in no lines found, line return unclipped.')
-            return self
-
-        index_kept = np.arange(len(abc))[shouldKeep]
-        return self._clip_vectors(index_kept)
-
-    def clip_plane(self,dist,**kargs) :
-        """
-        Remove vectors from the vector collection based on a clip surface.
-
-        Parameters
-        ----------
-        dist : number, optional, default : 0.0 
-            Distance from the origin to the clip surface,
-            along the direction vector.
-
-        direction : array-like, optional, default: [0,0,1]
-            A xyz vector normal to the intersection plane
-            for a planar clip surface or axial direction of 
-            a cylinder for a cylindrical clip surface.
-
-        coor : integer or string indicating the type of clip surface:
-            0, p, P, xyz,planar                 - planar (default)
-            1, c, C, cylinder,pplar,cylindrical - cylinder
-            2, s, S, sphere,spherical           - sphere
-            3, x, X                             - y-z plane
-            4, y, Y                             - x-z plane
-            5, z, Z                             - x-y plane
-
-        Returns
-        -------
-        self : Vector3DCollection object
-
-        """
-        # NOTE: this method is 'identical' to the line clip_plane method.
-        # FutDev:  call identical clip 'functions' for lines & vectors. MROI
-        # ...........................................................
-        def clip_op(xyz,dist,coor,direction) :
-            abc = np.transpose(xyz)
-            dotprod = _coor_dotprod(direction,coor,abc)
-            shouldclip = np.less(dotprod,np.full(len(dotprod),dist))
-            return shouldclip
-        # ...........................................................
-        dirDft = { 'direction': [0,0,1.0] }
-        kargDft = { **_COOR_KWARGS, **dirDft }
-        KW = KWprocessor( kargDft, 'clip_plane', **kargs)
-        coor = KW.getVal('coor')
-        direction = KW.getVal('direction')
-
-        if coor==3 : coor, direction = 0, [ 1,0,0 ]
-        if coor==4 : coor, direction = 0, [ 0,1,0 ]
-        if coor==5 : coor, direction = 0, [ 0,0,1 ]
-        
-        return self.clip(lambda xyz : clip_op(xyz,dist,coor,direction) )
-
-    def clip_from_direction(self,direction) :
-        """
-        Remove vectors from the vector collection based on direction.
-
-        Parameters
-        ----------
-        direction : arrar of size 3
-            A 3D vector in xyz Cartesian coordinates designating
-            a direction vector.  Vectors will be retained if the
-            dot product with the direction is positive. 
-
-        Returns
-        -------
-        self : Vector3DCollection object
-
-        """
-        uvw = self._vect
-        shouldKeep = np.dot(uvw,direction) > 0.0
-        index_kept = np.arange(len(uvw))[shouldKeep]
-        return self._clip_vectors(index_kept)
-
-    def clip_from_magnitude(self, kind='a', nmag=0.5) :
-        """
-        Remove vectors from the vector collection based on magnitude.
-
-        Parameters
-        ----------
-        kind : string, default : '+a' 
-            Vectors are kept based on the magnitude using the key:
-
-            'a'  : above average
-
-            'a-' : below average
-
-            'm'  : above the median
-
-            'm-' : below the median
-
-            'v'  : above the normalized magnitude set by nmag argument
-
-            'v-' : below the normalized magnitude set by nmag argument
-
-        nmag : float, default: 0.5
-            Sets the range of magnitude during clipping.
-
-        Returns
-        -------
-        self : Vector3DCollection object
-
-        """
-        # -----------------------------------------
-        isAbove = len(kind) == 1   # only has a single character
-        kindType = kind[0].upper()
-
-        mag = np.linalg.norm(self._vect,axis=1)
-        minmax = [np.min(mag), np.max(mag)]
-
-        if   kindType == 'A' : refpt = np.mean(mag) 
-        elif kindType == 'M' : refpt = np.median(mag)
-        elif kindType == 'V' : 
-            if(nmag<=0.0 or nmag>= 1.0 ) :
-                raise ValueError("clip_from_magnitude,  'nmag' argument must be between 0 an 1")
-            refpt = minmax[0] + nmag*( minmax[1]-minmax[0])
-        else :
-            raise ValueError("clip_from_magnitude, 'kind' argument must start with a,m or v ")
-        vRng = [refpt,minmax[1]] if isAbove else [0.0,refpt]
-
-        shouldKeep = np.logical_and ( (mag >= vRng[0]) , (mag <= vRng[1]) )
-        index_kept = np.arange(len(mag))[shouldKeep]
-
-        return self._clip_vectors(index_kept)
-
-    def shade(self,depth=0,direction=None, contrast=None) :
-        """
-        Reduce vector HSV color Value based on vector direction.
-        
-        The dot product of vector with the illumination direction 
-        is used to adjust HSV color value.
-        
-        Parameters
-        ----------
-        depth : scalar, optional, default: 0
-            Minimum color value of shaded line segments.
-            Depth value ranges from 0 to 1.
-    
-        direction : array-like, optional, default: default view
-            A xyz vector pointing to the illumination source, 
-            if ax is not defined.
-
-        contrast : scalar, optional, default: 1
-            Shading contrast adjustment from low to high with a value
-            of 1 for linear variations with the line segment direction.
-            Contrast value ranges from 0.1 to 3.     
-            
-        Returns
-        -------
-        self : Vector3DCollection object
-
-        """
-
-        if direction is None : 
-            direction = elev_azim_2vector(*_DFT_VIEW)
-        if np.any( (depth<0) or (depth>1) ) :
-            raise ValueError('depth values, {}, must be between 0 and 1'.format(depth))
-        if contrast is not None:
-            if (contrast<0.1 or contrast>3) :
-                raise ValueError('contrast must be between 0.1 and 3. , found {}'.format(contrast))
-        # -----------------------------------------
-        unitDirection = np.divide( direction, np.linalg.norm(direction) )
-        vectMag = np.linalg.norm(self._vect,axis=1)[:,np.newaxis]
-        vectUnitDir = np.divide( self._vect, vectMag)
-        dtprod = np.dot(vectUnitDir,unitDirection)
-        # for Lines, effective shade is normal to line
-        d = 1- np.abs(dtprod)
-        if contrast is not None :
-            d =  0.5*( 1 + np.sign(dtprod)*np.power( np.abs(dtprod) , 1/contrast) )      
-        colors = self.get_color()
-        ncol = int(len(colors)/3)  # note: vect colors are the first third of line colors
-        vcolor = colors[:ncol]
-        vc_less_alpha = vcolor[:,:3]
-        alphas = vcolor[:,3][:,np.newaxis]
-        hsv_vals = cm.colors.rgb_to_hsv(vc_less_alpha)
-        # adjust color value with multiplier.
-        cvm = ((1-depth)*d + depth*np.ones(len(d)))[:, np.newaxis]
-        hsv_vals[:,2] = (cvm*hsv_vals[:,2:3])[:,0]
-        rgb_vals =  cm.colors.hsv_to_rgb(hsv_vals)
-        shade_colors = np.concatenate((rgb_vals, alphas), axis=1)
-        self._set_vectColor(shade_colors)
-        return self
-
-    def fade(self,depth=0,ax=None,direction=None) :
-        """
-        Reduce vector opacity based on location relative
-        to the view orientation. 
-        
-        Parameters
-        ----------
-        depth : scalar, optional, default: 0
-            Minimum opacity to 1 for vector opacity from back
-            to front vector location (tail).
-            Depth value ranges from 0 to 1.
-
-        ax : Matplotlib 3D axes, default: default view direction.
-            If not None and direction is None, viewing direction
-            is assigned from the ax.
-        
-        direction : array-like, optional, default: (1,0,1)
-            A xyz vector pointing to the viewing direction,
-            if ax is not defined.
-
-        Returns
-        -------
-        self : Vector3DCollection object
-
-        """
-        elev,azim = _DFT_VIEW 
-        if ax is not None :
-            elev,azim = ax.elev,ax.azim
-        temp_direction = elev_azim_2vector(elev, azim)
-        if direction is None :
-            direction = temp_direction
-        unitDirection = np.divide( direction, np.linalg.norm(direction) )
-
-        if np.any( (depth<0) or (depth>1) ) :
-            raise ValueError('depth values, {}, must be between 0 and 1'.format(depth))
-        # -----------------------------------------
-        vectTail = self._location
-        if len(vectTail) == 1 : return self # fade not available for single vector
-        dtprod = np.dot(vectTail,unitDirection)
-        dprange = np.amax(dtprod)-np.amin(dtprod)
-        norm_dp = (dtprod - np.amin(dtprod))/dprange
-        fadex = (1-depth)*norm_dp + depth
-        colors = self.get_color()
-        ncol = int(len(colors)/3)  # note: vect colors are the first third of line colors
-        vcolor = colors[:ncol]
-        vc_less_alpha = vcolor[:,:3]
-        fadex = fadex*vcolor[:,3]  # fade original alpha values. 
-        faded_vcolors = np.concatenate((vc_less_alpha, fadex[:,np.newaxis] ), axis=1)
-        self._set_vectColor(faded_vcolors)
         return self
 
 
@@ -7793,8 +7243,7 @@ class ColorLine3DCollection(Line3DCollection) :
         x = np.interp( x, (x.min(), x.max()), (-1.0, 1.0) )
         y = np.interp( y, (y.min(), y.max()), (-1.0, 1.0) )
 
-        #trial = [ g( x[i],y[i])[0] for i in range(len(x)) ]
-        trial = [ g.ev( x[i],y[i]) for i in range(len(x)) ]    # update for v_1.4.0
+        trial = [ g( x[i],y[i])[0] for i in range(len(x)) ]
 
         v = np.array(trial)*delta + dmin
         vmin, vmax = v.min(), v.max()
@@ -8209,6 +7658,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self : line object
 
         """
+
         data = datagrid
         dmax = np.amax(datagrid)
         dmin = np.amin(datagrid)
@@ -8216,8 +7666,7 @@ class ColorLine3DCollection(Line3DCollection) :
         data = (datagrid - dmin)/delta
         xd = np.linspace(-1, 1, data.shape[0] )
         yd = np.linspace(-1, 1, data.shape[1] )
-        #g =  interp2d(yd, xd, data, kind='cubic')
-        r = RectBivariateSpline(yd, xd, data.T)    # update for v_1.4.0
+        g =  interpolate.interp2d(yd, xd, data, kind='cubic')
 
         # -----------------------------------------
         if cmap is not None :
@@ -8241,8 +7690,7 @@ class ColorLine3DCollection(Line3DCollection) :
         x = np.interp( x, (x.min(), x.max()), (-1.0, 1.0) )
         y = np.interp( y, (y.min(), y.max()), (-1.0, 1.0) )
 
-        #trial = [ g( x[i],y[i])[0] for i in range(len(x)) ]
-        trial = [ r.ev( x[i],y[i]) for i in range(len(x)) ]    # update for v_1.4.0
+        trial = [ g( x[i],y[i])[0] for i in range(len(x)) ]
 
         v = np.array(trial)*delta + dmin
         vmin, vmax = v.min(), v.max()
@@ -8256,8 +7704,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self._bounds['vlim'] = [ vmin, vmax ] 
 
         # .............................................
-        #self._map_cmap_from_datagrid_vert(g, delta, dmin, cm_colorMap)
-        self._map_cmap_from_datagrid_vert(r, delta, dmin, cm_colorMap)  # update for v_1.4.0
+        self._map_cmap_from_datagrid_vert(g, delta, dmin, cm_colorMap)
         # .............................................
 
         return self
@@ -8678,8 +8125,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
         """
 
-        if direction is None : 
-            direction = elev_azim_2vector(*_DFT_VIEW)
+        if direction is None : direction = _ILLUM
         if np.any( (depth<0) | (depth>1) ) :
             raise ValueError('depth values, {}, must be between 0 and 1'.format(depth))
         if contrast is not None:
@@ -9191,13 +8637,10 @@ class ParametricLine(ColorLine3DCollection) :
         if yVal is not None :
             lineVertsPts = np.linspace(domain['xmin'], domain['xmax'], numVerts )
             y_lineVertsPts = np.array([yVal] )
-            #z_Y_lines = g(lineVertsPts, y_lineVertsPts)
+            z_Y_lines = g(lineVertsPts, y_lineVertsPts)
+            # the following, compensates for interp2d for datagrid
+            # which drops the first dimension, see map_xySlice_from_op  ???
             z_Y_lines = np.array([g(lineVertsPts, y_lineVertsPts)])
-            # the following, compensates for single y-value
-            # to drop the first dimension, see map_xySlice_from_op
-            # Required for replacing interp2d by RectBivariateSpline for '_from_datagrid'
-            # but using a defined funtion g() for '_from_op'.
-            if z_Y_lines.ndim == 3 : z_Y_lines = z_Y_lines[0]       # update for v_1.4.0
             
             for iX in range(numVerts) :
                  verts.append( [ lineVertsPts[iX], yVal, z_Y_lines[0,iX] ])
@@ -9361,8 +8804,8 @@ class ParametricLine(ColorLine3DCollection) :
             pts = np.reshape(pts,(xlen*ylen,3))
             x,y,z = op(pts.T)
             z = np.reshape(z,(ylen,xlen))
-            # the following, compensates for single y-value
-            # to drop the first dimension, see _getSlice
+            # the following, compensates for interp2d for datagrid
+            # which drops the first dimension, see _getSlice 
             if ylen == 1 : z = z[0]
             return z
 
@@ -9407,9 +8850,8 @@ class ParametricLine(ColorLine3DCollection) :
         data = (datagrid - dmin)/delta
         xd = np.linspace(-1, 1, data.shape[0] )
         yd = np.linspace(-1, 1, data.shape[1] )
-        #g =  interp2d(yd, xd, data, kind='cubic')
-        r = RectBivariateSpline(yd, xd, data.T)    # update for v_1.4.0
-        g = lambda xnew,ynew: r(xnew,ynew).T       # update for v_1.4.0
+        g =  interpolate.interp2d(yd, xd, data, kind='cubic')
+
         # -----------------------------------------
         self._map_xySlice( g, **kargs  )
         if scale is not None : 
@@ -10184,13 +9626,11 @@ def density_function(vals, bins=(10,10), scale=True, xbnd=True, ybnd=True, kind=
         scale = area*(bins[0]*bins[1])/len(vals[0]) if scale else 1.0
 
     Zvals = scale*Zvals/area
-    #f = interp2d(yedges,xedges,Zvals,kind=kind)
-    r = RectBivariateSpline(yedges,xedges,Zvals.T)    # update for v_1.4.0
+    f = interpolate.interp2d(yedges,xedges,Zvals,kind=kind)
 
     def density(xa,ya):
         size = min( len(xa),len(ya) )
-        #vals = [ f(ya[i],xa[i])[0] for i in range(size) ]
-        vals = [ r.ev(ya[i],xa[i]) for i in range(size) ]
+        vals = [ f(ya[i],xa[i])[0] for i in range(size) ]
         return np.array(vals)
 
     return density

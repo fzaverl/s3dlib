@@ -754,11 +754,6 @@ def section_cmap(cmap,lowIndx,hiIndx,name=None) :
     return op_cmap(op_lFunc,name=name)     # update for v_1.2.0
 
 
-# ================================================================+
-# FutDev : DualCmap to inherit matplotlib.colors.BivarColormap    |
-# ================================================================+
-
-
 class DualCmap() :
     
     def __init__(self,xcmap,ycmap,kind='sum',norm=True,name=None) :
@@ -771,8 +766,7 @@ class DualCmap() :
 
         ycmap : colormap or string of a colormap name.
 
-        kind : string {'sum','ave','ave2','srt','x_v','x_l','v_y','l_y'}
-            or number, default: 'sum'
+        kind : string {'sum','ave','ave2','srt'} or number, default: 'sum'
             Method of combining colormaps.
 
         norm : bool, optional, default True
@@ -781,10 +775,12 @@ class DualCmap() :
         name : string,optional.
             name to identify the dual colormap.
         """
+        # FutDev: possible blend color modes?
+        #         Need documentation explaination for 'kind'.
 
         self._name = name if name is not None else ''
-        if isinstance(xcmap,str) : xcmap = mpl.colormaps[xcmap]
-        if isinstance(ycmap,str) : ycmap = mpl.colormaps[ycmap]
+        if isinstance(xcmap,str) : xcmap = mpl.colormaps[xcmap]     # update for v_1.2.0
+        if isinstance(ycmap,str) : ycmap = mpl.colormaps[ycmap]     # update for v_1.2.0
 
         self.xmap = xcmap
         self.ymap = ycmap
@@ -793,56 +789,7 @@ class DualCmap() :
         self.pow = 0.5 
         if isinstance(kind,(int,float)): self.distfact(kind)
         return
-
-    @staticmethod
-    def _l_to_hsv(l):
-        # from: https://gist.github.com/mathebox/e0805f72e7db3269ec22
-        # Adapted for current usage.
-        v = (2*l + (1-np.abs(2*l-1)))/2
-        v = np.clip(np.abs(v),0.0,1.0)
-        vv = np.clip(np.abs(v),0.66,1.0)
-        s = np.abs( 2*(vv-l)/vv )
-        s = np.clip(s,0.0,1.0)
-        return s,v
-
-    def _hsvMapT(self,x,y,revAx='False', useLit=False) :
-        xcolor = self.xmap(x)
-        ycolor = self.ymap(y)
-        if revAx : ycolor,xcolor = xcolor,ycolor
-
-        xcolorT,ycolorT = xcolor.T,ycolor.T
-        xrgbT = xcolorT[:3]
-        xhsvT = colors.rgb_to_hsv(xrgbT.T).T
-        yrgbT = ycolorT[:3]
-        yhsvT = colors.rgb_to_hsv(yrgbT.T).T
-        xhsT  = xhsvT[:2]
-        yvT   = yhsvT[2]
-
-        hsvT = np.empty( xrgbT.shape)
-        hsvT[:2] = xhsT
-        hsvT[2] = yvT
-        #...............................................
-        if useLit : 
-            hT = hsvT[0]
-            sModT,vModT = DualCmap._l_to_hsv(yvT)
-            abcT = np.empty(( 3,*hT.shape))
-            abcT[0]= hT
-            abcT[1]= sModT
-            abcT[2]= vModT
-            hsvT = abcT
-        #...............................................
-        rgbT  = colors.hsv_to_rgb( hsvT.T ).T
-        # Note: alpha channel of 'dominante' cmap will be used if
-        #       available, otherwise, the alpha is set to unity.
-        xalpT = xcolorT[3]  if xcolorT.shape[0]==4 else np.ones(yvT.shape)
-        
-        _rgbaT = np.empty( xcolorT.shape )
-        _rgbaT[:3] = rgbT
-        _rgbaT[3] = xalpT
-        _rgba = _rgbaT.T
-
-        return _rgba
-
+    
     def __call__(self,x,y):
         """
         RGBA color values from x,y positions.
@@ -858,16 +805,9 @@ class DualCmap() :
         -------
         RGBA values with N shape (4,N)
         """
-        hsvTypes = [ 'x_v','x_l','v_y','l_y']
         if self._norm :
             x = (x-np.min(x))/(np.max(x)-np.min(x))
             y = (y-np.min(y))/(np.max(y)-np.min(y))
-        if self._kind in hsvTypes :
-            cntIndex = hsvTypes.index(self._kind)
-            revAx  = cntIndex >= 2
-            useLit = cntIndex%2 == 1
-            color = self._hsvMapT(x,y,revAx,useLit)
-            return color.T
         color = np.add(self.xmap(x),self.ymap(y))
         if self._kind == 'ave' : color /= 2.0
         color = np.clip(color,0.0,1.0)
@@ -875,7 +815,7 @@ class DualCmap() :
         if self._kind == 'srt' : color = np.sqrt(color)
         if self._kind == 'pwr' : color = np.power(color,self.pow)
         return color.T
-
+    
     def __str__(self) :
         """DualCmap object string representation."""
 
@@ -930,7 +870,6 @@ class DualCmap() :
         return self
 
 
-
 # =================================================================================+
 
 
@@ -977,3 +916,7 @@ def linsegfunc(v, arr) :
 
 
 
+# =================================================================================+
+# FutDev : would be nice to have a function to create a 2D colorbar which could    |
+#          be added to the Matplotlib 3D Axes.                                     |
+# =================================================================================+

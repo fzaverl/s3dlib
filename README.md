@@ -259,18 +259,18 @@ In the following figure ( [source code](/examples/uv_dualcmap.py) ), surfaces ar
 ---
 ## General
 
-**Version** 1.2.0
+**Version** 1.4.0
 
 **Documentation:**
 >[s3dlib.org](https://s3dlib.org)
 
 **Dependencies:**
->* Python 3.11
->* Numpy 1.26
+>* Python 3.8
+>* Numpy 1.24.4
 >* Matplotlib 3.8
 >* Colorspacious 1.1
 >* Scikit-image 0.20
->* SciPy 1.11
+>* SciPy 1.10.1
 
 **License:**
 >MIT, see  [LICENSE](/LICENSE/LICENSE.txt) for details.

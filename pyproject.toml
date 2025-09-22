@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "s3dlib"
-version = "1.3.0"
+version = "1.4.0"
 authors = [
   { name="Frank Zaverl, Jr.", email="fzaverl@s3dlib.org" },
 ]
 description = "Python classes to create 3D surface and line objects rendered in Matplotlib"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
