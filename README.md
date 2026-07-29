@@ -259,7 +259,7 @@ In the following figure ( [source code](/examples/uv_dualcmap.py) ), surfaces ar
 ---
 ## General
 
-**Version** 1.4.0
+**Version** 1.5.0
 
 **Documentation:**
 >[s3dlib.org](https://s3dlib.org)

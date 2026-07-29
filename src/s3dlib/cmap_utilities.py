@@ -515,6 +515,10 @@ def mirrored_cmap( cmap, name=None, rev=False) :
     rev : boolean {True, False}, default: False
         If True, the reversed colormap will be used.
 
+    Returns
+    -------
+    ListedColormap
+        An instance of a colormap.
     """  
     if isinstance(cmap,str) : 
         cmap = mpl.colormaps[cmap]     # update for v_1.2.0

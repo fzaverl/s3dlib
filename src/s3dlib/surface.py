@@ -10,13 +10,15 @@ from functools import reduce
 #from time import time
 
 import numpy as np
-from scipy.interpolate import RBFInterpolator, RectBivariateSpline
+from scipy.interpolate import RectBivariateSpline
 from scipy.spatial import Delaunay, ConvexHull
 from skimage import measure
 
 import matplotlib as mpl
 from matplotlib import cm, colors, image, tri, rcParams
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+
+import s3dlib.prvt_func as pvt
 
 #.. simple warning string
 warnings.formatwarning = lambda m,c,n,l,line=0 : str(m)+'\n'
@@ -47,7 +49,7 @@ _DFT_VIEW = [  30, -60 ]            # default, axes elev and azim
 _DFT_CMAP = rcParams['image.cmap']  # default, colormap
 
 # +----------------------------------------------------------+
-# |  S3Dlib v_1.4.0 was developed using Matplotlib v_3.8.0   |
+# |  S3Dlib v_1.5.0 was developed using Matplotlib v_3.8.0   |
 # +----------------------------------------------------------+
 
 # S3Dlib v_1.4 uses scipy.interpolate.RectBivariateSpline, to replace interp2d.
@@ -99,106 +101,95 @@ class Surface3DCollection(Poly3DCollection):
         return surface
 
     @staticmethod
-    def _get_cloud_points(N,dm) :
-        """
-        Grid of xyz mesh coordinates within a domain.
-
-        Note: Cloud points only calculated once for surface sets in the same domain.
-        """
-        XD,YD,ZD = dm[0],dm[1],dm[2]
-        dmT = dm.T
-        A = dmT[1]-dmT[0]
-        B=np.array( [ XD[0],YD[0],ZD[0] ])
-        Nj = (N+1)*1j
-        xyz = np.mgrid[XD[0]:XD[1]:Nj,YD[0]:YD[1]:Nj, ZD[0]:ZD[1]:Nj ]
-        return xyz,A,B
-
-    @staticmethod
-    def _get_VF(cloud,sval,A,B) :
+    def _get_VF(dataVol,sval,A,B) :
         """
         Surface vertices/face indices for an f(x,y,z) = constant.
 
-        The cloud contains the scalar values.
+        The dataVol contains the scalar values.
         The surface of constant value, sval.
-        A,B are specific to the cloud domain.
+        A,B are specific to the dataVol domain.
         """
-        M = cloud.shape[0] - 1
-        N = cloud.shape[1] - 1
-        P = cloud.shape[2] - 1
+        M = dataVol.shape[0] - 1
+        N = dataVol.shape[1] - 1
+        P = dataVol.shape[2] - 1
         spacing = (1/M, 1/N, 1/P)
         level = 0.001    # FutDev: level should not be a constant.
-        vol = cloud - sval
+        vol = dataVol - sval
         verts, fvIndices, _, _ = measure.marching_cubes(vol, level, spacing=spacing)
         C = np.empty([len(verts),3])
         C[:] = A
         verts = C*verts + B
         return verts,fvIndices
 
-    @staticmethod
-    def _impl_cloud_surf(operation, drez, cloud ,domain, fval, name, **kwargs) :
 
-        dm = _interpret_domain(domain)   # update for v_1.3.0
+    @staticmethod
+    def _impl_cloud_surface(operation, drez,domain,valCntl,**kwargs) :
+        # Update for v_1.5.0 from v_1.4.0 :
+        # Combines _impl_cloud_surf() and _impl_cloud_surfset()
+        # by removing reference to cloud.
+        # Called by public implsurf() and implsurfSet()
+
+        # .. generate data in the domain volume.....
+        dm = _interpret_domain(domain)
         XD,YD,ZD = dm[0],dm[1],dm[2]
         dmT = dm.T
         A = dmT[1]-dmT[0]
         B=np.array( [ XD[0],YD[0],ZD[0] ])
-        if cloud is None :
-            N = int( 10*drez )
-            Nj = (N+1)*1j
-            xyz = np.mgrid[XD[0]:XD[1]:Nj,YD[0]:YD[1]:Nj, ZD[0]:ZD[1]:Nj ]
-            cloud = operation(xyz)
+        N = int( 10*drez )
+        Nj = (N+1)*1j
+        xyz = np.mgrid[XD[0]:XD[1]:Nj,YD[0]:YD[1]:Nj, ZD[0]:ZD[1]:Nj ]
+        dataVol = operation(xyz)
+        minData, maxData = np.min(dataVol), np.max(dataVol)
+        delData = maxData - minData
 
-        verts, faces = Surface3DCollection._get_VF(cloud,fval,A,B)
-        surface = Surface3DCollection( verts, faces, **kwargs)
-        if name is not None: surface._geomName = name
-        return surface
+        surfVal = valCntl  # valCntl is either an int or a list of values.
+        if isinstance(valCntl,int) :
+            numb = valCntl  #.. generate list of surface values.
+            delta = (maxData - minData)/(numb + 1)
+            surfVal = [ minData + (i+1)*delta for i in range(numb)]
+        else :
+            prod = 1  #.. check surface values are in dataVol
+            for f in surfVal : prod *= (f>minData and f<maxData) 
+            if prod==0 :
+                errStr = "Error: implicit surface value not in domain"
+                errStr += " range {} to {}".format(minData, maxData)
+                raise ValueError(errStr)
 
-    @staticmethod
-    def _impl_cloud_surfset(operation, drez, cloud ,domain, numb, name, **kwargs) :
-    
-        dm = _interpret_domain(domain)   # update for v_1.3.0
-        XD,YD,ZD = dm[0],dm[1],dm[2]
-        dmT = dm.T
-        A = dmT[1]-dmT[0]
-        B=np.array( [ XD[0],YD[0],ZD[0] ])
-        if cloud is None :
-            N = int( 10*drez )
-            Nj = (N+1)*1j
-            xyz = np.mgrid[XD[0]:XD[1]:Nj,YD[0]:YD[1]:Nj, ZD[0]:ZD[1]:Nj ]
-            cloud = operation(xyz)
-        # extract cmap or color from kwargs.
-        kargDft = { 'color':None, 'cmap':_DFT_CMAP  }
-        KW = KWprocessor(kargDft,'implsurfSet',**kwargs)
+        # extract from kwargs....
+        # ... can use 'color' or 'cmap' ...
+        kargDft = { 'color':None, 'cmap':_DFT_CMAP, 'name':None  }
+        KW = pvt.KWprocessor(kargDft,'implsurf',**kwargs)
+        name = KW.getVal('name') 
         userColor = KW.getVal('color')
-        useDefColor = userColor is not None   # use color arg  if color is defined.
+        useDefColor = userColor is not None   # use color arg if color is defined.
+        if useDefColor : # if single color, convert to a list.
+            if not isinstance(userColor, list) : userColor=[userColor]
+
         cmapobj = KW.getVal('cmap')
-        kwargs = KW.filter()
         if isinstance(cmapobj,str) : 
             cmapobj = mpl.colormaps[cmapobj]      # update for v_1.2.0
-
-        delta = 1/(numb + 1)
-        minVal, maxVal = np.min(cloud), np.max(cloud)
-        rngVal = maxVal - minVal
+        kwargs = KW.filter()
 
         surface = None
-        for i in np.linspace(delta, 1, numb, endpoint=False) :
-            fval = minVal + i*rngVal
-            verts, faces = Surface3DCollection._get_VF(cloud,fval,A,B)
-            color = userColor if useDefColor else cmapobj(i)
+        for i,fval in enumerate(surfVal) :
+            verts, faces = Surface3DCollection._get_VF(dataVol,fval,A,B)
+            if useDefColor :
+                color = userColor[i%len(userColor) ]
+            else :
+                color = cmapobj( (fval-minData)/delData )
             surf = Surface3DCollection( verts, faces, color=color, **kwargs)
             surface = surf if surface is None else surface + surf
-        
-        # following for a colorbar view
-        surface.set_cmap(cmapobj)
-        # note: min/max is cloud values, not surface range.
-        surface.bounds['vlim'] = [ minVal, maxVal ]
-        if name is not None: surface._geomName = name    # note: for this special case:
-        if name is not None: surface.cname = name        #       cname = name
-
+            
+        surface.set_cmap(cmapobj)  #.. set as default if further use of cmap,
+                                #   or needed for colorbar display.
+        if name is None: name = pvt._getFunctionName(operation)
+        if name is not None: surface.name = name
+        # note: min/max are dataVol values, not the surface values  
+        surface.bounds['vlim'] = [minData, maxData]
         return surface
 
     @staticmethod
-    def implsurf(operation, drez=2.0, domain=1, fval=0.0, name=None, **kwargs) :
+    def implsurf(operation, drez=2.0, domain=1, *fval, **kwargs) : 
         """
         Surface3DCollection defined by an implicit function f(x,y,z).
 
@@ -207,8 +198,7 @@ class Surface3DCollection(Poly3DCollection):
         operation : function object
             Implicit function that takes one
             argument, a 3xN Numpy array of x,y,z coordinates.
-            The function returns a single scalar value.
-            The value of zero defines the implicit surface.
+            The function returns a scalar value.
 
         drez : Float, optional, default: 2.0
             Multiplier for the number of subdivisions within the domain.
@@ -224,71 +214,40 @@ class Surface3DCollection(Poly3DCollection):
 
         fval : a number, default: 0.0
             Scalar value of the function at the surface.
+            The value of zero defines the implicit surface.
 
+        Other Parameters
+        ----------------
         name : string, optional, default: None.
             Descriptive identifier for the geometry.
+
+        color : color or list of colors, optional, default: None
+
+        cmap : str or Colormap, optional
+            A Colormap instance or registered colormap name.
+            Used for multiple surface values if color is not assigned.
 
         Returns
         -------
         Surface3DCollection object
 
         """
-
-        if not isinstance(drez, (int,float)) : 
-            raise ValueError("Incorrect drez argument datatype passed to impf:", drez)
-        if drez<1 or drez>10 :
-            raise ValueError("Error: incorrect value drez passed to impf:", drez)
-
-        surface = Surface3DCollection._impl_cloud_surf \
-            (operation, drez,None,domain,fval,name,**kwargs)
-        if name is None: name = _getFunctionName(operation,name)
-        if name is not None: surface._geomName = name
+        # update for v_1.5.0
+        if len(fval) == 0 : fval=[0.0]   # default value
+        surface = Surface3DCollection._impl_cloud_surface(operation, drez,domain,fval,**kwargs)
         return surface
 
     @staticmethod
-    def cloudsurf(cloud, domain=1, fval=0.0, name=None, **kwargs) :
+    def implsurfSet(operation, drez=2.0, domain=1, numb=2, **kwargs) :
         """
-        Surface3DCollection defined for a constant value in a point cloud.
-
-        Parameters
-        ----------
-        cloud : a (M,N,P) shaped array of point cloud values.
-
-        domain : a number, list or array, default: 1
-            The domain of the function evaluation.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        fval : a number, default: 0.0
-            Scalar value of surface contour within the cloud.
-
-        name : string, optional, default: None.
-            Descriptive identifier for the geometry.
-
-        Returns
-        -------
-        Surface3DCollection object
-
-        """
-
-        surface = Surface3DCollection._impl_cloud_surf \
-            (None,None,cloud,domain,fval,name,**kwargs)
-        return surface
-
-    @staticmethod
-    def implsurfSet(operation, drez=2.0, domain=1, numb=2, name=None, **kwargs) :
-        """
-        Set of surface contours implicit function f(x,y,z) within a domain
+        Set of surfaces defined by an implicit function f(x,y,z).
 
         Parameters
         ----------
         operation : function object
             Implicit function that takes one
             argument, a 3xN Numpy array of x,y,z coordinates.
-            The function returns a single scalar value.
-            The value of zero defines the implicit surface.
+            The function returns a scalar value.
 
         drez : Float, optional, default: 2.0
             Multiplier for the number of subdivisions within the domain.
@@ -303,243 +262,29 @@ class Surface3DCollection(Poly3DCollection):
             three coordinate axes.
 
         numb : an integer, default: 2
-            Number of surface contours within the domain.
+            Number of surface contours with evenly spaced values within the domain.
 
+        Other Parameters
+        ----------------
         name : string, optional, default: None.
             Descriptive identifier for the geometry.
+
+        color : color or list of colors, optional, default: None
+
+        cmap : str or Colormap, optional
+            A Colormap instance or registered colormap name.
+            Used for multiple surface values if color is not assigned.
 
         Returns
         -------
         Surface3DCollection object
 
         """
-
-        if not isinstance(drez, (int,float)) : 
-            raise ValueError("Incorrect drez argument datatype passed to impf:", drez)
-        if drez<1 or drez>10 :
-            raise ValueError("Error: incorrect value drez passed to impf:", drez)
-
-        surface = Surface3DCollection._impl_cloud_surfset \
-            (operation, drez,None,domain,numb,name,**kwargs)
-        if name is None: name = _getFunctionName(operation,name)
-        if name is not None: surface._geomName = name
+        # update for v_1.5.0
+        surface = Surface3DCollection._impl_cloud_surface(operation, drez,domain,numb,**kwargs)
         return surface
 
-    @staticmethod
-    def cloudsurfSet(cloud, domain=1, numb=2, name=None, **kwargs) :
-        """
-        Surface3DCollection defined for a constant value in a point cloud.
 
-        Parameters
-        ----------
-        cloud : a (M,N,P) shaped array of point cloud values.
-
-        domain : a number, list or array, default: 1
-            The domain of the function evaluation.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        numb : an integer, default: 2
-            Number of surface contours within the domain.
-
-        name : string, optional, default: None.
-            Descriptive identifier for the geometry.
-
-        Returns
-        -------
-        Surface3DCollection object
-
-        """
-
-        surface = Surface3DCollection._impl_cloud_surfset \
-            (None,None,cloud,domain,numb,name,**kwargs)
-        return surface
-
-    @staticmethod
-    def pntcloud(points,drez,domain=None) :
-        """
-        Numpy array of scalar values from a set of point values.
-
-        Parameters
-        ----------
-        points : V X 4, float array-like 
-            An array of V number of xyz point coordinates and point scalar
-            values.
-
-        drez : Float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the datacloud.
-
-        domain : None or number, list or array, default: None
-            If None, coordinates are normalized over the point xyz coordinates.
-            The domain of the point cloud.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        Returns
-        -------
-        Numpy (N,N,N) shaped array of scaler values
-        """
-
-        coor, vals = Surface3DCollection._extract_vals_from_inputCoor(points)
-        if vals is None :
-            raise ValueError("Error: pntcloud 'points' requires a Nx4 array")
-        if drez<1 or drez>5 :
-            raise ValueError("Error: incorrect value 'drez' passed to pntcloud:", drez)
-        if domain is None :
-            tcoor = coor-np.min(coor,axis=0)
-            coor = np.divide(tcoor,np.max(tcoor,axis=0))
-            domain = [ [0,1], [0,1], [0,1] ]
-        else :
-            domain = _interpret_domain(domain)
-        dftDm = domain
-        rngX,rngY,rngZ = dftDm[0],dftDm[1],dftDm[2]
-        Np1 = int( 10*drez )+1
-        xyz = np.mgrid[ rngX[0]:rngX[1]:Np1*1j,
-                        rngY[0]:rngY[1]:Np1*1j,
-                        rngZ[0]:rngZ[1]:Np1*1j ]
-        xyzflat = xyz.reshape(3, -1).T
-        wflat = RBFInterpolator(coor, vals)(xyzflat)
-        wgrid = wflat.reshape(Np1, Np1, Np1)
-        return wgrid
-
-    @staticmethod
-    def _pntdensitycloud( data, pdg, drez, domain) :
-        # called from datasurface to create a cloud enclosing the data points.
-        dataPts, dataVals = Surface3DCollection._extract_vals_from_inputCoor(data)
-        hasVals = dataVals is not None
-        #isMapped = hasVals and not wts  .... vestigal code
-        #weight = dataVals if (wts and hasVals) else np.ones( dataPts.shape[0])
-        isMapped = hasVals
-        weight = np.ones( dataPts.shape[0])
-        if domain is None:
-            # extract from the data coordinates.
-            dm = np.array([np.min(dataPts,axis=0),np.max(dataPts,axis=0)]).T
-        else :
-            dm = _interpret_domain(domain)
-
-        A = dm.T[1] - dm.T[0]
-        B = np.array( [ dm[0][0], dm[1][0], dm[2][0] ])
-        C = np.empty([len(dataPts),3])
-        C[:] = A
-        norm_coor = (dataPts-B)/C
-        N = int( 10*drez )
-        Nj = (N+1)*1j
-        xyz = np.mgrid[0:1:Nj,0:1:Nj, 0:1:Nj ]
-        dens = np.zeros(xyz.T.shape[:3])
-        for i,org in enumerate(norm_coor) :
-            diff = (xyz.T - org)
-            R = np.linalg.norm(diff,axis=3)
-            dens = dens + weight[i]*np.exp(-(R/pdg)**2)
-
-        retVals = dataVals if isMapped else None
-        return dens.T,A,B,dataPts,retVals
-
-    @staticmethod
-    def pntdensitycloud(points, pdg=0.1, drez=2.0, domain=None) :
-        """
-        Numpy array of scalar values values from a dataset.
-
-        Parameters
-        ----------
-        points : V x 3, or V X 4, float array-like 
-            An array of V number of xyz point coordinates.
-            If V X 4, scaler values are assigned to each pont.
-
-        pdg : float, optional, default: 0.1
-            Data point coordinate standard deviation, normalized.
-            Value is 0.0 > pdg > 1.0.
-
-        drez : Float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the datacloud.
-
-        domain : a number, list or array, default: None
-            If None, coordinates are normalized over the point xyz coordinates.
-            The domain of the point cloud.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        Returns
-        -------
-        Numpy (N,N,N) shaped array of scaler values
-        """
-        domain = _interpret_domain(domain)
-        densT,_,_,_,_ = Surface3DCollection._pntdensitycloud( points, pdg, drez, domain)
-        return densT
-
-    @staticmethod
-    def pntdensitysurf(points, pdg=0.1, drez=2.0, domain=1, relden=None, name=None, **kwargs) :
-        """
-        Surface3DCollection for a constant density value of point values.
-
-        Parameters
-        ----------
-        points : V x 3, or V X 4, float array-like 
-            An array of V number of xyz point coordinates.
-            If V X 4, scaler values are assigned to each vertex.
-
-        pdg : float, optional, default: 0.1
-            Data point coordinate standard deviation, normalized.
-            Value is 0.0 > pdg > 1.0.
-
-        drez : float, optional, default: 2.0
-            Multiplier for the number of subdivisions within the 
-            data coordinate domain.
-            Drez values range from 1 to 5 and control the
-            resolution of the surface.
-
-        domain : a number, list or array, default: 1
-            The domain of the surface evaluation.  For a number, n,
-            the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
-            [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
-            as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
-            three coordinate axes.
-
-        relden : a number, default : 0.5
-            Scalar value(s) of the relative density surface enclosing the data points.
-            Value is 0.0 > relden > 1.0.
-
-        name : string, optional, default: None.
-            Descriptive identifier for the geometry.
-
-        Returns
-        -------
-        Surface3DCollection object
-        """
-        #.....................................    
-        def coor_vals(coor, points, vals) :
-            # Assign the coor values to the nearest data point values.
-            distanceVector = coor[:,None] - points
-            R = np.linalg.norm(distanceVector,axis=2)
-            ind = np.argsort(R)
-            return vals[ind[:,0]]
-        #.....................................
-        domain = _interpret_domain(domain)     
-        cloud,A,B,dataPts,dataVals = Surface3DCollection._pntdensitycloud( points, pdg, drez, domain)
-        minc,maxc = np.min(cloud), np.max(cloud)
-        fval = minc + (maxc-minc)*relden
-        verts,faces = Surface3DCollection._get_VF(cloud,fval,A,B)
-
-        surface = Surface3DCollection(verts,faces,name=name, **kwargs).evert()
-
-        if dataVals is not None :
-            cvals = coor_vals(surface.vertices.T, dataPts, dataVals)
-            surface.set_vertvals(cvals)
-            surface.triangulate(1)
-            surface.map_cmap_from_vertvals( surface.cmap )
-
-        return surface
 
     @staticmethod
     def _init_triangulateBase(rez,baseVcoor,baseFaceVertexIndices, midVectFunc) :
@@ -1168,24 +913,6 @@ class Surface3DCollection(Poly3DCollection):
         self.efIndicesList = self._edgeCommonFaceIndices()
         return
 
-    @staticmethod
-    def _extract_vals_from_inputCoor(ponts) :
-        """
-        Separate (N,4) into (N,3) and (N) arrays,
-
-        or just (N,3) and None.
-        Used by __init__ and subclassed classmethods pntsurf
-        """
-        # update for v_1.3.0
-        tempCoor = np.array(ponts,dtype=float)
-        vVals = None
-        if tempCoor.shape[1] == 3 :
-            vCoor = tempCoor
-        else :
-            vCoor = tempCoor[:,:3]
-            vVals = tempCoor[:,3]
-        return vCoor,vVals
-
     def __init__(self, vertexCoor, faceIndices, name=None, vcolor=None, **kwargs) :
         """ 
         3D surface of connected F faces, each face with N number of vertices.
@@ -1217,13 +944,13 @@ class Surface3DCollection(Poly3DCollection):
         """
 
         # following for a 'control limit' parameters in kwargs.
-        KW = KWprocessor({'maxieface':_MAXIEFACE},'Surface3DCollection.__init__',False,**kwargs)
+        KW = pvt.KWprocessor({'maxieface':_MAXIEFACE},'Surface3DCollection.__init__',False,**kwargs)
         maxieface = KW.getVal('maxieface')
         kwargs = KW.filter()
 
         dataPts = np.array(vertexCoor,dtype=float)
         # update for v_1.3.0
-        dataPts, vVal = Surface3DCollection._extract_vals_from_inputCoor(dataPts)
+        dataPts, vVal = pvt._extract_vals_from_inputCoor(dataPts)
         self.vertexCoor = dataPts
         self.vertexVals = vVal
 
@@ -2074,7 +1801,7 @@ class Surface3DCollection(Poly3DCollection):
         dft_vc = self.vertexColor            # update for v_1.4.0
         #kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
         kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':dft_vc, 'width':1, 'alr':_DFT_ALR  }
-        KW = KWprocessor(kargDft,'vectorfield_from_op',**kargs)
+        KW = pvt.KWprocessor(kargDft,'vectorfield_from_op',**kargs)
         scale = KW.getVal('scale')
         isV3D = KW.getVal('v3d')
         color = KW.getVal('color')
@@ -2123,7 +1850,7 @@ class Surface3DCollection(Poly3DCollection):
         dft_fc = self._dfacecolors            # update for v_1.4.0
         #kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':None, 'width':1, 'alr':_DFT_ALR  }
         kargDft = { 'scale':self._normal_scale, 'v3d':True, 'color':dft_fc, 'width':1, 'alr':_DFT_ALR  }
-        KW = KWprocessor(kargDft,'vectorfield_from_op',**kargs)
+        KW = pvt.KWprocessor(kargDft,'vectorfield_from_op',**kargs)
         scale = KW.getVal('scale')
         isV3D = KW.getVal('v3d')
         color = KW.getVal('color')
@@ -2184,7 +1911,7 @@ class Surface3DCollection(Poly3DCollection):
 
         kargDft = { 'returnxyz':False, 'useBase':False, 
                     'scale':1, 'color':'black', 'width':1, 'alr':_DFT_ALR  }
-        KW = KWprocessor(kargDft,'dispfield_from_op',**kargs)
+        KW = pvt.KWprocessor(kargDft,'dispfield_from_op',**kargs)
         returnxyz = KW.getVal('returnxyz')
         useBase = KW.getVal('useBase')
         scale = KW.getVal('scale')
@@ -2235,7 +1962,7 @@ class Surface3DCollection(Poly3DCollection):
         """
 
         kargDft = { 'scale':1, 'color':'black', 'width':1, 'alr':_DFT_ALR  }
-        KW = KWprocessor(kargDft,'vectorfield_from_op',**kargs)
+        KW = pvt.KWprocessor(kargDft,'vectorfield_from_op',**kargs)
         scale = KW.getVal('scale')
         color = KW.getVal('color')
         width = KW.getVal('width')
@@ -2289,7 +2016,7 @@ class Surface3DCollection(Poly3DCollection):
         """
 
         kargDft = { 'scale':1, 'color':'black', 'width':1, 'alr':_DFT_ALR  }
-        KW = KWprocessor(kargDft,'vectorfield_to_surface',**kargs)
+        KW = pvt.KWprocessor(kargDft,'vectorfield_to_surface',**kargs)
         scale = KW.getVal('scale')
         color = KW.getVal('color')
         width = KW.getVal('width')
@@ -2463,13 +2190,63 @@ class Surface3DCollection(Poly3DCollection):
         else :   RGB = cm.colors.hsv_to_rgb(colors)
         self.set_color(RGB)
         self.isSurfaceColored = True
-        cname = _getFunctionName(operation,cname) 
+        cname = pvt._getFunctionName(operation,cname) 
         if cname is not None : self.valuesName = cname 
         self._bounds['vlim'] = _DFT_VLIM
 
         self._map_color_from_op_vert(operation, rgb)
 
         return self
+
+
+    def map_color_from_cloud(self,cloud,cname=None) :
+        """
+        Assign color values to each face from cloud color.
+        Surface will take colormapping of the cloud
+        if the cloud is colormapped, in which case
+        colors corrosponding to values will be the
+        same for surface and cloud.
+
+        Parameters
+        ----------
+        cloud : Point3DCloud object.
+            The surface must be contained within the cloud domain.
+
+        cname : string, optional, default: cloud.name
+            Descriptive identifier for values indicated by color.
+
+        Returns
+        -------
+        self : surface object
+
+        """
+        verts = self.vertexCoor[ self.fvIndices ]
+        faceCenterCoor = self._get_face_centers(verts)
+        xyz = faceCenterCoor
+
+        if not cloud.hasVals :
+                colorValues = cloud.get_colors_at_xyz(xyz)
+                self.set_color(colorValues)
+                self.isSurfaceColored = True
+                self.valuesName = cloud.name if cname is None else cname
+                return self
+
+        values = cloud(xyz)   #.. note: this checks if all faceCenters are in cloud
+        self.faceValues = values  # set faceValues from values
+        self._bounds['vlim'] = [ values.min(), values.max() ] 
+        cmap = cloud._getSubCmap( self._bounds['vlim'] )
+        #... Note similarity to map_vertvals_from_cloud with
+        #    map_cmap_from_vertvals (between vertices vs. facecenters)
+        #    Here, vertex values are not set.
+        vmin, vmax = values.min(), values.max()
+        norm = colors.Normalize(vmin=vmin,vmax=vmax)
+        self.set_cmap(cmap)
+        colorMap = cmap(norm(values))
+        self.set_color(colorMap)
+        self.isSurfaceColored = True
+        self.valuesName = cloud.name if cname is None else cname
+        return self 
+
 
     def _map_cmap_from_datagrid_vert(self, datagrid, cmap=None, viewport=None) :
 
@@ -2736,7 +2513,34 @@ class Surface3DCollection(Poly3DCollection):
         self.valuesName = cname
         return self
 
-    def set_vertvals(self,values) :
+    def map_vertvals_from_cloud(self,cloud,cname=None) :
+        """
+        Assign scalar values to each vertex from cloud values.
+        Surface will take colormapping of the cloud,
+        where colors corrosponding to values will be the
+        same for surface and cloud.
+
+        Parameters
+        ----------
+        cloud : Point3DCloud object.
+            The surface must be contained within the cloud domain.
+
+        cname : string, optional, default: cloud.name
+            Descriptive identifier for values indicated by color.
+
+        Returns
+        -------
+        self : surface object
+
+        """
+        if cname is None : cname = cloud.name
+        values = cloud(self.vertices.T)   #.. note: this checks if all vertices are in cloud
+        self.set_vertvals_from_values(values) 
+        cmap = cloud._getSubCmap( self.bounds['vertvlim'] )  # note: call to @property bounds
+        self.map_cmap_from_vertvals(cmap, cname=cname)
+        return self
+
+    def set_vertvals_from_values(self,values) :
         """
         Assign scalar values to each vertex.
 
@@ -2750,14 +2554,58 @@ class Surface3DCollection(Poly3DCollection):
         self : surface object
 
         """
+        # changed set_vertvals() to set_vertvals_from_values() ... update 1.5.0
         values = np.array(values)
         noVerts = self.vertexCoor.shape[0]
         noVals  = values.shape[0]
         if noVals != noVerts :
-            warnings.warn("Error: [set_vertvals] no. vertices {} != no. values {}, no action taken".format(noVerts,noVals))
+            warnings.warn("Error: [set_vertvals_from_values] no. vertices {} != no. values {}, no action taken".format(noVerts,noVals))
             return self
         self.vertexVals = values
+        self._bounds['vertvlim'] = [ values.min(), values.max() ]  # update for v_1.5.0
         return self
+
+
+    def map_vertvals_from_samples(self,samples,domain) :
+        """
+        Assign vertex values from the values of the nearest sample.
+
+        Parameters
+        ----------
+        samples : V X 4, float array-like 
+            An array of V number of xyz vertex coordinates and
+            scaler values which are assigned to each vertex.
+
+        domain : 3 X 2, float array-like
+
+        Returns
+        -------
+        self : surface object
+
+        """
+        #.....................................    
+        def coor_vals(coor, points, vals, dmn) :
+            # Assign the coor values to the nearest data point values.
+            # points & vals in normalized coordinates in domain.
+            A = dmn.T[1] - dmn.T[0]
+            B = np.array( [ dmn[0][0], dmn[1][0], dmn[2][0] ])
+            C = np.empty([len(coor),3])
+            C[:] = A
+            norm_coor = (coor-B)/C
+            C = np.empty([len(points),3])
+            C[:] = A
+            norm_points = (points-B)/C
+            distanceVector = norm_coor[:,None] - norm_points
+            R = np.linalg.norm(distanceVector,axis=2)
+            ind = np.argsort(R)
+            return vals[ind[:,0]]
+        #.....................................
+        dataPts, dataVals = pvt._extract_vals_from_inputCoor(samples)
+        domain = np.array(domain)
+        cvals = coor_vals(self.vertices.T, dataPts, dataVals, domain)
+        self.set_vertvals_from_values(cvals)
+        return self
+
 
     def _map_cmap_from_op_vert(self, operation, cmap) :
         
@@ -2840,11 +2688,11 @@ class Surface3DCollection(Poly3DCollection):
         self.isSurfaceColored = True
         self._bounds['vlim'] = [ vmin, vmax ] 
 
-        #cname = _getFunctionName(operation,cname)
+        #cname = pvt._getFunctionName(operation,cname)
         trialName = None
         if cname is None :
             if dftDirName is not None : trialName = dftDirName
-            else :  trialName =  _getFunctionName(operation,None)
+            else :  trialName =  pvt._getFunctionName(operation,None)
         else: trialName = cname
         self.valuesName = trialName
         # ========================================================================
@@ -3077,7 +2925,7 @@ class Surface3DCollection(Poly3DCollection):
         self.set_verts( verts )
         self._surfaceShapeChanged = True
         if name is None : name = self._geomName
-        name = _getFunctionName(operation,name)
+        name = pvt._getFunctionName(operation,name)
         if name is not None: self._geomName = name
         self.phongNorms = None  # update for v_1.3.0
         return self
@@ -3240,7 +3088,7 @@ class Surface3DCollection(Poly3DCollection):
         # ...........................................................
         dirDft = { 'direction': [0,0,1.0] }
         kargDft = { **_COOR_KWARGS, **dirDft }
-        KW = KWprocessor( kargDft, 'clip_plane', **kargs)
+        KW = pvt.KWprocessor( kargDft, 'clip_plane', **kargs)
         coor = KW.getVal('coor')
         direction = KW.getVal('direction')
 
@@ -3708,7 +3556,7 @@ class Surface3DCollection(Poly3DCollection):
 
         """
         kargDft = { 'lenmult':1.0, 'width':1.5, 'color':['r','g','b'], 'negaxis':False }
-        KW = KWprocessor(kargDft,'get_transformAxis',**kargs)
+        KW = pvt.KWprocessor(kargDft,'get_transformAxis',**kargs)
         lenmult = KW.getVal('lenmult')
         width = KW.getVal('width')
         color = KW.getVal('color')
@@ -3818,7 +3666,7 @@ class Surface3DCollection(Poly3DCollection):
             temp['coor'][0] = [coorVal]
             kargDft = { **temp, **extDft }
 
-        KW = KWprocessor(kargDft,'contourLines',**kargs)
+        KW = pvt.KWprocessor(kargDft,'contourLines',**kargs)
         cIndex = KW.getVal('coor')
         direction = KW.getVal('direction')
         name = KW.getVal('name')
@@ -3881,7 +3729,7 @@ class Surface3DCollection(Poly3DCollection):
             temp['coor'][0] = [coorVal]
             kargDft = { **temp, **extDft }
         
-        KW = KWprocessor(kargDft,'contourLineSet',**kargs)
+        KW = pvt.KWprocessor(kargDft,'contourLineSet',**kargs)
         cIndex = KW.getVal('coor')
         direction = KW.getVal('direction')
         name = KW.getVal('name')
@@ -4339,7 +4187,7 @@ class PlanarSurface(Surface3DCollection) :
         """
         dataPts = np.array(xyz_points)
         # update for v_1.3.0
-        dataPts, vVal = Surface3DCollection._extract_vals_from_inputCoor(dataPts)
+        dataPts, vVal = pvt._extract_vals_from_inputCoor(dataPts)
 
         xyzPts = dataPts.T
 
@@ -4359,7 +4207,7 @@ class PlanarSurface(Surface3DCollection) :
         surface._set_geometric_bounds()
         surface._rez = surface._calc_rez(4)
         surface._basetype = 'pntsurf'
-        if vVal is not None : surface.set_vertvals(vVal)   # update for v_1.3.0
+        if vVal is not None : surface.set_vertvals_from_values(vVal)   # update for v_1.3.0
         return surface
 
     @classmethod
@@ -4849,7 +4697,7 @@ class PolarSurface(Surface3DCollection) :
         """
         dataPts = np.array(rtz_points)
         # update for v_1.3.0
-        dataPts, vVal = Surface3DCollection._extract_vals_from_inputCoor(dataPts)
+        dataPts, vVal = pvt._extract_vals_from_inputCoor(dataPts)
 
         xyzPts = PolarSurface.coor_convert(dataPts.T,True)
 
@@ -4868,7 +4716,7 @@ class PolarSurface(Surface3DCollection) :
         surface.set_verts( verts[faceIndices] )
         surface._set_geometric_bounds()
         surface._rez = surface._calc_rez(4)
-        if vVal is not None : surface.set_vertvals(vVal)   # update for v_1.3.0
+        if vVal is not None : surface.set_vertvals_from_values(vVal)   # update for v_1.3.0
         surface._basetype = 'pntsurf'
         return surface
 
@@ -5582,7 +5430,7 @@ class CylindricalSurface(Surface3DCollection) :
         """
         dataPts = np.array(rtz_points)
         # update for v_1.3.0
-        dataPts, vVal = Surface3DCollection._extract_vals_from_inputCoor(dataPts)
+        dataPts, vVal = pvt._extract_vals_from_inputCoor(dataPts)
 
         cylPts = np.array(dataPts.T)
         cylPts[0] = np.amax(cylPts[0])
@@ -5621,7 +5469,7 @@ class CylindricalSurface(Surface3DCollection) :
         surface._set_geometric_bounds()
         surface._rez = surface._calc_rez(12)
         surface._basetype = 'pntsurf'
-        if vVal is not None : surface.set_vertvals(vVal)   # update for v_1.3.0
+        if vVal is not None : surface.set_vertvals_from_values(vVal)   # update for v_1.3.0
         return surface
 
     @classmethod
@@ -6359,7 +6207,7 @@ class SphericalSurface(Surface3DCollection) :
         """
         dataPts = np.array(rtp_points)
         # update for v_1.3.0
-        dataPts, vVal = Surface3DCollection._extract_vals_from_inputCoor(dataPts)
+        dataPts, vVal = pvt._extract_vals_from_inputCoor(dataPts)
 
         sphPts = dataPts.T
         xyzPts = SphericalSurface.coor_convert(dataPts.T,True)
@@ -6381,7 +6229,7 @@ class SphericalSurface(Surface3DCollection) :
         surface._set_geometric_bounds()
         surface._rez = surface._calc_rez(20)
         surface._basetype = 'pntsurf'
-        if vVal is not None : surface.set_vertvals(vVal)   # update for v_1.3.0
+        if vVal is not None : surface.set_vertvals_from_values(vVal)   # update for v_1.3.0
         return surface
 
     @classmethod
@@ -6616,7 +6464,7 @@ class Vector3DCollection(Line3DCollection) :
         self._vlines = np.array(lines)  # vector has 3 lines. update for v_1.4.0
 
         kargDft = { 'colors':['k'] }
-        KW = KWprocessor(kargDft,'vector_init',False,**kwargs)
+        KW = pvt.KWprocessor(kargDft,'vector_init',False,**kwargs)
         inputColors = KW.getVal('colors') # update for v_1.4.0
         kwargs = KW.filter()
         lines_colors,vcolors = get_lineCollection_colors(len(XYZ),inputColors)
@@ -6930,7 +6778,7 @@ class Vector3DCollection(Line3DCollection) :
             RGB = np.concatenate((RGB,ones),axis=1)
 
         self._set_vectColor(RGB)
-        cname = _getFunctionName(operation,cname)
+        cname = pvt._getFunctionName(operation,cname)
         if cname is not None : self.valuesName = cname
      
         return self
@@ -6977,7 +6825,7 @@ class Vector3DCollection(Line3DCollection) :
         norm = colors.Normalize(vmin=v.min(),vmax=v.max())
         color = cm_colorMap(norm(v))
         self._set_vectColor(color)
-        cname = _getFunctionName(operation,cname)
+        cname = pvt._getFunctionName(operation,cname)
         if cname is not None: self.valuesName = cname
         self._bounds['vlim'] = [ v.min(), v.max() ]
 
@@ -7143,7 +6991,7 @@ class Vector3DCollection(Line3DCollection) :
         # ...........................................................
         dirDft = { 'direction': [0,0,1.0] }
         kargDft = { **_COOR_KWARGS, **dirDft }
-        KW = KWprocessor( kargDft, 'clip_plane', **kargs)
+        KW = pvt.KWprocessor( kargDft, 'clip_plane', **kargs)
         coor = KW.getVal('coor')
         direction = KW.getVal('direction')
 
@@ -8107,7 +7955,7 @@ class ColorLine3DCollection(Line3DCollection) :
         v = i
         vmin, vmax = 0.0, 1.0
         if sop is not None :
-            temp = _getFunctionName(sop,cname)
+            temp = pvt._getFunctionName(sop,cname)
             if temp is not None : self.valuesName = temp
             v = np.array(sop(i))
             vmin, vmax = v.min(), v.max()
@@ -8288,7 +8136,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self : line object
 
         """       
-        cname = _getFunctionName(operation,cname)
+        cname = pvt._getFunctionName(operation,cname)
         if cname is not None : self.valuesName = cname
 
         if cmap is not None :
@@ -8349,7 +8197,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self : line object
 
         """       
-        cname = _getFunctionName(operation,cname)
+        cname = pvt._getFunctionName(operation,cname)
         if cname is not None : self.valuesName = cname
         # -----------------------------------------
         segments = self._segments3d
@@ -8406,7 +8254,7 @@ class ColorLine3DCollection(Line3DCollection) :
         self.set_segments(segments)
         self._set_geometric_bounds()
         if name is None : name = self._geomName
-        name = _getFunctionName(operation,name)
+        name = pvt._getFunctionName(operation,name)
         if name is not None : self._geomName = name
         return self
 
@@ -8440,7 +8288,7 @@ class ColorLine3DCollection(Line3DCollection) :
         """
         dirDft = { 'direction': [0,0,1.0] }
         kargDft = { **_COOR_KWARGS, **dirDft }
-        KW = KWprocessor( kargDft, 'map_to_plane', **kargs)
+        KW = pvt.KWprocessor( kargDft, 'map_to_plane', **kargs)
         coor = KW.getVal('coor')
         direction = KW.getVal('direction')
 
@@ -8586,7 +8434,7 @@ class ColorLine3DCollection(Line3DCollection) :
         # ...........................................................
         dirDft = { 'direction': [0,0,1.0] }
         kargDft = { **_COOR_KWARGS, **dirDft }
-        KW = KWprocessor( kargDft, 'clip_plane', **kargs)
+        KW = pvt.KWprocessor( kargDft, 'clip_plane', **kargs)
         coor = KW.getVal('coor')
         direction = KW.getVal('direction')
 
@@ -8867,7 +8715,7 @@ class ColorLine3DCollection(Line3DCollection) :
 
         """
         kargDft = { 'lenmult':1.0, 'width':1.5, 'color':['r','g','b'], 'negaxis':False }
-        KW = KWprocessor(kargDft,'get_transformAxis',**kargs)
+        KW = pvt.KWprocessor(kargDft,'get_transformAxis',**kargs)
         lenmult = KW.getVal('lenmult')
         width = KW.getVal('width')
         color = KW.getVal('color')
@@ -9036,7 +8884,7 @@ class ColorLine3DCollection(Line3DCollection) :
         """
         extDft = { 'direction':[0,0,1], 'dist':0.0, 'lrez':0, 'alpha':None, 'color':None, 'name':None }
         kargDft = { **_COOR_KWARGS, **extDft }
-        KW = KWprocessor(kargDft,'get_filled_surface',**kargs)
+        KW = pvt.KWprocessor(kargDft,'get_filled_surface',**kargs)
         drctn = KW.getVal('direction')
         axis = KW.getVal('coor')
         base = KW.getVal('dist')
@@ -9082,7 +8930,7 @@ class ColorLine3DCollection(Line3DCollection) :
         """
 
         kargDft = { 'lrez':0, 'alpha':None, 'color':None, 'name':None }
-        KW = KWprocessor(kargDft,'get_surface_to_line',**kargs)
+        KW = pvt.KWprocessor(kargDft,'get_surface_to_line',**kargs)
         lrez = KW.getVal('lrez')
         alpha = KW.getVal('alpha')
         name = KW.getVal('name')
@@ -9155,7 +9003,7 @@ class ParametricLine(ColorLine3DCollection) :
         if operation is None :
             verts, indices = default_line(numVerts)
         else :
-            name = _getFunctionName(operation,name)
+            name = pvt._getFunctionName(operation,name)
             lineVals = np.linspace(0.0,1.0, self.numSeg+1)
             verts = np.array(operation(lineVals)).T
             verts = verts.tolist()
@@ -9369,7 +9217,7 @@ class ParametricLine(ColorLine3DCollection) :
         def g(xArr, yArr) :
             return zValue_generator(xArr, yArr, operation)
         # -----------------------------------------
-        name = _getFunctionName(operation,self._geomName)
+        name = pvt._getFunctionName(operation,self._geomName)
         if name is not None : self._geomName = name
         return self._map_xySlice( g, **kargs  )
 
@@ -9506,120 +9354,6 @@ class SegmentLine(ColorLine3DCollection) :
 #                                                                                  |
 # =================================================================================+
 
-class KWprocessor():
-    """  Access values from defaults or kwargs. """
-
-    def __init__(self,valDict, methodStr=None, checkInputKeys=True, **kargs) :
-        """
-        Validate input of a method's kwargs.  Internal use ONLY.
-
-        Parameters
-        ----------
-        valDict : dictionary of argument names, defaults and valid values.
-            key -   keyword argument name
-            value - single default value, or list of 2D lists to be validated:
-                    If a list of list, the structure is:
-                    value[0] - ['default value']    <- single value
-                    value[1] - [ a, b, c, ..... ]   <- list of a list of valid values
-
-        methodStr : string, optional, default: None
-            Identifier of the method called where a validation error occured
-            which is shown in the error message.
-
-        checkInputKeys : bool, default: True
-            If True, check if all kargs are in the valDict.
-            Unknown keys will produce a ValueError.
-            If False, ignore kargs not in valDict.
-
-        kargs :
-            The dictionary object containing the input keyword:values to be extracted.
-
-        """
-        # FutDev: could use a dictionary for value[1] to validate ranges and types.
-        self.valDict = valDict
-        self.kargs = kargs
-        self.method = methodStr
-        if checkInputKeys :
-            if len(kargs) == 0    : return
-            if len(valDict) == 0  : return
-            errMsg = "Keyword, {}, is not recognized. \n List of possible keys are: {}"
-            if methodStr is not None : errMsg = '['+methodStr+'] - ' + errMsg
-            for key in kargs.keys() : 
-                if not key in valDict.keys() :
-                    raise ValueError( errMsg.format(key, list(valDict.keys())  ) )
-        return    
-
-    def _defVal(self,v) :
-        value = self.valDict[v]
-        if isinstance(value,list) :
-            firstVal = value[0]
-            return firstVal[0] if isinstance(firstVal,(list,tuple)) else value
-        return value
-
-    def _valueKeywordError(self,keyStr,usrVal) :
-        dicVal = self.valDict[keyStr]
-        errList = dicVal[1]
-        for i in range(2,len(dicVal) ) : errList += dicVal[i] 
-        errA = "Keyword, {}, value of {} is not recognized.\n List of possible values are: {}"
-        errB = "Keyword, {}, value of '{}' is not recognized.\n List of possible values are: {}" 
-        errStr =  errB if isinstance(usrVal,str) else errA      
-        if self.method is not None : errStr = '['+self.method+'] - ' + errStr
-        return errStr.format(keyStr,str(usrVal),errList)
-        
-    def getVal(self,keyStr,checkValidity=True)  :
-        """
-        Return the named argument value.
-
-        Parameters
-        ----------
-        keyStr : string. Keyword
-
-        checkValidity : bool, optional, default: True
-            If True, karg value is checked to be valid
-            among the list of valid values.
-
-        Raises
-        ------
-        ValueError
-            if invalid keyword assignment.
-
-        Returns
-        -------
-            value of keyword, or the default value if the keyStr is not found in kargs.
-
-        """
-        def listOfList(v) :
-            if not isinstance(v,(list,tuple)) : return False
-            return isinstance(v[0],(list,tuple)) 
-        kargs = self.kargs
-        if len(kargs) == 0 : return self._defVal(keyStr)
-        if keyStr not in self.valDict : # only for development purposes.
-            print("################ CODE ERROR KW001 #####################")
-            return None
-        if keyStr in kargs : 
-            dicVal = self.valDict[keyStr]
-            usrVal = kargs[keyStr]
-            if listOfList(dicVal) :
-                for vLst in dicVal :
-                    if usrVal in set(vLst) : return vLst[0] #<< value is the first.
-                if not checkValidity : return usrVal
-                else :
-                    raise ValueError( self._valueKeywordError(keyStr,usrVal))
-            return usrVal
-        return self._defVal(keyStr)
-
-    def filter(self):
-        """
-        Removes defaults from kargs.
-        Use implies that more than default kargs are to be used,
-        thus 'checkInputKeys' should be set to False at __init__.
-        """
-        for key in self.valDict:
-            try :   del self.kargs[ key ]
-            except: pass
-        return self.kargs
-
-
 # FutDev: include transform
 
 def _axisUSF(axes) :
@@ -9659,16 +9393,6 @@ def _coor_dotprod(direction,cIndex,refCoor) :
         unitDirection = np.divide( direction, np.linalg.norm(direction) )
         dotprod = np.dot(verts,unitDirection)
     return dotprod
-
-def _getFunctionName(op,xName=None) :
-    if xName is not None : return xName
-    # assign function name if not a lambda function
-    fobar = lambda x : x
-    if op.__name__ != fobar.__name__ :
-        name = op.__name__
-    else :
-        name = None
-    return name
 
 def _set_geomBounds(v,bounds) :
     """Set _bounds dictionary values from vertex coordinates."""
@@ -9839,7 +9563,7 @@ def setupAxis(axes, **kargs ) :
 
     kargDft = { 'length': 1.5, 'color':'k', 'labels':['X','Y','Z'],
                 'offset':0.0, 'pad': 0.15, 'width':2, 'alr':0.2, 'negaxis':False}
-    KW = KWprocessor(kargDft,'setupAxis',**kargs)
+    KW = pvt.KWprocessor(kargDft,'setupAxis',**kargs)
     length = KW.getVal('length')
     color = KW.getVal('color')
     offset = KW.getVal('offset')
@@ -9928,7 +9652,7 @@ def auto_scale(axes,*obj3d,**kargs) :
 
     Parameters
     ----------
-    axes : Matplotlib 3D axes.
+    axes : Matplotlib 3D axes object.
 
     obj3d : positional arguments of s3dlib objects
     
@@ -9997,6 +9721,52 @@ def auto_scale(axes,*obj3d,**kargs) :
         return axes      
 
     axes.auto_scale_xyz(X,Y,Z)
+    return axes
+
+def add_boxCorner(axes,domain,full=False,color='.6',lw=1.0) :
+    """
+    Add a line object denoting the domain corner in an axis view.
+
+    Parameters
+    ----------
+    axes : Matplotlib 3D axes object.
+
+    domain : 3 x 2 array
+
+    rgb : bool {True, False}, optional, default: False
+        Facing corner edges are shown. If True, the three
+        face edges are also shown.
+
+    color : line color, default: '.6'
+
+    lw : line width, default: 1.0
+
+    Returns
+    -------
+    axis object
+
+    """
+    # got tired of manually reconstructing this for each figure ;-)
+
+    domain = _interpret_domain(domain)
+    xmin,xmax,ymin,ymax,z3,z1 = np.array(domain).flatten()
+    xyz = [ [xmax,ymin,0], [xmax,ymax,0], [xmin,ymax,0], [xmin,ymin,0],
+            [xmax,ymin,0], [xmax,ymax,0], [xmin,ymax,0], [xmin,ymin,0] ]
+
+    if (axes.elev >=0) : z1,z3 = z3,z1
+    az = axes.azim
+    if az<0 : az += 360
+    i = int((az)/90)
+    coorIndex = [ i, (i+1)%4, (i+2)%4, (i+3)%4,
+                  i, (i+1)%4, (i+2)%4, (i+3)%4 ]
+
+    verts = np.array(xyz)[coorIndex]
+    verts[:,2] = [z3,z3,z3,z3,z1,z1,z1,z1]
+
+    iE = [[0,1,2],[1,5]]
+    if full: iE += [[0,3,2,6,5,4,0]]
+    corner = ColorLine3DCollection(verts,iE,color=color,lw=lw)
+    axes.add_collection3d(corner)
     return axes
 
 def eulerRot(theta, phi, psi=0, useXconv=True, inrad=False) :
@@ -10150,7 +9920,7 @@ def density_function(vals, bins=(10,10), scale=True, xbnd=True, ybnd=True, kind=
    
     Returns
     -------
-    A function f(x,y)
+    Density function f(x,y), 3 X 2 domain array
 
     """
     vals = np.array(vals)
@@ -10193,15 +9963,24 @@ def density_function(vals, bins=(10,10), scale=True, xbnd=True, ybnd=True, kind=
         vals = [ r.ev(ya[i],xa[i]) for i in range(size) ]
         return np.array(vals)
 
-    return density
+    xmin,ymin = minval
+    xmax,ymax = maxval
+    zmin,zmax = np.min(Zvals), np.max(Zvals)
+    den_dmn = [ [xmin,xmax], [ymin,ymax], [zmin,zmax] ]
 
-def get_points_from_cloud(cloud,domain=1,cmap=None,fade=None) :
+    return density, np.array(den_dmn)
+
+def samples_to_object(samples, domain, cmap=None ,rez=1, size=1) :
     """
-    xyz coordinate points, marker colors array, and ScalarMappable object.
-    
+    Convert each sample point to a spherical object within a domain.
+    Useful for creating Matplotlib figures containing points intersecting surfaces.
+
     Parameters
     ----------
-    cloud : a (M,N,P) shaped array of point cloud values.
+    samples : V X 3 or V X 4, float array-like 
+        An array of V number of xyz vertex coordinates and scalar values. 
+        The scalar values are used to assign color. If a V x 3 array
+        is passed, all points are a uniform default color.
 
     domain : a number, list or array, default: 1
         The domain of the function evaluation.  For a number, n,
@@ -10213,43 +9992,48 @@ def get_points_from_cloud(cloud,domain=1,cmap=None,fade=None) :
     cmap : str or Colormap, default: Matplotlib default colormap
         A Colormap instance or registered colormap name.
         
-    fade : an float, default: None
-        Powerlaw adjust point opacity for emphasizing upper/lower values.
-        The absolute values of fade must be in the range 0.1 to 10.
+    rez : int, default: 1
+        Recursive subdivisions of the triangulated base faces of each
+        spherical sample point.
+
+    size : float, default: 1
+        Spherical point size relative to the x domain. For size of 1,
+        the sphere diameter is 1/25 the x domain.
 
     Returns
     -------
-    xyz : a 3 X S array, where S is the number of points in the domain.
-
-    colors : array of point colors.
-
-    ScMap : a Matplotlib ScalarMappable object.
+    Single Surface3DCollection object composed of V number of SphericalSurface objects
 
     """
-    dftDm = _interpret_domain(domain)
-    objMap = _DFT_CMAP if cmap is None else cmap
-    if isinstance(objMap,str) : 
-        objMap = mpl.colormaps[objMap]
-    S = np.array(cloud.shape)
-    rngX,rngY,rngZ = dftDm[0],dftDm[1],dftDm[2]
-    xyz = np.mgrid[ rngX[0]:rngX[1]:S[0]*1j,
-                    rngY[0]:rngY[1]:S[1]*1j,
-                    rngZ[0]:rngZ[1]:S[2]*1j ]
-    sxyz = np.reshape(xyz,(3,-1))
-    vxyz = cloud.flatten()
-    normalizedData = (vxyz-np.min(vxyz))/(np.max(vxyz)-np.min(vxyz))
-    vcolors = objMap(normalizedData)
-    if fade is not None:
-        if abs(fade) < 0.1 or abs(fade) > 10.0 :
-            raise ValueError('[get_points_from_cloud]: fade out of range, 0.1 >= abs(fade) <= 10 ' )
-        if fade > 0 :
-            vcolors[:,3] = normalizedData**fade    # set color with gradient transparency.
-        else :
-            vcolors[:,3] = (1-normalizedData)**(-fade)
-    norm = colors.Normalize(vmin=np.min(vxyz),vmax=np.max(vxyz))
-    sm = cm.ScalarMappable(cmap=objMap, norm=norm)
-    sm.set_array([])
-    return sxyz, vcolors, sm
+    temp = np.array(samples,dtype=float)
+    coor = temp[:,:3]
+    vals = temp[:,3] if temp.shape[1] == 4 else None
+    #domain  = np.array(domain)
+    domain = _interpret_domain(domain)
+    xr = domain.T[1] - domain.T[0]
+    size *= xr[0]/25.0          # default=1, diameter =1/25 of x-domain
+    size = [size, size*xr[1]/xr[0], size*xr[2]/xr[0]]
+
+    cmap = _DFT_CMAP if cmap is None else cmap
+    if isinstance(cmap,str) : 
+        cmap = mpl.colormaps[cmap]
+
+    if vals is not None:
+        minV, maxV = np.min(vals), np.max(vals)
+        rng = maxV-minV
+    else :
+        minV, maxV = 0,-1
+    sphere_pts = None
+    for i in range(len(samples)) :
+        sphere = SphericalSurface(rez)
+        sphere.transform(scale=size,translate=coor[i])
+        if vals is not None:
+            index = (vals[i]-minV)/(rng)
+            sphere.set_color( cmap(index)  )
+        sphere_pts = sphere if sphere_pts is None else sphere_pts + sphere
+    sphere_pts.set_cmap(cmap)
+    sphere_pts.bounds['vlim'] = [minV, maxV]
+    return sphere_pts
 
 
 # =================================================================================+
