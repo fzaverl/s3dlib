@@ -4,6 +4,7 @@
 '''
 Module containing the Point3DCloud class.
 '''
+import warnings
 import string 
 import random
 import numpy as np
@@ -25,7 +26,7 @@ from skimage import measure
 _DFT_COLOR = rcParams['lines.color'] # default, surface/line color
 _DFT_CMAP  = rcParams['image.cmap']  # default, colormap
 
-_DFT_PDG = 1.0   # single sample data distribution.  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+_DFT_PDG = 1.0   # single sample data distribution.
 
 
 class Point3DCloud() :
@@ -55,9 +56,11 @@ class Point3DCloud() :
             color = colors.to_rgba(color) 
         else :    
             raise ValueError('Invalid color argument')
+        self._singleColor = color      
         cArr = np.zeros( (self._numPts, 4) )
         cArr[:] = color
-        return cArr
+        self._colors =cArr
+        return None
 
     def _domain_contains_xyz(self,coor) :
         dmn = self._domain
@@ -132,10 +135,12 @@ class Point3DCloud() :
         #.. following only used to create a cBar_ScalarMappable if
         #   no color mapping is called, but needed if a color bar is displayed.
         #   See the cBar_ScalarMappable @property.
-        self._singleColor = KW.getVal('color')
-        self._colors = self._initColor( self._singleColor )
+        self._singleColor = None
+        self._colors = None
+        self._initColor( KW.getVal('color') )
         self._scmpb = None # only defined if color mapped
-
+        # FutDev: self.hasColor and self.isUniformColor ???
+        #         could be more efficient when mapping color to a surface.
         self.hasVals = False
         self.isColorMapped = False
         self.geomChanged = False
@@ -182,6 +187,7 @@ class Point3DCloud() :
         V X 4 float array
 
         """
+        # FutDev:  if uniform color, just return an array of uniform colors.
         if not self._domain_contains_xyz(xyz) :
             raise ValueError('Found coordinates external to the cloud domain')
         apoints = np.array(self.axis_points)
@@ -195,6 +201,7 @@ class Point3DCloud() :
         b = interpn(apoints, B.reshape(N,N,N), xyz)
         a = np.ones(r.shape)    # << note: alpha = 1 for all colors.
         rgba = np.array( [r,g,b,a]).T
+        rgba = np.clip(rgba,0.0,1.0)
         return rgba
 
     @property
@@ -279,35 +286,19 @@ class Point3DCloud() :
             [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
             as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
             three coordinate axes.
-            Must be a 2D array if ylim or zlim is set.
+            If 2D array, ylim and zlim are ignored, otherwize,
+            must be a number or 1D array if ylim or zlim are None.
 
         ylim, zlim : a number or 2D array, default: None
-            Set the ylim and/or zlim.
+            Set the ylim and/or zlim.  If None, set to xlim.
 
         Returns
         -------
         self : Point3DCloud object
 
         """
-        # ........................................
-        def convertSV(c) :
-            # 'ONLY IF' single value, c, or single value array, [c], return [-c,c].
-            if not isinstance(c, (int,float)) :
-                if len(c) ==1 : c = c[0]  # change here if needed.
-            if isinstance(c, (int,float)) :
-                c = np.array( [-c,c], dtype=float ) 
-            return c
-        # ........................................
-        xlim = convertSV(xlim)
-        xDim = len(xlim)
-        if xDim == 3 :  # contains domains of all ccoordinates
-            dim = xlim
-        else :          # xlim only the x-domain
-            ylim = xlim if ylim is None else convertSV(ylim)
-            zlim = xlim if zlim is None else convertSV(zlim)
-            dim = [ xlim, ylim, zlim ] 
-
-        self._set_geom(dim)
+        domn = pvt._interpret_domain_args(xlim,ylim,zlim)
+        self._set_geom(domn)
 
         return self
 
@@ -340,7 +331,9 @@ class Point3DCloud() :
         varr : N float array of values
         norm : N float array of normalized values
         """
-
+        # FutDev: use generically, passing in values and colormap
+        #         Then place in prvt_func module for use with
+        #         surfaces and lines.
         minVal, maxVal = np.min(self._values), np.max(self._values)
         vRng = maxVal - minVal
 
@@ -349,9 +342,14 @@ class Point3DCloud() :
             varr = [ minVal + (i+1)*delta for i in range(N)]
         else :
             varr = N
-        norm = (varr-minVal)/vRng
-        cmap = self._getCmap()
-        carr = cmap( norm )
+
+        if vRng > 0 : # PICNIC check when values have not been set.
+            norm = (varr-minVal)/vRng
+            cmap = self._getCmap()
+            carr = cmap( norm )
+        else :
+            norm = [1.0]*len(varr)
+            carr = [self._singleColor]*len(varr)
 
         return carr,varr,norm
 
@@ -651,7 +649,7 @@ class Point3DCloud() :
         self._cmap = objMap
         self.isColorMapped = True
 
-        vxyz = values.flatten()   # <<<<<<<<<<<<<<<<<<<  why flatten ?????
+        vxyz = values.flatten()
         normalizedData = (vxyz-np.min(vxyz))/(np.max(vxyz)-np.min(vxyz))
         vcolors = objMap(normalizedData)
         self._colors = vcolors 
@@ -765,8 +763,8 @@ class Point3DCloud() :
         self : point cloud object
 
         """
-        self._singleColor = color
-        self._colors = self._initColor( self._singleColor )
+
+        self._initColor( color )
         self._scmpb = None # only defined if color mapped
 
         return self
@@ -816,7 +814,7 @@ class Point3DCloud() :
 
         surface = None
         minVal,maxVal = valList[0], valList[0]  # initialize
-        #for fval in valList :
+
         for i,fval in enumerate(valList) :
             if fval < minVal : minVal=fval
             if fval > maxVal : maxVal=fval
@@ -828,9 +826,17 @@ class Point3DCloud() :
                 color = cmapobj( (fval-minCpts)/valrange )
             surf = Surface3DCollection( verts, faces,color=color)
             surface = surf if surface is None else surface+surf
+
         surface.set_cmap(self._getCmap())
         surface._bounds['vlim'] =[ minCpts, maxCpts ] 
-
+        # now that the surface face vals are set, set the surface vertex values
+        try :
+            surface._map_vertvals_from_cloud(self)
+        except :
+            # for density clouds, the computed surface vertices may be external
+            # the domain, but the surface face colors are still assigned since
+            # the samples are still in the domain.
+            warnings.warn('WARNING: surface vertex values are NOT assigned !')
         if self.val_source != 'function' : surface.evert()
 
         if name is not None: surface._geomName = name

@@ -38,6 +38,53 @@ def _getFunctionName(op,xName=None) :
     return name
 
 
+def _interpret_domain_args(xlim,ylim,zlim) :
+    """
+    Interpret calling args to a 3 X 2 coordinate domain list.
+
+    Parameters
+    ----------
+    xlim : a number, list or array, default: 1
+        The domain of the cloud.  For a number, n,
+        the x,y,z axes domains will be [-n,n]. For a 1-dimensional 2-element list,
+        [a,b] will be assigned the domain for all 3 axes.  Using a list of list (array),
+        as [ [a,b],[c,d],[e,f] ], the domain is assigned individually for each of the
+        three coordinate axes.
+        If 2D array, ylim and zlim are ignored, otherwize,
+        must be a number or 1D array if ylim or zlim are None.
+
+    ylim, zlim : a number or 1D array, default: None
+        Set the ylim and/or zlim.  If None, set to xlim.
+
+    Returns
+    -------
+    list : 3 X 2 list
+
+    """
+    # ........................................
+    def convertSV(c) :
+        # 'ONLY IF' single value, c, or single value array, [c], return [-c,c].
+        if not isinstance(c, (int,float)) :
+            if len(c) ==1 : c = c[0]  # change here if needed.
+        if isinstance(c, (int,float)) :  # note: this is not an else.
+            c = [-c,c] 
+        return c
+    # ........................................
+    xlim = convertSV(xlim)
+    xDim = len(xlim)
+    if xDim == 3 :  # contains domains of all ccoordinates
+        dim = xlim
+    else :          # xlim only the x-domain
+        ylim = xlim if ylim is None else convertSV(ylim)
+        zlim = xlim if zlim is None else convertSV(zlim)
+        dim = [ xlim, ylim, zlim ]
+
+    npDom = np.array(dim).T
+    if np.prod( npDom[1] > npDom[0] ) == False :
+        raise ValueError('ERROR: domain min > max !!!') 
+    return dim
+
+
 class KWprocessor():
     """  Access values from defaults or kwargs. """
 

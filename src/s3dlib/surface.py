@@ -1284,14 +1284,20 @@ class Surface3DCollection(Poly3DCollection):
             face = self.fvIndices[fInx]
             for vInx in face :
                 vfIndicesList[vInx].append(fInx)
-
         # DevNote: probably a 'cleaner' method?  MROI
         normals = [ None ] *len(self.vertexCoor)
+        fv = np.sqrt(1.0/3.0)
+        fillerVect = np.array( [fv,fv,fv])
         for i in range(len(normals)) :
             vert = vfIndicesList[i]
             vertList = faceNormalCoor[ vert ]
-            vertSum = np.sum(vertList,axis=0)/len(vertList)
-            unitVector = np.divide( vertSum, np.linalg.norm(vertSum) )
+            if len(vertList) == 0 : # eliminate divide error .... update for v_1.5.0
+                # Note: clipping may result in remaining vertices without
+                #       associated faces, so the vertList is empty.
+                unitVector = fillerVect   #.. not used, but don't leave blank.
+            else :
+                vertSum = np.sum(vertList,axis=0)/len(vertList)
+                unitVector = np.divide( vertSum, np.linalg.norm(vertSum) )
             normals[i] = unitVector
 
         normals = np.array(normals)
@@ -2513,6 +2519,20 @@ class Surface3DCollection(Poly3DCollection):
         self.valuesName = cname
         return self
 
+    def _map_vertvals_from_cloud(self,cloud,cname=None,cmapVerts=False) :
+        """
+        Assign scalar values to each vertex from cloud values.
+        By default, surface will NOT take colormapping of the cloud.
+        Used by cloud._valsurface() method
+        """
+        if cname is None : cname = cloud.name
+        values = cloud(self.vertices.T)   #.. note: this checks if all vertices are in cloud
+        self.set_vertvals_from_values(values) 
+        if cmapVerts :
+            cmap = cloud._getSubCmap( self.bounds['vertvlim'] )  # note: call to @property bounds
+            self.map_cmap_from_vertvals(cmap, cname=cname)
+        return self
+
     def map_vertvals_from_cloud(self,cloud,cname=None) :
         """
         Assign scalar values to each vertex from cloud values.
@@ -2533,12 +2553,8 @@ class Surface3DCollection(Poly3DCollection):
         self : surface object
 
         """
-        if cname is None : cname = cloud.name
-        values = cloud(self.vertices.T)   #.. note: this checks if all vertices are in cloud
-        self.set_vertvals_from_values(values) 
-        cmap = cloud._getSubCmap( self.bounds['vertvlim'] )  # note: call to @property bounds
-        self.map_cmap_from_vertvals(cmap, cname=cname)
-        return self
+        return self._map_vertvals_from_cloud(cloud,cname,cmapVerts=True)
+
 
     def set_vertvals_from_values(self,values) :
         """
